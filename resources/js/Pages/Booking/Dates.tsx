@@ -1,8 +1,8 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import CheckoutLayout from '../../Components/CheckoutLayout';
 import BookingSummary from '../../Components/BookingSummary';
 import { AlertTriangle, CheckCircle2, Minus, Plus } from 'lucide-react';
-import type { Tour, TourSchedule, TourAddon } from '../../types';
+import type { Tour, TourSchedule, TourAddon, PageProps } from '../../types';
 
 interface Props {
     booking: {
@@ -19,6 +19,7 @@ function fmt(cents: number) {
 }
 
 export default function BookingDates({ booking }: Props) {
+    const { locale } = usePage<PageProps>().props;
     const { tour } = booking;
 
     const { data, setData, post, processing, errors } = useForm({
@@ -231,7 +232,7 @@ export default function BookingDates({ booking }: Props) {
                         <div className="flex items-center justify-between pt-[8px]">
                             <button
                                 type="button"
-                                onClick={() => router.visit(tour.slug ? `/tours/${tour.slug}` : '/tours')}
+                                onClick={() => router.visit(tour.slug ? `/${locale}/tours/${tour.slug}` : `/${locale}/tours`)}
                                 className="flex items-center gap-[6px] text-[13px] font-medium text-[#4f5c53] hover:text-[#2E4A39] transition-colors"
                             >
                                 ← Back to trip

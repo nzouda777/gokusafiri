@@ -26,6 +26,10 @@ return new class extends Migration
         });
         Schema::table('reviews', function (Blueprint $table) {
             $table->dropColumn(['author_name', 'author_avatar']);
+        });
+        // Remove anonymous reviews before reverting user_id to NOT NULL
+        \DB::table('reviews')->whereNull('user_id')->delete();
+        Schema::table('reviews', function (Blueprint $table) {
             $table->foreignId('user_id')->nullable(false)->change();
         });
     }

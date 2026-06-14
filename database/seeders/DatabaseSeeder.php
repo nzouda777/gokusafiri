@@ -145,7 +145,15 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($tourDefs as $data) {
+            // Skip tours already created by TourSeeder (avoids duplicate slugs like gorilla-trekking-bwindi-1)
+            if (Tour::whereRaw("JSON_UNQUOTE(JSON_EXTRACT(title, '$.en')) = ?", [$data['title']['en']])->exists()) {
+                continue;
+            }
+
             $dest = Destination::whereJsonContains('name->en', $data['dest_en'])->first();
+            if (! $dest) {
+                continue;
+            }
             $tour = Tour::create([
                 'operator_id' => $operator->id,
                 'destination_id' => $dest->id,

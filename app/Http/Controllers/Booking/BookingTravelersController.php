@@ -11,8 +11,9 @@ use Inertia\Response;
 
 class BookingTravelersController extends Controller
 {
-    public function show(string $reference): Response
+    public function show(Request $request): Response
     {
+        $reference = $request->route('reference');
         $booking = Booking::where('reference', $reference)
             ->with(['tour.destination', 'tour.media', 'schedule', 'travelers', 'addons.tourAddon'])
             ->firstOrFail();
@@ -75,8 +76,9 @@ class BookingTravelersController extends Controller
         ]);
     }
 
-    public function update(Request $request, string $reference): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
+        $reference = $request->route('reference');
         $request->validate([
             'lead.first_name' => 'required|string|max:100',
             'lead.last_name'  => 'required|string|max:100',

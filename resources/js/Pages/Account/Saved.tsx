@@ -1,13 +1,14 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AccountLayout from '../../Components/AccountLayout';
 import { Star, Heart, MapPin } from 'lucide-react';
-import type { Tour } from '../../types';
+import type { Tour, PageProps } from '../../types';
 
 interface Props {
     savedTours: Tour[];
 }
 
 export default function AccountSaved({ savedTours }: Props) {
+    const { locale } = usePage<PageProps>().props;
     const fmt = (cents: number) => (cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 
     function handleRemove(tourId: number) {
@@ -73,10 +74,10 @@ export default function AccountSaved({ savedTours }: Props) {
                                         <p className="font-bold text-[#1F2937]">{fmt(tour.base_price)}</p>
                                     </div>
                                     <div className="flex gap-2">
-                                        <Link href={`/tours/${tour.slug}`} className="px-4 py-2 rounded-full border border-gray-200 text-xs font-medium text-[#1F2937] hover:border-[#2C4A3B] transition-colors">
+                                        <Link href={`/${locale}/tours/${tour.slug}`} className="px-4 py-2 rounded-full border border-gray-200 text-xs font-medium text-[#1F2937] hover:border-[#2C4A3B] transition-colors">
                                             View details
                                         </Link>
-                                        <Link href={`/tours/${tour.slug}`} className="px-4 py-2 rounded-full bg-[#2C4A3B] text-white text-xs font-semibold hover:bg-[#3a5c4a] transition-colors">
+                                        <Link href={`/${locale}/tours/${tour.slug}`} className="px-4 py-2 rounded-full bg-[#2C4A3B] text-white text-xs font-semibold hover:bg-[#3a5c4a] transition-colors">
                                             Modify
                                         </Link>
                                     </div>

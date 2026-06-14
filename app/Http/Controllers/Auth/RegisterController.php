@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +37,6 @@ class RegisterController extends Controller
             'newsletter_opt_in' => $request->boolean('marketing'),
         ]);
 
-        event(new Registered($user));
         Auth::login($user);
 
         return redirect('/account/trips');

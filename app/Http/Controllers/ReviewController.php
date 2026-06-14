@@ -9,8 +9,9 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function store(Request $request, string $slug): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
+        $slug = $request->route('slug');
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'body'   => 'required|string|min:20|max:2000',

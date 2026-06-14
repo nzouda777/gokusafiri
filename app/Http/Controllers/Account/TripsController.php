@@ -28,7 +28,7 @@ class TripsController extends Controller
         $stats = [
             'upcoming' => Booking::where('user_id', $user->id)->whereIn('status', ['confirmed', 'payment_pending'])->count(),
             'completed' => Booking::where('user_id', $user->id)->where('status', 'completed')->count(),
-            'countries' => Booking::where('user_id', $user->id)->join('tour_schedules', 'bookings.schedule_id', '=', 'tour_schedules.id')->join('tours', 'bookings.tour_id', '=', 'tours.id')->join('destinations', 'tours.destination_id', '=', 'destinations.id')->distinct('destinations.country')->count('destinations.country'),
+            'countries' => Booking::where('user_id', $user->id)->join('tour_schedules', 'bookings.tour_schedule_id', '=', 'tour_schedules.id')->join('tours', 'bookings.tour_id', '=', 'tours.id')->join('destinations', 'tours.destination_id', '=', 'destinations.id')->distinct('destinations.country')->count('destinations.country'),
             'tier' => 'Explorer',
         ];
 
@@ -61,8 +61,9 @@ class TripsController extends Controller
         ]);
     }
 
-    public function cancel(Request $request, string $reference): RedirectResponse
+    public function cancel(Request $request): RedirectResponse
     {
+        $reference = $request->route('reference');
         $booking = Booking::where('reference', $reference)
             ->where('user_id', $request->user()->id)
             ->firstOrFail();

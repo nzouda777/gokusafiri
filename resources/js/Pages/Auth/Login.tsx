@@ -52,7 +52,7 @@ export default function Login() {
                         ].map((s) => (
                             <div key={s.label}>
                                 <p className="font-serif text-3xl font-bold text-white">
-                                    {s.val.replace('k', '<span class="text-[#E07A3F]">k</span>')}
+                                    {/* {s.val.replace('k', '<span class="text-[#E07A3F]">k</span>')} */}
                                     <span dangerouslySetInnerHTML={{ __html: s.val.replace(/k\+/, '<span style="color:#E07A3F">k</span>+') }} className="hidden" />
                                     {s.val}
                                 </p>

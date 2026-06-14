@@ -38,8 +38,9 @@ class BookingController extends Controller
         return redirect("/booking/{$booking->reference}/dates");
     }
 
-    public function confirmation(Request $request, string $reference): Response
+    public function confirmation(Request $request): Response
     {
+        $reference = $request->route('reference');
         $booking = Booking::where('reference', $reference)
             ->with(['tour.destination', 'tour.media', 'schedule', 'travelers', 'addons.tourAddon'])
             ->firstOrFail();
@@ -93,8 +94,9 @@ class BookingController extends Controller
         ]);
     }
 
-    public function itineraryPdf(string $reference)
+    public function itineraryPdf(Request $request)
     {
+        $reference = $request->route('reference');
         $booking = Booking::where('reference', $reference)->firstOrFail();
         return response()->json(['reference' => $booking->reference, 'message' => 'PDF generation pending']);
     }

@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function TourCard({ tour, onWishlistToggle }: Props) {
-    const { auth } = usePage<PageProps>().props;
+    const { auth, locale } = usePage<PageProps>().props;
 
     const price = Math.round(tour.base_price / 100).toLocaleString('en-US', {
         style: 'currency', currency: 'USD', maximumFractionDigits: 0,
@@ -36,7 +36,7 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
 
     return (
         <a
-            href={`/tours/${tour.slug}`}
+            href={`/${locale}/tours/${tour.slug}`}
             className="group block bg-white border border-[rgba(0,0,0,0.1)] rounded-[22px] overflow-hidden hover:shadow-lg transition-shadow duration-300"
         >
             {/* Image */}

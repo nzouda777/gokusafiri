@@ -12,8 +12,9 @@ use Inertia\Response;
 
 class BookingDatesController extends Controller
 {
-    public function show(string $reference): Response
+    public function show(Request $request): Response
     {
+        $reference = $request->route('reference');
         $booking = Booking::where('reference', $reference)
             ->with(['tour.destination', 'tour.media', 'tour.schedules', 'tour.addons', 'addons'])
             ->firstOrFail();
@@ -69,8 +70,9 @@ class BookingDatesController extends Controller
         ]);
     }
 
-    public function update(Request $request, string $reference): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
+        $reference = $request->route('reference');
         $request->validate([
             'schedule_id' => 'required|exists:tour_schedules,id',
             'adults'      => 'required|integer|min:1|max:20',

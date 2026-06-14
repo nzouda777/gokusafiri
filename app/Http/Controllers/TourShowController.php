@@ -9,11 +9,12 @@ use Inertia\Response;
 
 class TourShowController extends Controller
 {
-    public function show(Request $request, string $slug): Response
+    public function show(Request $request): Response
     {
+        $slug = $request->route('slug');
         $tour = Tour::published()
             ->where('slug', $slug)
-            ->with(['destination', 'media', 'schedules', 'addons', 'reviews' => fn ($q) => $q->where('is_approved', true)->latest()])
+            ->with(['destination', 'media', 'schedules', 'addons', 'reviews' => fn ($q) => $q->where('is_approved', true)->with('user')->latest()])
             ->firstOrFail();
 
         $userId = $request->user()?->id;

@@ -25,8 +25,9 @@ class BookingPaymentController extends Controller
     // ──────────────────────────────────────────────
     // GET /booking/{reference}/payment
     // ──────────────────────────────────────────────
-    public function show(string $reference): Response
+    public function show(Request $request): Response
     {
+        $reference = $request->route('reference');
         $booking = Booking::where('reference', $reference)
             ->with(['tour.destination', 'tour.media', 'schedule', 'addons.tourAddon'])
             ->firstOrFail();
@@ -90,8 +91,9 @@ class BookingPaymentController extends Controller
     // POST /booking/{reference}/payment/plan
     // Switch between deposit and full payment (creates a new PaymentIntent)
     // ──────────────────────────────────────────────
-    public function updatePlan(Request $request, string $reference): JsonResponse
+    public function updatePlan(Request $request): JsonResponse
     {
+        $reference = $request->route('reference');
         $request->validate(['plan' => 'required|in:full,deposit']);
 
         $booking = Booking::where('reference', $reference)->firstOrFail();
@@ -110,8 +112,9 @@ class BookingPaymentController extends Controller
     // GET /booking/{reference}/payment/complete
     // Stripe redirects here after 3DS or bank redirect
     // ──────────────────────────────────────────────
-    public function complete(Request $request, string $reference): RedirectResponse
+    public function complete(Request $request): RedirectResponse
     {
+        $reference      = $request->route('reference');
         $piId           = $request->query('payment_intent');
         $redirectStatus = $request->query('redirect_status');
 
@@ -154,8 +157,9 @@ class BookingPaymentController extends Controller
     // ──────────────────────────────────────────────
     // Signed balance payment link
     // ──────────────────────────────────────────────
-    public function payBalance(Request $request, Booking $booking): RedirectResponse
+    public function payBalance(Request $request): RedirectResponse
     {
+        $booking = $request->route('booking');
         $pmId = $booking->stripe_payment_method_id;
 
         if (! $pmId) {
