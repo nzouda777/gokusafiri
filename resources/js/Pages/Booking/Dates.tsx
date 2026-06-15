@@ -1,7 +1,8 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import CheckoutLayout from '../../Components/CheckoutLayout';
 import BookingSummary from '../../Components/BookingSummary';
-import { AlertTriangle, CheckCircle2, Minus, Plus } from 'lucide-react';
+import { AlertTriangle, Minus, Plus } from 'lucide-react';
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 import type { Tour, TourSchedule, TourAddon, PageProps } from '../../types';
 
 interface Props {
@@ -20,7 +21,10 @@ function fmt(cents: number) {
 
 export default function BookingDates({ booking }: Props) {
     const { locale } = usePage<PageProps>().props;
+    const { t } = useLaravelReactI18n();
     const { tour } = booking;
+
+    const dateLocale = { en: 'en-US', fr: 'fr-FR', es: 'es-ES' }[locale] ?? 'en-US';
 
     const { data, setData, post, processing, errors } = useForm({
         schedule_id: booking.schedule_id ?? tour.schedules?.[0]?.id ?? ('' as number | ''),
@@ -31,7 +35,6 @@ export default function BookingDates({ booking }: Props) {
     });
 
     const selectedSchedule = tour.schedules?.find(s => s.id === Number(data.schedule_id)) ?? null;
-    const totalPax         = data.adults + data.children;
 
     // Live price calculation for sidebar
     const schedulePrice  = selectedSchedule?.price_override ?? tour.base_price;
@@ -55,7 +58,7 @@ export default function BookingDates({ booking }: Props) {
 
     return (
         <CheckoutLayout step={1}>
-            <Head title="Confirm your trip & date" />
+            <Head title={t('dates.title')} />
 
             <form onSubmit={handleContinue}>
                 <div className="flex flex-col lg:flex-row gap-[28px] items-start">
@@ -66,15 +69,15 @@ export default function BookingDates({ booking }: Props) {
                         {/* Page title */}
                         <div className="mb-[4px]">
                             <h1 className="font-display not-italic text-[32px] leading-[1.15] text-[#16241b]">
-                                Confirm your trip & date
+                                {t('dates.title')}
                             </h1>
                             <p className="text-[13px] text-[#8a968d] mt-[4px]">
-                                Step 1 of 4 · No charge until you confirm payment
+                                {t('dates.step_hint')}
                             </p>
                         </div>
 
                         {/* ── Choose your departure ──────────── */}
-                        <Section title="Choose your departure">
+                        <Section title={t('dates.choose_departure')}>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-[10px]">
                                 {tour.schedules?.map(s => {
                                     const start    = new Date(s.start_date);
@@ -117,19 +120,19 @@ export default function BookingDates({ booking }: Props) {
 
                                             {/* Date range */}
                                             <p className="font-semibold text-[15px] text-[#16241b] pr-[28px]">
-                                                {start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – {end.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                                {start.toLocaleDateString(dateLocale, { month: 'short', day: 'numeric' })} – {end.toLocaleDateString(dateLocale, { month: 'short', day: 'numeric' })}
                                             </p>
 
                                             {/* Status */}
                                             {soldOut ? (
-                                                <p className="text-[12px] text-[#8a968d]">Sold out</p>
+                                                <p className="text-[12px] text-[#8a968d]">{t('dates.sold_out')}</p>
                                             ) : lowStock ? (
                                                 <p className="flex items-center gap-[4px] text-[12px] text-[#E07A3F] font-medium">
                                                     <AlertTriangle size={11} />
-                                                    Only {s.seats_left} slots left
+                                                    {t('dates.only_slots', { count: s.seats_left })}
                                                 </p>
                                             ) : (
-                                                <p className="text-[12px] text-[#8a968d]">Available</p>
+                                                <p className="text-[12px] text-[#8a968d]">{t('dates.available')}</p>
                                             )}
 
                                             {/* Year */}
@@ -146,27 +149,27 @@ export default function BookingDates({ booking }: Props) {
                         </Section>
 
                         {/* ── Who's travelling? ─────────────── */}
-                        <Section title="Who's travelling?">
+                        <Section title={t('dates.who_travelling')}>
                             <div className="divide-y divide-[#f0ede8]">
                                 <Counter
-                                    label="Adults"
-                                    sublabel="Age 13+"
+                                    label={t('search.adults')}
+                                    sublabel={t('dates.adults_sub')}
                                     value={data.adults}
                                     min={1}
                                     max={tour.max_group_size ?? 20}
                                     onChange={v => setData('adults', v)}
                                 />
                                 <Counter
-                                    label="Children"
-                                    sublabel="Age 2 – 12"
+                                    label={t('search.children')}
+                                    sublabel={t('dates.children_sub')}
                                     value={data.children}
                                     min={0}
                                     max={Math.max(0, (tour.max_group_size ?? 20) - data.adults)}
                                     onChange={v => setData('children', v)}
                                 />
                                 <Counter
-                                    label="Infants"
-                                    sublabel="Under 2 — free"
+                                    label={t('search.infants')}
+                                    sublabel={t('dates.infants_sub')}
                                     value={data.infants}
                                     min={0}
                                     max={4}
@@ -177,7 +180,7 @@ export default function BookingDates({ booking }: Props) {
 
                         {/* ── Enhance your trip ─────────────── */}
                         {(tour.addons?.length ?? 0) > 0 && (
-                            <Section title="Enhance your trip" badge="optional">
+                            <Section title={t('dates.enhance_trip')} badge={t('dates.optional')}>
                                 <div className="space-y-[2px]">
                                     {tour.addons!.map(addon => {
                                         const checked = data.addons.includes(addon.id);
@@ -219,7 +222,7 @@ export default function BookingDates({ booking }: Props) {
 
                                                 {/* Price */}
                                                 <span className="text-[14px] font-semibold text-[#16241b] shrink-0">
-                                                    +{fmt(addon.price)}<span className="text-[#8a968d] font-normal text-[12px]">/person</span>
+                                                    +{fmt(addon.price)}<span className="text-[#8a968d] font-normal text-[12px]">{t('show.per_person')}</span>
                                                 </span>
                                             </label>
                                         );
@@ -235,14 +238,14 @@ export default function BookingDates({ booking }: Props) {
                                 onClick={() => router.visit(tour.slug ? `/${locale}/tours/${tour.slug}` : `/${locale}/tours`)}
                                 className="flex items-center gap-[6px] text-[13px] font-medium text-[#4f5c53] hover:text-[#2E4A39] transition-colors"
                             >
-                                ← Back to trip
+                                {t('dates.back')}
                             </button>
                             <button
                                 type="submit"
                                 disabled={processing || !data.schedule_id}
                                 className="flex items-center gap-[8px] px-[28px] py-[13px] rounded-full bg-[#2E4A39] text-white text-[14px] font-semibold hover:bg-[#1e3326] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
-                                {processing ? 'Saving…' : 'Continue to details'} →
+                                {processing ? t('dates.saving') : `${t('dates.continue')} →`}
                             </button>
                         </div>
                     </div>

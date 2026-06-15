@@ -56,8 +56,9 @@ function Avatar({ name, src, size = 40 }: { name: string; src?: string; size?: n
 }
 
 export default function TourShow({ tour }: Props) {
-    const { auth } = usePage<PageProps>().props;
+    const { auth, locale } = usePage<PageProps>().props;
     const { t } = useLaravelReactI18n();
+    const dateLocale = { en: 'en-US', fr: 'fr-FR', es: 'es-ES' }[locale] ?? 'en-US';
     const [activeTab, setActiveTab]               = useState('overview');
     const [selectedSchedule, setSelectedSchedule] = useState<TourSchedule | null>(tour.schedules?.[0] ?? null);
     const [travelers, setTravelers]               = useState(2);
@@ -80,7 +81,7 @@ export default function TourShow({ tour }: Props) {
 
     const cancellationDate = selectedSchedule
         ? new Date(new Date(selectedSchedule.start_date).getTime() - (tour.cancellation_days ?? 30) * 86400000)
-              .toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+              .toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })
         : null;
 
     const TABS = [
@@ -444,9 +445,9 @@ export default function TourShow({ tour }: Props) {
                                             <option value="">{t('show.select_date')}</option>
                                             {tour.schedules?.map(s => (
                                                 <option key={s.id} value={s.id}>
-                                                    {new Date(s.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} –{' '}
-                                                    {new Date(s.end_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                                                    {s.seats_left <= 5 ? ` · ${s.seats_left} left` : ''}
+                                                    {new Date(s.start_date).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric' })} –{' '}
+                                                    {new Date(s.end_date).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                    {s.seats_left <= 5 ? ` ${t('show.n_left', { count: s.seats_left })}` : ''}
                                                 </option>
                                             ))}
                                         </select>
@@ -542,6 +543,7 @@ export default function TourShow({ tour }: Props) {
 // ── Review form ──────────────────────────────────────────────────────────────
 function ReviewForm({ tourSlug, userHasReviewed }: { tourSlug: string; userHasReviewed: boolean }) {
     const { auth, locale } = usePage<PageProps>().props;
+    const { t } = useLaravelReactI18n();
     const [hovered, setHovered] = useState(0);
     const { data, setData, post, processing, errors, wasSuccessful, reset } = useForm({
         rating: 0,
@@ -552,13 +554,13 @@ function ReviewForm({ tourSlug, userHasReviewed }: { tourSlug: string; userHasRe
         return (
             <div className="mt-[32px] bg-[#fbf8f2] border border-[#e4ddd0] rounded-[16px] p-[24px] text-center">
                 <Star size={24} className="mx-auto text-[#E07A3F] mb-[10px]" />
-                <p className="text-[15px] font-semibold text-[#16241b] mb-[6px]">Share your experience</p>
-                <p className="text-[13px] text-[#8a968d] mb-[16px]">Sign in to write a review for this safari.</p>
+                <p className="text-[15px] font-semibold text-[#16241b] mb-[6px]">{t('review.share_exp')}</p>
+                <p className="text-[13px] text-[#8a968d] mb-[16px]">{t('review.sign_in_prompt')}</p>
                 <Link
                     href={`/${locale}/login`}
                     className="inline-block px-[20px] py-[10px] rounded-full bg-[#2E4A39] text-white text-[13px] font-semibold hover:bg-[#3a5c4a] transition-colors"
                 >
-                    Sign in to review
+                    {t('review.sign_in_btn')}
                 </Link>
             </div>
         );
@@ -569,8 +571,8 @@ function ReviewForm({ tourSlug, userHasReviewed }: { tourSlug: string; userHasRe
             <div className="mt-[32px] bg-[#f0f7f2] border border-[#b8d4be] rounded-[16px] p-[20px] flex items-center gap-[14px]">
                 <CheckCircle2 size={22} className="text-[#2E4A39] shrink-0" />
                 <div>
-                    <p className="text-[14px] font-semibold text-[#16241b]">You've already reviewed this safari</p>
-                    <p className="text-[12px] text-[#8a968d] mt-[2px]">Thank you for your feedback!</p>
+                    <p className="text-[14px] font-semibold text-[#16241b]">{t('review.already_reviewed')}</p>
+                    <p className="text-[12px] text-[#8a968d] mt-[2px]">{t('review.thanks_feedback')}</p>
                 </div>
             </div>
         );
@@ -581,8 +583,8 @@ function ReviewForm({ tourSlug, userHasReviewed }: { tourSlug: string; userHasRe
             <div className="mt-[32px] bg-[#f0f7f2] border border-[#b8d4be] rounded-[16px] p-[20px] flex items-center gap-[14px]">
                 <CheckCircle2 size={22} className="text-[#2E4A39] shrink-0" />
                 <div>
-                    <p className="text-[14px] font-semibold text-[#16241b]">Review submitted — thank you!</p>
-                    <p className="text-[12px] text-[#8a968d] mt-[2px]">Your review will appear after moderation.</p>
+                    <p className="text-[14px] font-semibold text-[#16241b]">{t('review.submitted')}</p>
+                    <p className="text-[12px] text-[#8a968d] mt-[2px]">{t('review.after_moderation')}</p>
                 </div>
             </div>
         );
@@ -595,11 +597,11 @@ function ReviewForm({ tourSlug, userHasReviewed }: { tourSlug: string; userHasRe
 
     return (
         <div className="mt-[32px] bg-white border border-[#e4ddd0] rounded-[16px] p-[24px]">
-            <h3 className="text-[16px] font-bold text-[#16241b] mb-[18px]">Write a review</h3>
+            <h3 className="text-[16px] font-bold text-[#16241b] mb-[18px]">{t('review.write')}</h3>
             <form onSubmit={handleSubmit}>
                 {/* Star selector */}
                 <div className="mb-[16px]">
-                    <p className="text-[12px] font-bold uppercase tracking-[1px] text-[#8a968d] mb-[8px]">Your rating</p>
+                    <p className="text-[12px] font-bold uppercase tracking-[1px] text-[#8a968d] mb-[8px]">{t('review.your_rating')}</p>
                     <div className="flex items-center gap-[4px]">
                         {[1, 2, 3, 4, 5].map(n => (
                             <button
@@ -626,12 +628,12 @@ function ReviewForm({ tourSlug, userHasReviewed }: { tourSlug: string; userHasRe
 
                 {/* Body */}
                 <div className="mb-[18px]">
-                    <p className="text-[12px] font-bold uppercase tracking-[1px] text-[#8a968d] mb-[8px]">Your experience</p>
+                    <p className="text-[12px] font-bold uppercase tracking-[1px] text-[#8a968d] mb-[8px]">{t('review.your_exp')}</p>
                     <textarea
                         value={data.body}
                         onChange={e => setData('body', e.target.value)}
                         rows={4}
-                        placeholder="Tell future travellers what made this safari special… (min 20 characters)"
+                        placeholder={t('review.placeholder')}
                         className="w-full px-[14px] py-[12px] rounded-[12px] border border-[#e4ddd0] text-[14px] text-[#16241b] bg-[#fbf8f2] resize-none focus:outline-none focus:border-[#2E4A39] placeholder:text-[#b0b8b2]"
                     />
                     {errors.body && <p className="text-[12px] text-red-500 mt-[4px]">{errors.body}</p>}
@@ -642,7 +644,7 @@ function ReviewForm({ tourSlug, userHasReviewed }: { tourSlug: string; userHasRe
                     disabled={processing || data.rating === 0 || data.body.length < 20}
                     className="px-[24px] py-[11px] rounded-full bg-[#2E4A39] text-white text-[13px] font-semibold hover:bg-[#3a5c4a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {processing ? 'Submitting…' : 'Submit review'}
+                    {processing ? t('review.submitting') : t('review.submit')}
                 </button>
             </form>
         </div>

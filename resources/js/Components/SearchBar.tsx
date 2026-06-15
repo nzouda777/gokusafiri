@@ -3,12 +3,20 @@ import {
     Search, MapPin, Calendar, Users, Compass,
     ChevronLeft, ChevronRight, Minus, Plus,
 } from 'lucide-react';
-import { router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 import {
     format, addMonths, subMonths, startOfMonth, endOfMonth,
     eachDayOfInterval, getDay, isSameDay, isBefore, isAfter,
     startOfDay, isToday,
 } from 'date-fns';
+import { enUS, fr as frLocale, es as esLocale } from 'date-fns/locale';
+import type { PageProps } from '../types';
+import type { Locale } from 'date-fns';
+
+// ─── Date-fns locale map ──────────────────────────────────────────────────────
+
+const DATE_LOCALES: Record<string, Locale> = { en: enUS, fr: frLocale, es: esLocale };
 
 // ─── Static data ──────────────────────────────────────────────────────────────
 
@@ -25,23 +33,11 @@ const DESTINATIONS = [
     { name: 'Kruger National Park', country: 'South Africa', slug: 'kruger' },
 ];
 
-const EXPERIENCES = [
-    { value: 'safari',    label: 'Safari',           emoji: '🦁' },
-    { value: 'beach',     label: 'Beaches',          emoji: '🏖️' },
-    { value: 'mountain',  label: 'Mountains',        emoji: '🏔️' },
-    { value: 'culture',   label: 'Culture',          emoji: '🎭' },
-    { value: 'gorilla',   label: 'Gorilla trekking', emoji: '🦍' },
-    { value: 'honeymoon', label: 'Honeymoon',        emoji: '💑' },
-];
-
-const DAY_LABELS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
-
 type ActiveField = 'destination' | 'dates' | 'travelers' | 'experience' | null;
 
 interface TravelerState { adults: number; children: number; infants: number }
 
 interface Props {
-    /** When true the bar sits inside a sticky container on the Tours page */
     sticky?: boolean;
     initialValues?: {
         destination?: string;
@@ -51,7 +47,7 @@ interface Props {
     };
 }
 
-// ─── Popover shell — defined OUTSIDE SearchBar to avoid remounting ─────────────
+// ─── Popover shell ────────────────────────────────────────────────────────────
 
 function Popover({ children, className = '' }: { children: React.ReactNode; className?: string }) {
     return (
@@ -72,9 +68,12 @@ interface CalendarProps {
     endDate: Date | null;
     onSelect: (start: Date | null, end: Date | null) => void;
     onClose: () => void;
+    dateLocale: Locale;
+    dayLabels: string[];
+    t: (key: string) => string;
 }
 
-function CalendarPanel({ startDate, endDate, onSelect, onClose }: CalendarProps) {
+function CalendarPanel({ startDate, endDate, onSelect, onClose, dateLocale, dayLabels, t }: CalendarProps) {
     const today = startOfDay(new Date());
     const [viewMonth, setViewMonth] = useState(today);
     const [hovered, setHovered] = useState<Date | null>(null);
@@ -124,8 +123,8 @@ function CalendarPanel({ startDate, endDate, onSelect, onClose }: CalendarProps)
                                         <ChevronLeft size={15} className="text-[#8a968d]" />
                                     </button>
                                 ) : <span className="w-7" />}
-                                <span className="text-[13px] font-semibold text-[#1a211c]">
-                                    {format(month, 'MMMM yyyy')}
+                                <span className="text-[13px] font-semibold text-[#1a211c] capitalize">
+                                    {format(month, 'MMMM yyyy', { locale: dateLocale })}
                                 </span>
                                 {mi === 1 ? (
                                     <button
@@ -139,7 +138,7 @@ function CalendarPanel({ startDate, endDate, onSelect, onClose }: CalendarProps)
 
                             {/* Day-of-week labels */}
                             <div className="grid grid-cols-7 mb-1">
-                                {DAY_LABELS.map(d => (
+                                {dayLabels.map(d => (
                                     <span key={d} className="text-center text-[11px] font-semibold text-[#8a968d] py-1">
                                         {d}
                                     </span>
@@ -196,14 +195,14 @@ function CalendarPanel({ startDate, endDate, onSelect, onClose }: CalendarProps)
                     onClick={() => onSelect(null, null)}
                     className="text-[13px] text-[#8a968d] hover:text-[#1a211c] transition-colors"
                 >
-                    Clear dates
+                    {t('cal.clear_dates')}
                 </button>
                 <button
                     onClick={onClose}
                     disabled={!startDate}
                     className="px-4 py-2 bg-[#6e8c79] text-white text-[13px] font-semibold rounded-full hover:bg-[#5a7865] disabled:opacity-40 transition-colors"
                 >
-                    {startDate && !endDate ? 'Pick end date' : 'Apply'}
+                    {startDate && !endDate ? t('cal.pick_end') : t('cal.apply')}
                 </button>
             </div>
         </div>
@@ -216,13 +215,14 @@ interface TravelersPanelProps {
     value: TravelerState;
     onChange: (v: TravelerState) => void;
     onClose: () => void;
+    t: (key: string) => string;
 }
 
-function TravelersPanel({ value, onChange, onClose }: TravelersPanelProps) {
-    const rows: { key: keyof TravelerState; label: string; sub: string; min: number }[] = [
-        { key: 'adults',   label: 'Adults',   sub: 'Age 13+',       min: 1 },
-        { key: 'children', label: 'Children', sub: 'Age 2–12',      min: 0 },
-        { key: 'infants',  label: 'Infants',  sub: 'Under 2, free', min: 0 },
+function TravelersPanel({ value, onChange, onClose, t }: TravelersPanelProps) {
+    const rows: { key: keyof TravelerState; labelKey: string; subKey: string; min: number }[] = [
+        { key: 'adults',   labelKey: 'search.adults',   subKey: 'search.adults_sub',   min: 1 },
+        { key: 'children', labelKey: 'search.children', subKey: 'search.children_sub', min: 0 },
+        { key: 'infants',  labelKey: 'search.infants',  subKey: 'search.infants_sub',  min: 0 },
     ];
 
     function adjust(key: keyof TravelerState, delta: number) {
@@ -239,8 +239,8 @@ function TravelersPanel({ value, onChange, onClose }: TravelersPanelProps) {
                         className={`flex items-center justify-between py-3.5 ${i < rows.length - 1 ? 'border-b border-[#f0ede8]' : ''}`}
                     >
                         <div>
-                            <div className="text-[14px] font-semibold text-[#1a211c]">{row.label}</div>
-                            <div className="text-[12px] text-[#8a968d] mt-0.5">{row.sub}</div>
+                            <div className="text-[14px] font-semibold text-[#1a211c]">{t(row.labelKey)}</div>
+                            <div className="text-[12px] text-[#8a968d] mt-0.5">{t(row.subKey)}</div>
                         </div>
                         <div className="flex items-center gap-3">
                             <button
@@ -272,7 +272,7 @@ function TravelersPanel({ value, onChange, onClose }: TravelersPanelProps) {
                     className="w-full py-2.5 bg-[#6e8c79] text-white text-[14px] font-semibold rounded-full
                                hover:bg-[#5a7865] transition-colors"
                 >
-                    Done
+                    {t('search.done')}
                 </button>
             </div>
         </div>
@@ -282,7 +282,25 @@ function TravelersPanel({ value, onChange, onClose }: TravelersPanelProps) {
 // ─── Main SearchBar ───────────────────────────────────────────────────────────
 
 export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
+    const { locale } = usePage<PageProps>().props;
+    const { t } = useLaravelReactI18n();
     const barRef = useRef<HTMLDivElement>(null);
+
+    const dateLocale = DATE_LOCALES[locale] ?? enUS;
+
+    const DAY_LABELS = [
+        t('cal.day_mo'), t('cal.day_tu'), t('cal.day_we'), t('cal.day_th'),
+        t('cal.day_fr'), t('cal.day_sa'), t('cal.day_su'),
+    ];
+
+    const EXPERIENCES = [
+        { value: 'safari',    labelKey: 'search.exp_safari',    emoji: '🦁' },
+        { value: 'beach',     labelKey: 'search.exp_beach',     emoji: '🏖️' },
+        { value: 'mountain',  labelKey: 'search.exp_mountain',  emoji: '🏔️' },
+        { value: 'culture',   labelKey: 'search.exp_culture',   emoji: '🎭' },
+        { value: 'gorilla',   labelKey: 'search.exp_gorilla',   emoji: '🦍' },
+        { value: 'honeymoon', labelKey: 'search.exp_honeymoon', emoji: '💑' },
+    ];
 
     const [active, setActive] = useState<ActiveField>(null);
 
@@ -310,7 +328,6 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
         return () => document.removeEventListener('mousedown', onDown);
     }, [close]);
 
-    // Toggle a field open/close
     function toggle(field: ActiveField) {
         setActive(prev => (prev === field ? null : field));
     }
@@ -319,17 +336,19 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
 
     const datesLabel = startDate
         ? endDate
-            ? `${format(startDate, 'MMM d')} – ${format(endDate, 'MMM d, yyyy')}`
-            : `${format(startDate, 'MMM d')} →`
+            ? `${format(startDate, 'MMM d', { locale: dateLocale })} – ${format(endDate, 'MMM d, yyyy', { locale: dateLocale })}`
+            : `${format(startDate, 'MMM d', { locale: dateLocale })} →`
         : '';
 
     const travelersLabel = [
-        travelers.adults   ? `${travelers.adults} adult${travelers.adults   > 1 ? 's' : ''}` : '',
-        travelers.children ? `${travelers.children} child${travelers.children > 1 ? 'ren' : ''}` : '',
-        travelers.infants  ? `${travelers.infants} infant${travelers.infants  > 1 ? 's' : ''}` : '',
+        travelers.adults   ? `${travelers.adults} ${travelers.adults   > 1 ? t('search.adults').toLowerCase()   : t('search.adults').toLowerCase().replace(/s$/, '')}` : '',
+        travelers.children ? `${travelers.children} ${travelers.children > 1 ? t('search.children').toLowerCase() : t('search.children').toLowerCase().replace(/s$/, '')}` : '',
+        travelers.infants  ? `${travelers.infants} ${travelers.infants  > 1 ? t('search.infants').toLowerCase()  : t('search.infants').toLowerCase().replace(/s$/, '')}` : '',
     ].filter(Boolean).join(', ');
 
-    const expLabel = EXPERIENCES.find(e => e.value === experience)?.label ?? '';
+    const expLabel = EXPERIENCES.find(e => e.value === experience)?.labelKey
+        ? t(EXPERIENCES.find(e => e.value === experience)!.labelKey)
+        : '';
 
     // ── Destination list ─────────────────────────────────────────────────────
     const filtered = DESTINATIONS.filter(d =>
@@ -348,7 +367,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
         if (tot > 0)    params.travelers  = String(tot);
         if (experience) params.experience = experience;
         setActive(null);
-        router.get('/tours', params);
+        router.get(`/${locale}/tours`, params);
     }
 
     // ── Shared styles ─────────────────────────────────────────────────────────
@@ -357,7 +376,6 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
          ${active === f ? 'bg-[#eef3ec]' : 'hover:bg-[#f9f9f9]'}`;
 
     return (
-        // barRef wraps the entire bar + its absolutely-positioned popovers
         <div ref={barRef} className="relative w-full">
 
             {/* ── Pill ─────────────────────────────────────────────────────── */}
@@ -367,10 +385,10 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
 
                 {/* Destination */}
                 <div className={field('destination')} onClick={() => toggle('destination')}>
-                    <span className="text-[11px] font-bold text-[#8a968d] tracking-[1.1px] uppercase">Destination</span>
+                    <span className="text-[11px] font-bold text-[#8a968d] tracking-[1.1px] uppercase">{t('search.destination')}</span>
                     <input
                         type="text"
-                        placeholder="Where to?"
+                        placeholder={t('search.destination_placeholder')}
                         value={destQuery}
                         onChange={e => {
                             setDestQuery(e.target.value);
@@ -386,9 +404,9 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
 
                 {/* Dates */}
                 <div className={field('dates')} onClick={() => toggle('dates')}>
-                    <span className="text-[11px] font-bold text-[#8a968d] tracking-[1.1px] uppercase">Dates</span>
+                    <span className="text-[11px] font-bold text-[#8a968d] tracking-[1.1px] uppercase">{t('search.dates')}</span>
                     <span className={`text-[15px] leading-[22px] ${datesLabel ? 'text-[#1a211c]' : 'text-[#8a968d]'}`}>
-                        {datesLabel || 'Add dates'}
+                        {datesLabel || t('search.dates_placeholder')}
                     </span>
                 </div>
 
@@ -396,9 +414,9 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
 
                 {/* Travelers */}
                 <div className={field('travelers')} onClick={() => toggle('travelers')}>
-                    <span className="text-[11px] font-bold text-[#8a968d] tracking-[1.1px] uppercase">Travelers</span>
+                    <span className="text-[11px] font-bold text-[#8a968d] tracking-[1.1px] uppercase">{t('search.travelers')}</span>
                     <span className={`text-[15px] leading-[22px] ${travelersLabel ? 'text-[#1a211c]' : 'text-[#8a968d]'}`}>
-                        {travelersLabel || '2 adults'}
+                        {travelersLabel || t('search.travelers_placeholder')}
                     </span>
                 </div>
 
@@ -406,9 +424,9 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
 
                 {/* Experience */}
                 <div className={field('experience')} onClick={() => toggle('experience')}>
-                    <span className="text-[11px] font-bold text-[#8a968d] tracking-[1.1px] uppercase">Experience</span>
+                    <span className="text-[11px] font-bold text-[#8a968d] tracking-[1.1px] uppercase">{t('search.experience')}</span>
                     <span className={`text-[15px] leading-[22px] ${expLabel ? 'text-[#1a211c]' : 'text-[#8a968d]'}`}>
-                        {expLabel || 'Any'}
+                        {expLabel || t('search.experience_placeholder')}
                     </span>
                 </div>
 
@@ -431,11 +449,11 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                 <Popover className="left-0 w-[320px]">
                     <div className="max-h-[300px] overflow-y-auto py-2">
                         {filtered.length === 0 ? (
-                            <div className="px-5 py-4 text-[13px] text-[#8a968d]">No destinations found</div>
+                            <div className="px-5 py-4 text-[13px] text-[#8a968d]">{t('search.no_destinations')}</div>
                         ) : filtered.map(d => (
                             <button
                                 key={d.slug}
-                                onMouseDown={e => e.preventDefault()} // prevent blur before click
+                                onMouseDown={e => e.preventDefault()}
                                 onClick={() => {
                                     setDestQuery(d.name);
                                     setDestSelected(d.slug);
@@ -464,6 +482,9 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                         endDate={endDate}
                         onSelect={(s, e) => { setStartDate(s); setEndDate(e); }}
                         onClose={() => setActive(null)}
+                        dateLocale={dateLocale}
+                        dayLabels={DAY_LABELS}
+                        t={t}
                     />
                 </Popover>
             )}
@@ -475,6 +496,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                         value={travelers}
                         onChange={setTravelers}
                         onClose={() => setActive(null)}
+                        t={t}
                     />
                 </Popover>
             )}
@@ -490,7 +512,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                             }`}
                         >
                             <Compass size={16} className="text-[#6e8c79] shrink-0" />
-                            All experiences
+                            {t('search.all_experiences')}
                         </button>
                         {EXPERIENCES.map(ex => (
                             <button
@@ -503,7 +525,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                                 }`}
                             >
                                 <span className="text-base shrink-0">{ex.emoji}</span>
-                                {ex.label}
+                                {t(ex.labelKey)}
                             </button>
                         ))}
                     </div>

@@ -1,16 +1,18 @@
 import { Link, usePage } from '@inertiajs/react';
 import { Lock, CheckCircle2 } from 'lucide-react';
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 import type { PageProps } from '../types';
 
-const STEPS = [
-    { n: 1, label: 'Trip & dates' },
-    { n: 2, label: 'Travelers details' },
-    { n: 3, label: 'Payment' },
-    { n: 4, label: 'Confirmation' },
-];
-
 export default function CheckoutLayout({ children, step }: { children: React.ReactNode; step: number }) {
-    const { auth } = usePage<PageProps>().props;
+    const { auth, locale } = usePage<PageProps>().props;
+    const { t } = useLaravelReactI18n();
+
+    const STEPS = [
+        { n: 1, labelKey: 'checkout.step1' },
+        { n: 2, labelKey: 'checkout.step2' },
+        { n: 3, labelKey: 'checkout.step3' },
+        { n: 4, labelKey: 'checkout.step4' },
+    ];
 
     return (
         <div className="min-h-screen flex flex-col bg-[#f5f7f5]">
@@ -19,7 +21,7 @@ export default function CheckoutLayout({ children, step }: { children: React.Rea
             <header className="bg-white border-b border-[#e4ddd0] h-[68px] flex items-center shrink-0 z-20">
                 <div className="max-w-[1200px] w-full mx-auto px-6 flex items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-[8px]">
+                    <Link href={`/${locale}`} className="flex items-center gap-[8px]">
                         <img
                             src="/images/logo.svg"
                             alt="GokuSafiri"
@@ -34,7 +36,7 @@ export default function CheckoutLayout({ children, step }: { children: React.Rea
                     {/* Secure checkout badge */}
                     <div className="flex items-center gap-[6px] text-[13px] text-[#8a968d] font-medium">
                         <Lock size={13} className="text-[#2E4A39]" />
-                        Secure checkout
+                        {t('checkout.secure')}
                     </div>
 
                     {/* Right actions */}
@@ -42,15 +44,15 @@ export default function CheckoutLayout({ children, step }: { children: React.Rea
                         {auth.user ? (
                             <span className="text-[13px] text-[#4f5c53]">{auth.user.name}</span>
                         ) : (
-                            <Link href="/login" className="text-[13px] text-[#4f5c53] hover:text-[#2E4A39] transition-colors">
-                                Sign in
+                            <Link href={`/${locale}/login`} className="text-[13px] text-[#4f5c53] hover:text-[#2E4A39] transition-colors">
+                                {t('nav.sign_in')}
                             </Link>
                         )}
                         <Link
-                            href="/tours"
+                            href={`/${locale}/tours`}
                             className="px-[18px] py-[8px] rounded-full bg-[#2E4A39] text-white text-[13px] font-semibold hover:bg-[#1e3326] transition-colors"
                         >
-                            Plan my trip
+                            {t('nav.plan_trip')}
                         </Link>
                     </div>
                 </div>
@@ -77,7 +79,7 @@ export default function CheckoutLayout({ children, step }: { children: React.Rea
                                         <span className={`text-[11px] font-medium hidden sm:block whitespace-nowrap ${
                                             current ? 'text-[#16241b]' : done ? 'text-[#2E4A39]' : 'text-[#8a968d]'
                                         }`}>
-                                            {s.label}
+                                            {t(s.labelKey)}
                                         </span>
                                     </div>
 
@@ -108,20 +110,20 @@ export default function CheckoutLayout({ children, step }: { children: React.Rea
                         <div>
                             <span className="font-display not-italic text-[18px] font-semibold">GokuSafiri</span>
                             <p className="mt-[10px] text-[13px] text-white/60 leading-[1.6]">
-                                Crafting unforgettable African journeys since 2011. Local expertise, responsible travel, and the trip of a lifetime — every time.
+                                {t('footer.tagline')}
                             </p>
                         </div>
                         {[
-                            { title: 'Explore',  links: ['Safaris', 'Beaches', 'Mountains', 'Custom trips'] },
-                            { title: 'Company',  links: ['About us', 'Our guides', 'Sustainability', 'Careers'] },
-                            { title: 'Support',  links: ['Help center', 'Contact us', 'Cancellation policy', 'Travel insurance'] },
+                            { titleKey: 'footer.explore',  links: ['footer.safaris', 'footer.beaches', 'footer.mountains', 'footer.custom'] },
+                            { titleKey: 'footer.company',  links: ['footer.about', 'footer.guides', 'footer.sustainability', 'footer.careers'] },
+                            { titleKey: 'footer.support',  links: ['footer.help', 'footer.contact', 'footer.cancel_policy', 'footer.insurance'] },
                         ].map(col => (
-                            <div key={col.title}>
-                                <h4 className="text-[12px] font-bold uppercase tracking-[1.2px] text-white/50 mb-[14px]">{col.title}</h4>
+                            <div key={col.titleKey}>
+                                <h4 className="text-[12px] font-bold uppercase tracking-[1.2px] text-white/50 mb-[14px]">{t(col.titleKey)}</h4>
                                 <ul className="space-y-[8px]">
-                                    {col.links.map(l => (
-                                        <li key={l}>
-                                            <a href="#" className="text-[13px] text-white/60 hover:text-white transition-colors">{l}</a>
+                                    {col.links.map(lk => (
+                                        <li key={lk}>
+                                            <a href="#" className="text-[13px] text-white/60 hover:text-white transition-colors">{t(lk)}</a>
                                         </li>
                                     ))}
                                 </ul>
@@ -131,11 +133,11 @@ export default function CheckoutLayout({ children, step }: { children: React.Rea
                 </div>
                 <div className="border-t border-white/10">
                     <div className="max-w-[1200px] mx-auto px-6 py-[16px] flex flex-col sm:flex-row justify-between text-[12px] text-white/40 gap-2">
-                        <span>© 2026 Gokusafiri. All rights reserved.</span>
+                        <span>{t('footer.rights', { year: new Date().getFullYear() })}</span>
                         <div className="flex gap-[16px]">
-                            <a href="#" className="hover:text-white/70">Privacy</a>
-                            <a href="#" className="hover:text-white/70">Terms</a>
-                            <a href="#" className="hover:text-white/70">Cookies</a>
+                            <a href="#" className="hover:text-white/70">{t('footer.privacy')}</a>
+                            <a href="#" className="hover:text-white/70">{t('footer.terms')}</a>
+                            <a href="#" className="hover:text-white/70">{t('footer.cookies')}</a>
                         </div>
                     </div>
                 </div>

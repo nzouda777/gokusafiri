@@ -1,7 +1,8 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import CheckoutLayout from '../../Components/CheckoutLayout';
 import { CheckCircle2, Mail, FileText, Backpack, MapPin, Download } from 'lucide-react';
-import type { Tour, TourSchedule, TourAddon } from '../../types';
+import { useLaravelReactI18n } from 'laravel-react-i18n';
+import type { Tour, TourSchedule, TourAddon, PageProps } from '../../types';
 
 interface Props {
     booking: {
@@ -24,19 +25,48 @@ function fmt(cents: number) {
 }
 
 export default function BookingConfirmation({ booking }: Props) {
+    const { locale } = usePage<PageProps>().props;
+    const { t } = useLaravelReactI18n();
     const { tour, schedule } = booking;
 
+    const dateLocale = { en: 'en-US', fr: 'fr-FR', es: 'es-ES' }[locale] ?? 'en-US';
+
     const dateLabel = schedule
-        ? `${new Date(schedule.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${new Date(schedule.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+        ? `${new Date(schedule.start_date).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric' })} – ${new Date(schedule.end_date).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })}`
         : null;
 
     const perPerson   = tour.base_price;
     const subtotal    = perPerson * booking.travelers_count;
     const addonsTotal = booking.addons?.reduce((s, a) => s + a.addon.price * (a.addon.per === 'person' ? a.quantity : 1), 0) ?? 0;
 
+    const travelersLabel = booking.travelers_count !== 1
+        ? `${booking.travelers_count} ${t('summary.adults')}`
+        : `${booking.travelers_count} ${t('summary.adult')}`;
+
+    const nextSteps = [
+        {
+            n: 1,
+            icon: <Mail size={16} />,
+            title: t('confirm.step1_title'),
+            desc:  t('confirm.step1_desc'),
+        },
+        {
+            n: 2,
+            icon: <FileText size={16} />,
+            title: t('confirm.step2_title'),
+            desc:  t('confirm.step2_desc'),
+        },
+        {
+            n: 3,
+            icon: <Backpack size={16} />,
+            title: t('confirm.step3_title'),
+            desc:  t('confirm.step3_desc'),
+        },
+    ];
+
     return (
         <CheckoutLayout step={4}>
-            <Head title="You're booked!" />
+            <Head title={t('confirm.title')} />
 
             <div className="flex flex-col lg:flex-row gap-[28px] items-start">
 
@@ -49,44 +79,23 @@ export default function BookingConfirmation({ booking }: Props) {
                             <CheckCircle2 size={40} className="text-[#2E4A39]" strokeWidth={1.5} />
                         </div>
                         <h1 className="font-display not-italic text-[36px] leading-[1.15] text-[#16241b] mb-[8px]">
-                            You're booked! 🎉
+                            {t('confirm.title')}
                         </h1>
                         <p className="text-[14px] text-[#4f5c53]">
-                            Confirmation{' '}
-                            <span className="font-bold text-[#16241b]">#{booking.reference}</span>{' '}
-                            sent to {booking.lead_email}.
+                            {t('confirm.subtitle', { ref: booking.reference, email: booking.lead_email })}
                         </p>
                         <p className="text-[13px] text-[#8a968d] mt-[4px]">
-                            A trip specialist will reach out within 24 hours.
+                            {t('confirm.specialist')}
                         </p>
                     </div>
 
                     {/* What happens next */}
                     <div className="bg-white rounded-[18px] border border-[#e4ddd0] p-[24px] mb-[20px]">
                         <h2 className="text-[15px] font-bold text-[#16241b] mb-[20px]">
-                            What happens next
+                            {t('confirm.next_steps')}
                         </h2>
                         <div className="space-y-[20px]">
-                            {[
-                                {
-                                    n: 1,
-                                    icon: <Mail size={16} />,
-                                    title: 'Check your email',
-                                    desc: 'Itinerary, invoice & receipt are on the way',
-                                },
-                                {
-                                    n: 2,
-                                    icon: <FileText size={16} />,
-                                    title: 'Upload travel documents',
-                                    desc: 'Passport copies needed up to 30 days before',
-                                },
-                                {
-                                    n: 3,
-                                    icon: <Backpack size={16} />,
-                                    title: 'Get ready to go',
-                                    desc: "We'll send a packing list & local tips 2 weeks out",
-                                },
-                            ].map(step => (
+                            {nextSteps.map(step => (
                                 <div key={step.n} className="flex items-start gap-[14px]">
                                     <div className="w-[34px] h-[34px] rounded-full bg-[#2E4A39] text-white text-[13px] font-bold flex items-center justify-center shrink-0">
                                         {step.n}
@@ -106,7 +115,7 @@ export default function BookingConfirmation({ booking }: Props) {
                             href="/account/trips"
                             className="flex-1 flex items-center justify-center py-[14px] rounded-full bg-[#2E4A39] text-white text-[14px] font-semibold hover:bg-[#1e3326] transition-colors"
                         >
-                            View my trip dashboard
+                            {t('confirm.view_trips')}
                         </Link>
                         <a
                             href={`/booking/${booking.reference}/itinerary.pdf`}
@@ -114,7 +123,7 @@ export default function BookingConfirmation({ booking }: Props) {
                             className="flex-1 flex items-center justify-center gap-[8px] py-[14px] rounded-full border-[1.5px] border-[#2E4A39] text-[#2E4A39] text-[14px] font-semibold hover:bg-[#eef3ec] transition-colors"
                         >
                             <Download size={14} />
-                            Download Itinerary (PDF)
+                            {t('confirm.download_pdf')}
                         </a>
                     </div>
                 </div>
@@ -148,15 +157,13 @@ export default function BookingConfirmation({ booking }: Props) {
                             <div className="pt-[14px] border-t border-[#f0ede8] space-y-[8px]">
                                 {dateLabel && (
                                     <div className="flex justify-between text-[13px]">
-                                        <span className="text-[#8a968d]">Dates</span>
+                                        <span className="text-[#8a968d]">{t('summary.dates')}</span>
                                         <span className="font-semibold text-[#16241b]">{dateLabel}</span>
                                     </div>
                                 )}
                                 <div className="flex justify-between text-[13px]">
-                                    <span className="text-[#8a968d]">Travelers</span>
-                                    <span className="font-semibold text-[#16241b]">
-                                        {booking.travelers_count} adult{booking.travelers_count !== 1 ? 's' : ''}
-                                    </span>
+                                    <span className="text-[#8a968d]">{t('summary.travelers')}</span>
+                                    <span className="font-semibold text-[#16241b]">{travelersLabel}</span>
                                 </div>
                             </div>
 
@@ -171,16 +178,16 @@ export default function BookingConfirmation({ booking }: Props) {
                                     />
                                 ))}
                                 {(booking.member_discount ?? 0) > 0 && (
-                                    <PriceLine label="Member saving (5%)" amount={-(booking.member_discount!)} accent />
+                                    <PriceLine label={t('summary.member_saving')} amount={-(booking.member_discount!)} accent />
                                 )}
                                 {(booking.taxes ?? 0) > 0 && (
-                                    <PriceLine label="Taxes & fees" amount={booking.taxes!} />
+                                    <PriceLine label={t('summary.taxes')} amount={booking.taxes!} />
                                 )}
                             </div>
 
                             {/* Total paid */}
                             <div className="mt-[14px] pt-[14px] border-t border-[#e4ddd0] flex justify-between items-baseline">
-                                <span className="text-[14px] font-bold text-[#16241b]">Total paid</span>
+                                <span className="text-[14px] font-bold text-[#16241b]">{t('summary.total_paid')}</span>
                                 <span className="text-[20px] font-bold text-[#16241b]">{fmt(booking.total_amount)}</span>
                             </div>
 
@@ -189,9 +196,10 @@ export default function BookingConfirmation({ booking }: Props) {
                                 <div className="mt-[12px] flex items-start gap-[8px] bg-[#eef3ec] rounded-[12px] px-[12px] py-[10px]">
                                     <CheckCircle2 size={13} className="text-[#2E4A39] mt-[1px] shrink-0" />
                                     <p className="text-[12px] text-[#2E4A39] font-medium leading-[1.4]">
-                                        Free cancellation until{' '}
-                                        {new Date(booking.cancellation_deadline).toLocaleDateString('en-US', {
-                                            month: 'short', day: 'numeric', year: 'numeric'
+                                        {t('confirm.free_cancel', {
+                                            date: new Date(booking.cancellation_deadline).toLocaleDateString(dateLocale, {
+                                                month: 'short', day: 'numeric', year: 'numeric'
+                                            })
                                         })}
                                     </p>
                                 </div>

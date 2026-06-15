@@ -1,7 +1,7 @@
 import { Head, router, usePage } from '@inertiajs/react';
 import CheckoutLayout from '../../Components/CheckoutLayout';
 import BookingSummary from '../../Components/BookingSummary';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import {
     Elements,
@@ -12,6 +12,7 @@ import {
     useElements,
 } from '@stripe/react-stripe-js';
 import { Lock, ShieldCheck } from 'lucide-react';
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 import type { Tour, TourSchedule, TourAddon, PageProps } from '../../types';
 
 interface BookingData {
@@ -34,7 +35,6 @@ interface Props {
     client_secret: string | null;
 }
 
-// Stripe element styling — matching Figma inputs
 const STRIPE_STYLE = {
     style: {
         base: {
@@ -54,12 +54,13 @@ function fmt(cents: number) {
 
 export default function BookingPayment({ booking, client_secret }: Props) {
     const { stripe_key } = usePage<PageProps>().props;
-    const stripePromise  = stripe_key ? loadStripe(stripe_key) : null;
+    const { t } = useLaravelReactI18n();
+    const stripePromise = stripe_key ? loadStripe(stripe_key) : null;
 
-    if (! stripePromise) {
+    if (!stripePromise) {
         return (
             <CheckoutLayout step={3}>
-                <Head title="Payment" />
+                <Head title={t('payment.title')} />
                 <div className="text-center py-20 text-[#8a968d]">
                     <p className="text-[14px]">Payment configuration missing. Please contact support.</p>
                 </div>
@@ -74,26 +75,33 @@ export default function BookingPayment({ booking, client_secret }: Props) {
     );
 }
 
-// ─── Inner form — has access to Stripe context ─────────────────────────────
+// ─── Inner form ────────────────────────────────────────────────────────────────
 
 function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; initialClientSecret: string | null }) {
     const stripe   = useStripe();
     const elements = useElements();
+    const { locale } = usePage<PageProps>().props;
+    const { t } = useLaravelReactI18n();
 
-    const [plan, setPlan]             = useState<'full' | 'deposit'>(booking.payment_plan ?? 'deposit');
+    const dateLocale = { en: 'en-US', fr: 'fr-FR', es: 'es-ES' }[locale] ?? 'en-US';
+
+    const [plan, setPlan]                 = useState<'full' | 'deposit'>(booking.payment_plan ?? 'deposit');
     const [clientSecret, setClientSecret] = useState<string | null>(initialClientSecret);
     const [switchingPlan, setSwitchingPlan] = useState(false);
-    const [nameOnCard, setNameOnCard] = useState('');
-    const [agreeTerms, setAgreeTerms] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
-    const [cardError, setCardError]   = useState<string | null>(null);
+    const [nameOnCard, setNameOnCard]     = useState('');
+    const [agreeTerms, setAgreeTerms]     = useState(false);
+    const [submitting, setSubmitting]     = useState(false);
+    const [cardError, setCardError]       = useState<string | null>(null);
 
-    const amountToday    = plan === 'full' ? booking.total_amount : booking.deposit_amount;
-    const fullSaving     = Math.round(booking.total_amount * 0.02);
-    const returnUrl      = `${window.location.origin}/booking/${booking.reference}/payment/complete`;
+    const amountToday = plan === 'full' ? booking.total_amount : booking.deposit_amount;
+    const fullSaving  = Math.round(booking.total_amount * 0.02);
+    const returnUrl   = `${window.location.origin}/booking/${booking.reference}/payment/complete`;
 
-    // ── Switch deposit ↔ full ─────────────────────────────────────────────
-    async function switchPlan(newPlan: 'full' | 'deposit') {
+    const balanceDueDateFormatted = booking.balance_due_date
+        ? new Date(booking.balance_due_date).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })
+        : t('payment.default_due');
+
+    async function switchPlanFn(newPlan: 'full' | 'deposit') {
         if (newPlan === plan || switchingPlan) return;
         setSwitchingPlan(true);
         try {
@@ -107,19 +115,18 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
             setPlan(newPlan);
             setClientSecret(json.client_secret);
         } catch {
-            // keep previous plan if request fails
+            // keep previous plan on failure
         } finally {
             setSwitchingPlan(false);
         }
     }
 
-    // ── Submit payment ────────────────────────────────────────────────────
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        if (! stripe || ! elements || ! agreeTerms || ! clientSecret || submitting) return;
+        if (!stripe || !elements || !agreeTerms || !clientSecret || submitting) return;
 
         const cardNumber = elements.getElement(CardNumberElement);
-        if (! cardNumber) return;
+        if (!cardNumber) return;
 
         setSubmitting(true);
         setCardError(null);
@@ -138,11 +145,9 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
             return;
         }
 
-        // Payment succeeded or is processing
         if (paymentIntent?.status === 'succeeded') {
             router.visit(`/booking/${booking.reference}/confirmation`);
         } else {
-            // e.g. requires_action handled by Stripe (redirect to bank 3DS page)
             router.visit(`/booking/${booking.reference}/payment/complete?payment_intent=${paymentIntent?.id}&redirect_status=${paymentIntent?.status}`);
         }
     }
@@ -151,7 +156,7 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
 
     return (
         <CheckoutLayout step={3}>
-            <Head title="Payment" />
+            <Head title={t('payment.title')} />
 
             <form onSubmit={handleSubmit}>
                 <div className="flex flex-col lg:flex-row gap-[28px] items-start">
@@ -162,18 +167,18 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                         {/* Page title */}
                         <div className="mb-[4px]">
                             <h1 className="font-display not-italic text-[32px] leading-[1.15] text-[#16241b]">
-                                Payment
+                                {t('payment.title')}
                             </h1>
                             <p className="text-[13px] text-[#8a968d] mt-[4px] flex items-center gap-[5px]">
                                 <Lock size={11} />
-                                Step 3 of 4 · 256-bit encrypted & secure
+                                {t('payment.step_hint')}
                             </p>
                         </div>
 
                         {/* ── How would you like to pay? ─────── */}
                         <div className="bg-white rounded-[18px] border border-[#e4ddd0] p-[22px]">
                             <h2 className="text-[15px] font-bold text-[#16241b] mb-[14px]">
-                                How would you like to pay?
+                                {t('payment.how_pay')}
                             </h2>
                             <div className="space-y-[10px]">
 
@@ -184,17 +189,17 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                                         : 'border-[#e4ddd0] bg-white hover:border-[#c5d3c8]'
                                 } ${switchingPlan ? 'opacity-60 pointer-events-none' : ''}`}>
                                     <input type="radio" name="plan" checked={plan === 'full'}
-                                        onChange={() => switchPlan('full')} className="sr-only" />
+                                        onChange={() => switchPlanFn('full')} className="sr-only" />
                                     <Radio active={plan === 'full'} />
                                     <div className="flex-1 min-w-0">
                                         <div className="flex flex-wrap items-center gap-[8px]">
-                                            <span className="text-[14px] font-bold text-[#16241b]">Pay in full</span>
+                                            <span className="text-[14px] font-bold text-[#16241b]">{t('payment.pay_full')}</span>
                                             <span className="text-[12px] font-semibold text-white bg-[#2E4A39] px-[8px] py-[2px] rounded-full">
-                                                {fmt(booking.total_amount)} today
+                                                {t('payment.full_today', { amount: fmt(booking.total_amount) })}
                                             </span>
                                         </div>
                                         <p className="text-[12px] text-[#8a968d] mt-[3px]">
-                                            Save {fmt(fullSaving)} vs deposit plan
+                                            {t('payment.full_saving', { amount: fmt(fullSaving) })}
                                         </p>
                                     </div>
                                 </label>
@@ -206,22 +211,21 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                                         : 'border-[#e4ddd0] bg-white hover:border-[#c5d3c8]'
                                 } ${switchingPlan ? 'opacity-60 pointer-events-none' : ''}`}>
                                     <input type="radio" name="plan" checked={plan === 'deposit'}
-                                        onChange={() => switchPlan('deposit')} className="sr-only" />
+                                        onChange={() => switchPlanFn('deposit')} className="sr-only" />
                                     <Radio active={plan === 'deposit'} />
                                     <div className="flex-1 min-w-0">
                                         <div className="flex flex-wrap items-center gap-[8px]">
-                                            <span className="text-[14px] font-bold text-[#16241b]">Reserve with deposit</span>
+                                            <span className="text-[14px] font-bold text-[#16241b]">{t('payment.pay_deposit')}</span>
                                             <span className="text-[12px] font-semibold text-[#E07A3F] bg-[#E07A3F]/10 px-[8px] py-[2px] rounded-full">
-                                                20% today
+                                                {t('payment.deposit_pct')}
                                             </span>
                                         </div>
                                         <p className="text-[12px] text-[#8a968d] mt-[3px]">
-                                            {fmt(booking.deposit_amount)} today ·{' '}
-                                            remaining {fmt(booking.balance_amount)} due{' '}
-                                            {booking.balance_due_date
-                                                ? new Date(booking.balance_due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                                                : '30 days before departure'
-                                            }
+                                            {t('payment.deposit_desc', {
+                                                deposit: fmt(booking.deposit_amount),
+                                                balance: fmt(booking.balance_amount),
+                                                date: balanceDueDateFormatted,
+                                            })}
                                         </p>
                                     </div>
                                 </label>
@@ -231,9 +235,8 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                         {/* ── Card details ─────────────────────── */}
                         <div className="bg-white rounded-[18px] border border-[#e4ddd0] p-[22px]">
                             <div className="flex items-center justify-between mb-[18px]">
-                                <h2 className="text-[15px] font-bold text-[#16241b]">Card details</h2>
+                                <h2 className="text-[15px] font-bold text-[#16241b]">{t('payment.card_details')}</h2>
                                 <div className="flex items-center gap-[6px]">
-                                    {/* Card logos */}
                                     {['Visa', 'MC', 'Amex'].map(b => (
                                         <span key={b} className="text-[10px] font-bold text-[#8a968d] bg-[#f0ede8] px-[6px] py-[2px] rounded-[4px]">
                                             {b}
@@ -246,7 +249,7 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                                 {/* Card number */}
                                 <div>
                                     <label className="block text-[11px] font-bold tracking-[1px] uppercase text-[#8a968d] mb-[7px]">
-                                        Card number
+                                        {t('payment.card_number')}
                                     </label>
                                     <div className="px-[14px] py-[12px] rounded-[10px] border border-[#e4ddd0] bg-[#fbf8f2] focus-within:border-[#2E4A39] transition-colors">
                                         <CardNumberElement options={STRIPE_STYLE} />
@@ -257,7 +260,7 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                                 <div className="grid grid-cols-3 gap-[10px]">
                                     <div>
                                         <label className="block text-[11px] font-bold tracking-[1px] uppercase text-[#8a968d] mb-[7px]">
-                                            Expiry date
+                                            {t('payment.expiry')}
                                         </label>
                                         <div className="px-[14px] py-[12px] rounded-[10px] border border-[#e4ddd0] bg-[#fbf8f2] focus-within:border-[#2E4A39] transition-colors">
                                             <CardExpiryElement options={STRIPE_STYLE} />
@@ -265,7 +268,7 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                                     </div>
                                     <div>
                                         <label className="block text-[11px] font-bold tracking-[1px] uppercase text-[#8a968d] mb-[7px]">
-                                            CVV
+                                            {t('payment.cvv')}
                                         </label>
                                         <div className="px-[14px] py-[12px] rounded-[10px] border border-[#e4ddd0] bg-[#fbf8f2] focus-within:border-[#2E4A39] transition-colors">
                                             <CardCvcElement options={STRIPE_STYLE} />
@@ -273,7 +276,7 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                                     </div>
                                     <div>
                                         <label className="block text-[11px] font-bold tracking-[1px] uppercase text-[#8a968d] mb-[7px]">
-                                            Postal code
+                                            {t('payment.postal')}
                                         </label>
                                         <input
                                             type="text"
@@ -286,7 +289,7 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                                 {/* Name on card */}
                                 <div>
                                     <label className="block text-[11px] font-bold tracking-[1px] uppercase text-[#8a968d] mb-[7px]">
-                                        Name on card
+                                        {t('payment.name_card')}
                                     </label>
                                     <input
                                         type="text"
@@ -298,7 +301,7 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                                 </div>
 
                                 {/* Billing address */}
-                                <CheckboxRow label="Billing address same as lead contact" defaultChecked />
+                                <CheckboxRow label={t('payment.billing_same')} defaultChecked />
                             </div>
 
                             {/* Card error */}
@@ -313,13 +316,13 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                         <CheckboxRow
                             label={
                                 <>
-                                    I agree to Gokusafiri's{' '}
-                                    <a href="#" className="text-[#2E4A39] underline underline-offset-2">booking terms</a>
-                                    ,{' '}
-                                    <a href="#" className="text-[#2E4A39] underline underline-offset-2">cancellation policy</a>
-                                    {' '}and{' '}
-                                    <a href="#" className="text-[#2E4A39] underline underline-offset-2">privacy notice</a>
-                                    .
+                                    {t('payment.terms_prefix')}{' '}
+                                    <a href="#" className="text-[#2E4A39] underline underline-offset-2">{t('payment.terms_booking')}</a>
+                                    {', '}
+                                    <a href="#" className="text-[#2E4A39] underline underline-offset-2">{t('payment.terms_cancel')}</a>
+                                    {' '}{t('payment.terms_and')}{' '}
+                                    <a href="#" className="text-[#2E4A39] underline underline-offset-2">{t('payment.terms_privacy')}</a>
+                                    {'.'}
                                 </>
                             }
                             checked={agreeTerms}
@@ -330,11 +333,11 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                         <div className="flex items-center gap-[20px] py-[2px]">
                             <span className="flex items-center gap-[5px] text-[12px] text-[#8a968d]">
                                 <ShieldCheck size={13} className="text-[#2E4A39]" />
-                                Secured by Stripe
+                                {t('payment.secured_stripe')}
                             </span>
                             <span className="flex items-center gap-[5px] text-[12px] text-[#8a968d]">
                                 <Lock size={12} className="text-[#2E4A39]" />
-                                256-bit SSL
+                                {t('payment.ssl')}
                             </span>
                         </div>
 
@@ -344,7 +347,7 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                                 href={`/booking/${booking.reference}/travelers`}
                                 className="text-[13px] font-medium text-[#4f5c53] hover:text-[#2E4A39] transition-colors"
                             >
-                                ← Back
+                                {t('payment.back')}
                             </a>
                             <button
                                 type="submit"
@@ -352,7 +355,7 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
                                 className="flex items-center gap-[8px] px-[28px] py-[13px] rounded-full bg-[#2E4A39] text-white text-[14px] font-semibold hover:bg-[#1e3326] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 <Lock size={13} />
-                                {submitting ? 'Processing…' : `Continue to payment →`}
+                                {submitting ? t('payment.processing') : `${t('payment.submit')} →`}
                             </button>
                         </div>
                     </div>

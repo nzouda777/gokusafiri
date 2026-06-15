@@ -1,5 +1,6 @@
 import { Heart, MapPin, Star, Zap } from 'lucide-react';
 import { router, usePage } from '@inertiajs/react';
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 import type { Tour, PageProps } from '../types';
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
 
 export default function TourCard({ tour, onWishlistToggle }: Props) {
     const { auth, locale } = usePage<PageProps>().props;
+    const { t } = useLaravelReactI18n();
 
     const price = Math.round(tour.base_price / 100).toLocaleString('en-US', {
         style: 'currency', currency: 'USD', maximumFractionDigits: 0,
@@ -18,9 +20,9 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
     const badgeBg = badge === 'NEW' ? 'bg-white text-[#16241b]' : 'bg-[#f0a05e] text-white';
 
     const urgency = tour.seats_left !== undefined && tour.seats_left <= 5
-        ? `Only ${tour.seats_left} slots left this season`
+        ? t('tour.seats_left', { count: tour.seats_left })
         : tour.booked_this_week && tour.booked_this_week > 0
-        ? `Booked ${tour.booked_this_week} times this week`
+        ? t('tour.booked_week', { count: tour.booked_this_week })
         : null;
 
     function handleWishlist(e: React.MouseEvent) {
@@ -76,7 +78,7 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
                         <div className="flex items-center gap-[3px]">
                             <MapPin size={14} className="text-[#8a968d] shrink-0" />
                             <span className="text-[13px] leading-[19.5px] text-[#8a968d] font-medium whitespace-nowrap overflow-hidden text-ellipsis">
-                                {tour.destination?.name}{tour.destination?.country ? `, ${tour.destination.country}` : ''} · {tour.duration_days} days
+                                {tour.destination?.name}{tour.destination?.country ? `, ${tour.destination.country}` : ''} · {t('tour.days', { count: tour.duration_days })}
                             </span>
                         </div>
                         <div className="flex items-center gap-[5px] shrink-0">
@@ -114,13 +116,13 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
                 <div className="flex flex-col gap-[9px]">
                     <div className="flex items-end justify-between">
                         <div className="flex flex-col gap-0">
-                            <span className="text-[12px] font-semibold text-[#8a968d] leading-[18px]">from</span>
+                            <span className="text-[12px] font-semibold text-[#8a968d] leading-[18px]">{t('tour.from')}</span>
                             <span className="font-display not-italic text-[24px] leading-[36px] text-[#1e3326]">
                                 {price}
                             </span>
                         </div>
                         <span className="bg-[#6e8c79] text-white font-bold text-[14px] leading-[21px] px-[18px] py-[10px] rounded-full hover:bg-[#5a7865] transition-colors">
-                            Reserve
+                            {t('tour.reserve')}
                         </span>
                     </div>
 
