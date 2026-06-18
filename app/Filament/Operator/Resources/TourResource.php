@@ -51,8 +51,12 @@ class TourResource extends Resource
                     Forms\Components\TextInput::make('max_group_size')
                         ->label('Max Group Size')->numeric()->default(20),
                     Forms\Components\TextInput::make('base_price')
-                        ->label('Base Price (cents USD)')
+                        ->label('Adult Price (cents USD)')
                         ->numeric()->required(),
+                    Forms\Components\TextInput::make('child_price')
+                        ->label('Child Price under 12 (cents USD)')
+                        ->numeric()->nullable()
+                        ->helperText('Leave blank to use adult price. Infants are free.'),
                     Forms\Components\TextInput::make('cancellation_days')
                         ->label('Free Cancellation (days)')->numeric()->default(30),
                     // Package-only

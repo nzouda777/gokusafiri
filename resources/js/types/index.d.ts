@@ -22,6 +22,7 @@ export interface Tour {
     description: string;
     type: 'tour' | 'package';
     base_price: number;
+    child_price: number | null;
     currency: string;
     duration_days: number;
     max_group_size: number;
@@ -105,7 +106,8 @@ export interface Booking {
     paid_at?: string;
     addons?: BookingAddon[];
     travelers?: Traveler[];
-    cancellation_deadline?: string;
+    cancellation_deadline?: string | null;
+    can_cancel?: boolean;
 }
 
 export interface BookingAddon {

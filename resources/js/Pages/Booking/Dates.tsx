@@ -9,7 +9,9 @@ interface Props {
     booking: {
         reference: string;
         tour: Tour;
-        travelers_count: number;
+        adults: number;
+        children: number;
+        infants: number;
         schedule_id?: number;
         selected_addons?: number[];
     };
@@ -28,19 +30,20 @@ export default function BookingDates({ booking }: Props) {
 
     const { data, setData, post, processing, errors } = useForm({
         schedule_id: booking.schedule_id ?? tour.schedules?.[0]?.id ?? ('' as number | ''),
-        adults:      booking.travelers_count ?? 2,
-        children:    0,
-        infants:     0,
+        adults:      booking.adults ?? 2,
+        children:    booking.children ?? 0,
+        infants:     booking.infants ?? 0,
         addons:      (booking.selected_addons ?? []) as number[],
     });
 
     const selectedSchedule = tour.schedules?.find(s => s.id === Number(data.schedule_id)) ?? null;
 
-    // Live price calculation for sidebar
-    const schedulePrice  = selectedSchedule?.price_override ?? tour.base_price;
-    const subtotal       = schedulePrice * data.adults;
+    // Live price calculation — adults at schedule/base price, children at child_price, infants free
+    const adultPrice     = selectedSchedule?.price_override ?? tour.base_price;
+    const childPrice     = tour.child_price ?? adultPrice;
+    const subtotal       = adultPrice * data.adults + childPrice * data.children;
     const selectedAddons = tour.addons?.filter(a => data.addons.includes(a.id)) ?? [];
-    const addonsTotal    = selectedAddons.reduce((s, a) => s + a.price * data.adults, 0);
+    const addonsTotal    = selectedAddons.reduce((s, a) => s + a.price * (data.adults + data.children), 0);
     const memberDiscount = Math.round(subtotal * 0.05);
     const taxes          = Math.round((subtotal + addonsTotal - memberDiscount) * 0.008);
 
@@ -153,7 +156,7 @@ export default function BookingDates({ booking }: Props) {
                             <div className="divide-y divide-[#f0ede8]">
                                 <Counter
                                     label={t('search.adults')}
-                                    sublabel={t('dates.adults_sub')}
+                                    sublabel={`${fmt(adultPrice)} ${t('show.per_person')}`}
                                     value={data.adults}
                                     min={1}
                                     max={tour.max_group_size ?? 20}
@@ -161,7 +164,7 @@ export default function BookingDates({ booking }: Props) {
                                 />
                                 <Counter
                                     label={t('search.children')}
-                                    sublabel={t('dates.children_sub')}
+                                    sublabel={`${t('dates.children_sub')} · ${fmt(childPrice)} ${t('show.per_person')}`}
                                     value={data.children}
                                     min={0}
                                     max={Math.max(0, (tour.max_group_size ?? 20) - data.adults)}
@@ -255,8 +258,11 @@ export default function BookingDates({ booking }: Props) {
                         <BookingSummary
                             tour={tour}
                             schedule={selectedSchedule}
-                            travelers={data.adults}
-                            addons={selectedAddons.map(a => ({ addon: a, quantity: data.adults }))}
+                            adults={data.adults}
+                            children={data.children}
+                            infants={data.infants}
+                            childPrice={childPrice}
+                            addons={selectedAddons.map(a => ({ addon: a, quantity: data.adults + data.children }))}
                             memberDiscount={memberDiscount}
                             taxes={taxes}
                         />

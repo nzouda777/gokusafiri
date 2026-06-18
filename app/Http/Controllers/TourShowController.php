@@ -79,8 +79,8 @@ class TourShowController extends Controller
                 'inclusions' => $tour->arr('inclusions'),
                 'itinerary' => $tour->arr('itinerary'),
                 'gallery' => $gallery,
-                'hero_url' => $gallery->first()?->offsetGet('hero_url') ?? '',
-                'card_url' => $gallery->first()?->offsetGet('card_url') ?? '',
+                'hero_url' => $gallery->first()['hero_url'] ?? '',
+                'card_url' => $gallery->first()['card_url'] ?? '',
                 'addons' => $tour->addons->map(fn ($a) => [
                     'id'          => $a->id,
                     'name'        => $a->getTranslation('label', app()->getLocale(), false),

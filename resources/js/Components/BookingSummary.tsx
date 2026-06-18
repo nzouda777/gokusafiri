@@ -6,7 +6,12 @@ import type { Tour, TourSchedule, TourAddon, PageProps } from '../types';
 interface Props {
     tour: Tour;
     schedule?: TourSchedule | null;
+    /** Legacy single count (used from pages that don't split by type) */
     travelers?: number;
+    adults?: number;
+    children?: number;
+    infants?: number;
+    childPrice?: number;
     addons?: { addon: TourAddon; quantity: number }[];
     memberDiscount?: number;
     taxes?: number;
@@ -21,7 +26,13 @@ function fmt(cents: number) {
 }
 
 export default function BookingSummary({
-    tour, schedule, travelers = 1, addons = [], memberDiscount = 0, taxes = 0,
+    tour, schedule,
+    travelers,          // legacy: used when adults/children aren't split
+    adults: adultsProp,
+    children: childrenProp = 0,
+    infants: infantsProp = 0,
+    childPrice: childPriceProp,
+    addons = [], memberDiscount = 0, taxes = 0,
     total, depositAmount, showDeposit, showPaid,
 }: Props) {
     const { locale } = usePage<PageProps>().props;
@@ -29,10 +40,18 @@ export default function BookingSummary({
 
     const dateLocale = { en: 'en-US', fr: 'fr-FR', es: 'es-ES' }[locale] ?? 'en-US';
 
-    const perPerson   = tour.base_price;
-    const subtotal    = perPerson * travelers;
-    const addonsTotal = addons.reduce((s, a) => s + a.addon.price * (a.addon.per === 'person' ? a.quantity : 1), 0);
-    const computed    = total ?? (subtotal + addonsTotal - memberDiscount + taxes);
+    const adultPrice = tour.base_price;
+    const childPrice = childPriceProp ?? tour.child_price ?? adultPrice;
+
+    // Support both split (adults/children/infants) and legacy (travelers) usage
+    const adults   = adultsProp ?? travelers ?? 1;
+    const children = adultsProp !== undefined ? childrenProp : 0;
+    const infants  = adultsProp !== undefined ? infantsProp : 0;
+
+    const adultSubtotal   = adultPrice * adults;
+    const childSubtotal   = childPrice * children;
+    const addonsTotal     = addons.reduce((s, a) => s + a.addon.price * (a.addon.per === 'person' ? a.quantity : 1), 0);
+    const computed        = total ?? (adultSubtotal + childSubtotal + addonsTotal - memberDiscount + taxes);
 
     const dateLabel = schedule
         ? `${new Date(schedule.start_date).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric' })} – ${new Date(schedule.end_date).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })}`
@@ -51,9 +70,7 @@ export default function BookingSummary({
         ? t('summary.due_today')
         : t('summary.total');
 
-    const travelersLabel = travelers !== 1
-        ? `${travelers} ${t('summary.adults')}`
-        : `${travelers} ${t('summary.adult')}`;
+    const totalPax = adults + children + infants;
 
     return (
         <div className="bg-white rounded-[20px] border border-[#e4ddd0] overflow-hidden sticky top-[120px]">
@@ -61,7 +78,7 @@ export default function BookingSummary({
             {/* Tour image */}
             <div className="aspect-[4/3] overflow-hidden">
                 <img
-                    src={tour.card_url || '/images/placeholder-safari.jpg'}
+                    src={tour.card_url || '/images/tours/serengeti.jpg'}
                     alt={typeof tour.title === 'string' ? tour.title : ''}
                     className="w-full h-full object-cover"
                 />
@@ -80,7 +97,7 @@ export default function BookingSummary({
                 )}
 
                 {/* Date + travelers */}
-                {(dateLabel || travelers) && (
+                {(dateLabel || totalPax > 0) && (
                     <div className="mt-[14px] pt-[14px] border-t border-[#f0ede8] space-y-[7px]">
                         {dateLabel && (
                             <div className="flex justify-between text-[13px]">
@@ -88,10 +105,14 @@ export default function BookingSummary({
                                 <span className="font-semibold text-[#16241b]">{dateLabel}</span>
                             </div>
                         )}
-                        {travelers > 0 && (
+                        {totalPax > 0 && (
                             <div className="flex justify-between text-[13px]">
                                 <span className="text-[#8a968d]">{t('summary.travelers')}</span>
-                                <span className="font-semibold text-[#16241b]">{travelersLabel}</span>
+                                <span className="font-semibold text-[#16241b]">
+                                    {adults} {adults === 1 ? t('summary.adult') : t('summary.adults')}
+                                    {children > 0 && `, ${children} ${t('summary.children')}`}
+                                    {infants > 0 && `, ${infants} ${t('summary.infants')}`}
+                                </span>
                             </div>
                         )}
                     </div>
@@ -99,8 +120,14 @@ export default function BookingSummary({
 
                 {/* Price breakdown */}
                 <div className="mt-[14px] pt-[14px] border-t border-[#f0ede8] space-y-[8px]">
-                    {travelers > 0 && (
-                        <Line label={`${fmt(perPerson)} × ${travelers}`} amount={subtotal} />
+                    {adults > 0 && (
+                        <Line label={`${fmt(adultPrice)} × ${adults} ${adults === 1 ? t('summary.adult') : t('summary.adults')}`} amount={adultSubtotal} />
+                    )}
+                    {children > 0 && (
+                        <Line label={`${fmt(childPrice)} × ${children} ${t('summary.children')}`} amount={childSubtotal} />
+                    )}
+                    {infants > 0 && (
+                        <Line label={`${infants} ${t('summary.infants')}`} amount={0} muted freeLabel={t('summary.free')} />
                     )}
                     {addons.map(a => (
                         <Line
@@ -137,15 +164,14 @@ export default function BookingSummary({
     );
 }
 
-function Line({ label, amount, accent }: { label: string; amount: number; accent?: boolean }) {
-    const color = accent ? 'text-[#E07A3F]' : 'text-[#4f5c53]';
-    const valColor = accent ? 'text-[#E07A3F]' : 'text-[#16241b]';
+function Line({ label, amount, accent, muted, freeLabel }: { label: string; amount: number; accent?: boolean; muted?: boolean; freeLabel?: string }) {
+    const color    = accent ? 'text-[#E07A3F]' : muted ? 'text-[#8a968d]' : 'text-[#4f5c53]';
+    const valColor = accent ? 'text-[#E07A3F]' : muted ? 'text-[#8a968d]' : 'text-[#16241b]';
+    const display  = freeLabel && amount === 0 ? freeLabel : amount < 0 ? `–${fmt(Math.abs(amount))}` : fmt(amount);
     return (
         <div className="flex justify-between items-center text-[13px]">
             <span className={color}>{label}</span>
-            <span className={`font-medium ${valColor}`}>
-                {amount < 0 ? `–${fmt(Math.abs(amount))}` : fmt(amount)}
-            </span>
+            <span className={`font-medium ${valColor}`}>{display}</span>
         </div>
     );
 }

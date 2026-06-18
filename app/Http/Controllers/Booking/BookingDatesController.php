@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\TourAddon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -41,13 +42,16 @@ class BookingDatesController extends Controller
             'booking' => [
                 'reference'      => $booking->reference,
                 'schedule_id'    => $booking->tour_schedule_id,
-                'travelers_count' => $booking->adults + $booking->children,
+                'adults'         => $booking->adults,
+                'children'       => $booking->children,
+                'infants'        => $booking->infants,
                 'selected_addons' => $selectedAddonIds,
                 'tour' => [
                     'id'               => $tour->id,
                     'title'            => $tour->title,
                     'slug'             => $tour->slug,
                     'base_price'       => $tour->base_price,
+                    'child_price'      => $tour->child_price,
                     'currency'         => $tour->currency,
                     'duration_days'    => $tour->duration_days,
                     'max_group_size'   => $tour->max_group_size,
@@ -74,15 +78,20 @@ class BookingDatesController extends Controller
     {
         $reference = $request->route('reference');
         $request->validate([
-            'schedule_id' => 'required|exists:tour_schedules,id',
-            'adults'      => 'required|integer|min:1|max:20',
-            'children'    => 'required|integer|min:0|max:20',
-            'infants'     => 'required|integer|min:0|max:10',
-            'addons'      => 'array',
-            'addons.*'    => 'exists:tour_addons,id',
+            'schedule_id' => [
+                'required',
+                Rule::exists('tour_schedules', 'id')->where(
+                    fn ($q) => $q->where('starts_at', '>', now())
+                ),
+            ],
+            'adults'   => 'required|integer|min:1|max:20',
+            'children' => 'required|integer|min:0|max:20',
+            'infants'  => 'required|integer|min:0|max:10',
+            'addons'   => 'array',
+            'addons.*' => 'exists:tour_addons,id',
         ]);
 
-        $booking = Booking::where('reference', $reference)->firstOrFail();
+        $booking = Booking::where('reference', $reference)->with('tour')->firstOrFail();
 
         $booking->update([
             'tour_schedule_id' => $request->schedule_id,
@@ -112,12 +121,13 @@ class BookingDatesController extends Controller
     {
         $booking->load(['tour', 'schedule', 'addons.tourAddon']);
 
-        $schedule = $booking->schedule;
-        $tour     = $schedule?->tour ?? $booking->tour;
-        $price    = $schedule?->price_override ?? $tour->base_price;
-        $pax      = $booking->adults + $booking->children;
+        $schedule   = $booking->schedule;
+        $tour       = $schedule?->tour ?? $booking->tour;
+        $adultPrice = $schedule?->price_override ?? $tour->base_price;
+        $childPrice = $tour->child_price ?? $adultPrice; // fallback to adult price if not configured
 
-        $subtotal    = $price * $pax;
+        // Adults pay full price, children pay child_price, infants are free
+        $subtotal    = ($adultPrice * $booking->adults) + ($childPrice * $booking->children);
         $addonsTotal = $booking->addons->sum(fn ($ba) => $ba->unit_price * $ba->quantity);
 
         $memberDiscount = $booking->user_id ? (int) round($subtotal * 0.05) : 0;

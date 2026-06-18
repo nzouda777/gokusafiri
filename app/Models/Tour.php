@@ -24,7 +24,7 @@ class Tour extends Model implements HasMedia
     protected $fillable = [
         'operator_id', 'destination_id', 'type', 'title', 'slug', 'excerpt', 'description',
         'itinerary', 'included', 'excluded', 'inclusions', 'highlights',
-        'base_price', 'currency', 'duration_days', 'max_group_size', 'style',
+        'base_price', 'child_price', 'currency', 'duration_days', 'max_group_size', 'style',
         'lat', 'lng', 'cancellation_days', 'badge', 'discount_percent', 'status',
         'rating_cache', 'reviews_count_cache',
     ];
@@ -36,6 +36,7 @@ class Tour extends Model implements HasMedia
         'inclusions' => 'array',
         'highlights' => 'array',
         'base_price' => 'integer',
+        'child_price' => 'integer',
         'duration_days' => 'integer',
         'max_group_size' => 'integer',
         'cancellation_days' => 'integer',
@@ -130,8 +131,8 @@ class Tour extends Model implements HasMedia
 
     public function registerMediaConversions(?Media $media = null): void
     {
-        $this->addMediaConversion('thumb')->width(400)->height(300)->format('webp');
-        $this->addMediaConversion('card')->width(800)->height(600)->format('webp');
-        $this->addMediaConversion('hero')->width(1920)->height(1080)->format('webp');
+        $this->addMediaConversion('thumb')->width(400)->height(300)->format('jpg');
+        $this->addMediaConversion('card')->width(800)->height(600)->format('jpg');
+        $this->addMediaConversion('hero')->width(1920)->height(1080)->format('jpg');
     }
 }

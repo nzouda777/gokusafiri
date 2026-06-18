@@ -1,7 +1,8 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import AccountLayout from '../../Components/AccountLayout';
-import { Star, Heart, MapPin, Calendar } from 'lucide-react';
-import type { Booking, PageProps, User } from '../../types';
+import { Star, MapPin, Calendar, XCircle } from 'lucide-react';
+import { useState } from 'react';
+import type { Booking, PageProps } from '../../types';
 
 interface Stats {
     upcoming: number;
@@ -133,26 +134,45 @@ export default function AccountTrips({ bookings, stats, next_departure, tab = 'u
 }
 
 function BookingCard({ booking, fmt }: { booking: Booking; fmt: (c: number) => string }) {
+    const [confirmCancel, setConfirmCancel] = useState(false);
+    const [cancelling, setCancelling] = useState(false);
+
     const STATUS_LABEL: Record<string, string> = {
-        confirmed: 'Confirmed',
-        payment_pending: 'Pending payment',
-        completed: 'Completed',
-        cancelled: 'Cancelled',
+        confirmed:    'Confirmed',
+        deposit_paid: 'Deposit paid',
+        pending:      'Pending payment',
+        completed:    'Completed',
+        cancelled:    'Cancelled',
+        expired:      'Expired',
     };
     const STATUS_COLOR: Record<string, string> = {
-        confirmed: 'bg-green-100 text-green-700',
-        payment_pending: 'bg-yellow-100 text-yellow-700',
-        completed: 'bg-gray-100 text-gray-600',
-        cancelled: 'bg-red-100 text-red-600',
+        confirmed:    'bg-green-100 text-green-700',
+        deposit_paid: 'bg-blue-100 text-blue-700',
+        pending:      'bg-yellow-100 text-yellow-700',
+        completed:    'bg-gray-100 text-gray-600',
+        cancelled:    'bg-red-100 text-red-600',
+        expired:      'bg-gray-100 text-gray-500',
     };
 
     const inclusions = Array.isArray(booking.tour?.inclusions) ? booking.tour.inclusions : [];
+
+    function handleCancel() {
+        setCancelling(true);
+        router.post(`/trips/${booking.reference}/cancel`, {}, {
+            preserveScroll: true,
+            onFinish: () => { setCancelling(false); setConfirmCancel(false); },
+        });
+    }
+
+    const deadlineLabel = booking.cancellation_deadline
+        ? new Date(booking.cancellation_deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        : null;
 
     return (
         <div className="bg-white rounded-[16px] overflow-hidden shadow-sm flex flex-col sm:flex-row">
             <div className="relative sm:w-56 aspect-[16/9] sm:aspect-auto flex-shrink-0">
                 <img
-                    src={booking.tour?.card_url || '/images/placeholder-safari.jpg'}
+                    src={booking.tour?.card_url || '/images/tours/serengeti.jpg'}
                     alt={booking.tour?.title}
                     className="w-full h-full object-cover"
                 />
@@ -160,14 +180,13 @@ function BookingCard({ booking, fmt }: { booking: Booking; fmt: (c: number) => s
                     {STATUS_LABEL[booking.status] ?? booking.status}
                 </span>
             </div>
-            <div className="flex-1 p-4">
-                <div className="flex items-start justify-between gap-3 mb-1">
-                    <div>
-                        <p className="text-xs text-gray-400 mb-0.5">Booking #{booking.reference}</p>
-                        <div className="flex items-center gap-1">
-                            <Star size={11} className="fill-[#E07A3F] text-[#E07A3F]" />
-                            <span className="text-xs font-semibold text-[#1F2937]">{booking.tour?.rating_cache?.toFixed(1) ?? '–'}</span>
-                        </div>
+
+            <div className="flex-1 p-4 flex flex-col">
+                <div className="mb-1">
+                    <p className="text-xs text-gray-400 mb-0.5">Booking #{booking.reference}</p>
+                    <div className="flex items-center gap-1">
+                        <Star size={11} className="fill-[#E07A3F] text-[#E07A3F]" />
+                        <span className="text-xs font-semibold text-[#1F2937]">{booking.tour?.rating_cache?.toFixed(1) ?? '–'}</span>
                     </div>
                 </div>
 
@@ -186,6 +205,16 @@ function BookingCard({ booking, fmt }: { booking: Booking; fmt: (c: number) => s
                     </p>
                 )}
 
+                {/* Cancellation deadline info */}
+                {deadlineLabel && booking.status !== 'cancelled' && booking.status !== 'completed' && (
+                    <p className={`text-xs mb-2 flex items-center gap-1 ${booking.can_cancel ? 'text-[#2C4A3B]' : 'text-red-500'}`}>
+                        <XCircle size={10} className="shrink-0" />
+                        {booking.can_cancel
+                            ? `Free cancellation until ${deadlineLabel}`
+                            : `Cancellation closed (deadline: ${deadlineLabel})`}
+                    </p>
+                )}
+
                 {/* Tags */}
                 {inclusions.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mb-3">
@@ -195,15 +224,49 @@ function BookingCard({ booking, fmt }: { booking: Booking; fmt: (c: number) => s
                     </div>
                 )}
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-auto">
                     <div>
-                        <p className="text-xs text-gray-400">Total paid</p>
+                        <p className="text-xs text-gray-400">Total</p>
                         <p className="font-bold text-[#1F2937]">{fmt(booking.total_amount ?? 0)}</p>
                     </div>
-                    <div className="flex gap-2">
-                        <Link href={`/booking/${booking.reference}/confirmation`} className="px-4 py-2 rounded-full border border-gray-200 text-xs font-medium text-[#1F2937] hover:border-[#2C4A3B] transition-colors">
-                            View details
-                        </Link>
+
+                    <div className="flex gap-2 items-center">
+                        {/* Cancel confirmation inline */}
+                        {confirmCancel ? (
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs text-gray-500">Cancel this booking?</span>
+                                <button
+                                    onClick={handleCancel}
+                                    disabled={cancelling}
+                                    className="px-3 py-1.5 rounded-full bg-red-500 text-white text-xs font-semibold hover:bg-red-600 disabled:opacity-50 transition-colors"
+                                >
+                                    {cancelling ? 'Cancelling…' : 'Yes, cancel'}
+                                </button>
+                                <button
+                                    onClick={() => setConfirmCancel(false)}
+                                    className="px-3 py-1.5 rounded-full border border-gray-200 text-xs font-medium text-gray-600 hover:border-gray-400 transition-colors"
+                                >
+                                    Keep
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                {booking.can_cancel && (
+                                    <button
+                                        onClick={() => setConfirmCancel(true)}
+                                        className="px-3 py-2 rounded-full border border-red-200 text-xs font-medium text-red-500 hover:border-red-400 hover:bg-red-50 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                )}
+                                <Link
+                                    href={`/booking/${booking.reference}/confirmation`}
+                                    className="px-4 py-2 rounded-full border border-gray-200 text-xs font-medium text-[#1F2937] hover:border-[#2C4A3B] transition-colors"
+                                >
+                                    View details
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

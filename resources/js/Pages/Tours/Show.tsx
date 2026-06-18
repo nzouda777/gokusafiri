@@ -4,10 +4,12 @@ import {
     MapPin, Clock, Users, Star, Check, X,
     CheckCircle2, AlertTriangle, Heart,
     Utensils, Tent, User, Camera, Shield, Binoculars, Sparkles, Wind,
+    ChevronLeft, ChevronRight, LayoutGrid,
 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
-import type { Tour, TourSchedule, TourHighlight, TourReview, PageProps } from '../../types';
+import type { Tour, TourSchedule, TourHighlight, TourReview, PageProps, MediaItem } from '../../types';
+import { csrfToken } from '../../utils';
 
 interface Props { tour: Tour & { user_has_reviewed?: boolean } }
 
@@ -64,6 +66,8 @@ export default function TourShow({ tour }: Props) {
     const [travelers, setTravelers]               = useState(2);
     const [payFull, setPayFull]                   = useState(false);
     const [wishlisted, setWishlisted]             = useState(tour.is_wishlisted ?? false);
+    const [lightboxOpen, setLightboxOpen]          = useState(false);
+    const [lightboxIndex, setLightboxIndex]        = useState(0);
     const tabsRef = useRef<HTMLDivElement>(null);
     const sectionRefs = {
         overview:  useRef<HTMLDivElement>(null),
@@ -112,8 +116,17 @@ export default function TourShow({ tour }: Props) {
 
     function handleWishlist() {
         if (!auth.user) { router.visit('/login'); return; }
-        router.post(`/wishlist/${tour.id}`, {}, { preserveScroll: true, preserveState: true });
-        setWishlisted(!wishlisted);
+        const next = !wishlisted;
+        setWishlisted(next);
+        fetch(`/wishlist/${tour.id}`, {
+            method: 'POST',
+            headers: { 'X-XSRF-TOKEN': csrfToken(), 'Accept': 'application/json' },
+        }).catch(() => setWishlisted(!next));
+    }
+
+    function openLightbox(index: number) {
+        setLightboxIndex(index);
+        setLightboxOpen(true);
     }
 
     const highlights: TourHighlight[] = Array.isArray(tour.highlights) ? tour.highlights : [];
@@ -130,28 +143,64 @@ export default function TourShow({ tour }: Props) {
             <div className="bg-[#f5f2ec]">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6 pt-[16px] pb-[0px]">
                     {(tour.gallery?.length ?? 0) > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-[8px] h-[240px] sm:h-[380px] rounded-t-[20px] overflow-hidden">
-                            <div className="col-span-1 sm:col-span-2 relative overflow-hidden">
-                                <img
-                                    src={tour.hero_url || tour.gallery[0]?.url || '/images/placeholder-safari.jpg'}
-                                    alt={typeof tour.title === 'string' ? tour.title : ''}
-                                    className="w-full h-full object-cover"
-                                />
-                                <button
-                                    onClick={handleWishlist}
-                                    className="absolute top-[16px] right-[16px] w-[40px] h-[40px] rounded-full bg-white/90 backdrop-blur flex items-center justify-center hover:bg-white transition-colors shadow"
+                        <div className="relative">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-[8px] h-[240px] sm:h-[380px] rounded-t-[20px] overflow-hidden">
+                                {/* Main hero image */}
+                                <div
+                                    className="col-span-1 sm:col-span-2 relative overflow-hidden cursor-pointer group/hero"
+                                    onClick={() => openLightbox(0)}
                                 >
-                                    <Heart size={18} className={wishlisted ? 'fill-[#E07A3F] text-[#E07A3F]' : 'text-[#8a968d]'} />
+                                    <img
+                                        src={tour.hero_url || tour.gallery[0]?.url}
+                                        alt={typeof tour.title === 'string' ? tour.title : ''}
+                                        className="w-full h-full object-cover group-hover/hero:scale-[1.02] transition-transform duration-500"
+                                    />
+                                    <div className="absolute inset-0 bg-black/0 group-hover/hero:bg-black/10 transition-colors duration-300" />
+                                    <button
+                                        onClick={e => { e.stopPropagation(); handleWishlist(); }}
+                                        className="absolute top-[16px] right-[16px] w-[40px] h-[40px] rounded-full bg-white/90 backdrop-blur flex items-center justify-center hover:bg-white transition-colors shadow"
+                                    >
+                                        <Heart size={18} className={wishlisted ? 'fill-[#E07A3F] text-[#E07A3F]' : 'text-[#8a968d]'} />
+                                    </button>
+                                </div>
+
+                                {/* Side thumbnails */}
+                                <div className="hidden sm:flex flex-col gap-[8px]">
+                                    {tour.gallery.slice(1, 3).map((img, i) => (
+                                        <div
+                                            key={img.id}
+                                            className="flex-1 relative overflow-hidden cursor-pointer group/thumb"
+                                            onClick={() => openLightbox(i + 1)}
+                                        >
+                                            <img
+                                                src={img.card_url || img.url}
+                                                alt=""
+                                                className="w-full h-full object-cover group-hover/thumb:scale-[1.02] transition-transform duration-500"
+                                            />
+                                            <div className="absolute inset-0 bg-black/0 group-hover/thumb:bg-black/10 transition-colors duration-300" />
+                                            {/* "+N more" overlay on last visible thumbnail */}
+                                            {i === 1 && tour.gallery.length > 3 && (
+                                                <div className="absolute inset-0 bg-black/55 flex flex-col items-center justify-center pointer-events-none">
+                                                    <span className="text-white text-[26px] font-bold leading-none">+{tour.gallery.length - 3}</span>
+                                                    <span className="text-white/70 text-[11px] mt-[4px] font-medium tracking-wide">photos</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                    {tour.gallery.length < 2 && <div className="flex-1 bg-[#e4ddd0]" />}
+                                </div>
+                            </div>
+
+                            {/* View all photos pill */}
+                            {tour.gallery.length > 1 && (
+                                <button
+                                    onClick={() => openLightbox(0)}
+                                    className="absolute bottom-[16px] right-[16px] flex items-center gap-[7px] bg-white/95 backdrop-blur-sm text-[#16241b] text-[12px] font-semibold px-[14px] py-[9px] rounded-full shadow-md hover:bg-white transition-colors"
+                                >
+                                    <LayoutGrid size={13} />
+                                    {t('show.view_all_photos', { count: tour.gallery.length })}
                                 </button>
-                            </div>
-                            <div className="hidden sm:flex flex-col gap-[8px]">
-                                {tour.gallery.slice(1, 3).map((img, i) => (
-                                    <div key={i} className="flex-1 overflow-hidden">
-                                        <img src={img.card_url || img.url} alt="" className="w-full h-full object-cover" />
-                                    </div>
-                                ))}
-                                {tour.gallery.length < 2 && <div className="flex-1 bg-[#e4ddd0] rounded" />}
-                            </div>
+                            )}
                         </div>
                     ) : (
                         <div className="h-[240px] sm:h-[380px] rounded-t-[20px] bg-[#e4ddd0] flex items-center justify-center">
@@ -536,7 +585,133 @@ export default function TourShow({ tour }: Props) {
                     </div>
                 </div>
             </div>
+            {lightboxOpen && tour.gallery.length > 0 && (
+                <GalleryLightbox
+                    images={tour.gallery}
+                    initialIndex={lightboxIndex}
+                    onClose={() => setLightboxOpen(false)}
+                />
+            )}
         </AppLayout>
+    );
+}
+
+// ── Gallery lightbox ─────────────────────────────────────────────────────────
+function GalleryLightbox({
+    images,
+    initialIndex,
+    onClose,
+}: {
+    images: MediaItem[];
+    initialIndex: number;
+    onClose: () => void;
+}) {
+    const [index, setIndex] = useState(initialIndex);
+    const thumbsRef = useRef<HTMLDivElement>(null);
+    const touchStartX = useRef<number | null>(null);
+
+    const prev = useCallback(() => setIndex(i => (i - 1 + images.length) % images.length), [images.length]);
+    const next = useCallback(() => setIndex(i => (i + 1) % images.length), [images.length]);
+
+    useEffect(() => {
+        function onKey(e: KeyboardEvent) {
+            if (e.key === 'Escape') onClose();
+            else if (e.key === 'ArrowLeft') prev();
+            else if (e.key === 'ArrowRight') next();
+        }
+        document.addEventListener('keydown', onKey);
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.removeEventListener('keydown', onKey);
+            document.body.style.overflow = '';
+        };
+    }, [prev, next, onClose]);
+
+    // Keep active thumbnail in view
+    useEffect(() => {
+        const el = thumbsRef.current?.children[index] as HTMLElement | undefined;
+        el?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }, [index]);
+
+    function onTouchStart(e: React.TouchEvent) {
+        touchStartX.current = e.touches[0].clientX;
+    }
+    function onTouchEnd(e: React.TouchEvent) {
+        if (touchStartX.current === null) return;
+        const delta = e.changedTouches[0].clientX - touchStartX.current;
+        if (Math.abs(delta) > 50) delta < 0 ? next() : prev();
+        touchStartX.current = null;
+    }
+
+    const current = images[index];
+
+    return (
+        <div
+            className="fixed inset-0 z-50 flex flex-col bg-black/96"
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+        >
+            {/* Top bar */}
+            <div className="flex items-center justify-between px-5 py-4 shrink-0">
+                <span className="text-white/50 text-[13px] tabular-nums">
+                    {index + 1} <span className="text-white/30">/</span> {images.length}
+                </span>
+                <button
+                    onClick={onClose}
+                    className="w-[38px] h-[38px] rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                    aria-label="Close"
+                >
+                    <X size={18} className="text-white" />
+                </button>
+            </div>
+
+            {/* Main image */}
+            <div className="flex-1 flex items-center justify-center relative min-h-0 px-14 py-2">
+                <button
+                    onClick={prev}
+                    className="absolute left-3 w-[44px] h-[44px] rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-10 shrink-0"
+                    aria-label="Previous"
+                >
+                    <ChevronLeft size={22} className="text-white" />
+                </button>
+
+                <img
+                    key={current.url}
+                    src={current.hero_url || current.url}
+                    alt=""
+                    className="max-w-full max-h-full object-contain rounded-[6px] select-none"
+                    draggable={false}
+                />
+
+                <button
+                    onClick={next}
+                    className="absolute right-3 w-[44px] h-[44px] rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-10 shrink-0"
+                    aria-label="Next"
+                >
+                    <ChevronRight size={22} className="text-white" />
+                </button>
+            </div>
+
+            {/* Thumbnail strip */}
+            <div
+                ref={thumbsRef}
+                className="flex gap-[6px] px-5 pb-5 pt-3 overflow-x-auto scrollbar-hide shrink-0 justify-start"
+            >
+                {images.map((img, i) => (
+                    <button
+                        key={img.id}
+                        onClick={() => setIndex(i)}
+                        className={`shrink-0 w-[64px] h-[46px] rounded-[6px] overflow-hidden transition-all duration-200 ${
+                            i === index
+                                ? 'ring-2 ring-white ring-offset-2 ring-offset-black opacity-100'
+                                : 'opacity-40 hover:opacity-70'
+                        }`}
+                    >
+                        <img src={img.thumb_url || img.url} alt="" className="w-full h-full object-cover" draggable={false} />
+                    </button>
+                ))}
+            </div>
+        </div>
     );
 }
 

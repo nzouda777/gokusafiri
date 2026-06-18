@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\States\Booking\Cancelled;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -63,44 +64,85 @@ class TripsController extends Controller
 
     public function cancel(Request $request): RedirectResponse
     {
-        $reference = $request->route('reference');
-        $booking = Booking::where('reference', $reference)
+        $booking = Booking::where('reference', $request->route('reference'))
             ->where('user_id', $request->user()->id)
+            ->with(['tour', 'schedule'])
             ->firstOrFail();
 
-        $booking->update(['status' => 'cancelled']);
+        // Only pending, deposit_paid and confirmed bookings can be cancelled
+        if (!in_array($booking->status->getValue(), ['pending', 'deposit_paid', 'confirmed'])) {
+            return back()->withErrors(['cancel' => 'This booking cannot be cancelled.']);
+        }
 
-        return back()->with('success', 'Booking cancelled successfully.');
+        // Block if departure date is today or has passed
+        if ($booking->schedule && $booking->schedule->starts_at->toDateString() <= now()->toDateString()) {
+            return back()->withErrors(['cancel' => 'The departure date has already passed.']);
+        }
+
+        // Block if the free-cancellation deadline has passed
+        if ($booking->schedule && $booking->tour->cancellation_days !== null) {
+            $deadline = $booking->schedule->starts_at->subDays($booking->tour->cancellation_days)->toDateString();
+            if (now()->toDateString() > $deadline) {
+                return back()->withErrors(['cancel' => 'The free-cancellation deadline has passed. Please contact support.']);
+            }
+        }
+
+        $booking->status->transitionTo(Cancelled::class);
+
+        return back()->with('success', 'Your booking has been cancelled.');
     }
 
     private function formatBooking(Booking $booking): array
     {
-        $tour = $booking->tour;
+        $tour  = $booking->tour;
         $media = $tour->getMedia('gallery');
 
+        // Compute cancellation eligibility
+        $canCancel            = false;
+        $cancellationDeadline = null;
+        $statusValue          = $booking->status->getValue();
+
+        if (in_array($statusValue, ['pending', 'deposit_paid', 'confirmed']) && $booking->schedule) {
+            $today         = now()->toDateString();
+            $departureDate = $booking->schedule->starts_at->toDateString();
+
+            if ($departureDate > $today) {
+                if ($tour->cancellation_days !== null) {
+                    $deadline             = $booking->schedule->starts_at->subDays($tour->cancellation_days)->toDateString();
+                    $cancellationDeadline = $deadline;
+                    $canCancel            = $today <= $deadline;
+                } else {
+                    // No policy configured → always cancellable until departure
+                    $canCancel = true;
+                }
+            }
+        }
+
         return [
-            'id' => $booking->id,
-            'reference' => $booking->reference,
-            'status' => $booking->status,
-            'total_amount' => $booking->total_amount,
-            'travelers_count' => $booking->travelers_count,
+            'id'              => $booking->id,
+            'reference'       => $booking->reference,
+            'status'          => $statusValue,
+            'total_amount'    => $booking->total ?? 0,
+            'travelers_count' => $booking->adults + $booking->children,
+            'can_cancel'              => $canCancel,
+            'cancellation_deadline'   => $cancellationDeadline,
             'tour' => [
-                'id' => $tour->id,
-                'title' => $tour->title,
-                'slug' => $tour->slug,
+                'id'           => $tour->id,
+                'title'        => $tour->title,
+                'slug'         => $tour->slug,
                 'duration_days' => $tour->duration_days,
                 'rating_cache' => $tour->rating_cache,
-                'base_price' => $tour->base_price,
-                'inclusions' => $tour->arr('inclusions'),
-                'card_url' => $media->first()?->getUrl('card') ?? '',
-                'destination' => $tour->destination ? [
-                    'name' => $tour->destination->name,
+                'base_price'   => $tour->base_price,
+                'inclusions'   => $tour->arr('inclusions'),
+                'card_url'     => $media->first()?->getUrl('card') ?? '',
+                'destination'  => $tour->destination ? [
+                    'name'    => $tour->destination->name,
                     'country' => $tour->destination->country ?? '',
                 ] : null,
             ],
             'schedule' => $booking->schedule ? [
                 'start_date' => $booking->schedule->starts_at->toDateString(),
-                'end_date' => $booking->schedule->ends_at->toDateString(),
+                'end_date'   => $booking->schedule->ends_at->toDateString(),
             ] : null,
         ];
     }

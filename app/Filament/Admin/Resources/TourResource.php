@@ -104,9 +104,13 @@ class TourResource extends Resource
 
             Schemas\Components\Section::make('Pricing & Logistics')->schema([
                 Forms\Components\TextInput::make('base_price')
-                    ->label('Base Price')->numeric()->required()->minValue(100)
+                    ->label('Adult Price')->numeric()->required()->minValue(100)
                     ->suffix('cents')
                     ->helperText('In cents — e.g. 229000 = $2,290.00'),
+                Forms\Components\TextInput::make('child_price')
+                    ->label('Child Price (under 12)')->numeric()->nullable()->minValue(0)
+                    ->suffix('cents')
+                    ->helperText('Leave blank to charge the adult price. Infants (under 2) are always free.'),
                 Forms\Components\TextInput::make('currency')
                     ->label('Currency')->default('USD')->maxLength(3)->required(),
                 Forms\Components\TextInput::make('duration_days')

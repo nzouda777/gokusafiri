@@ -2,3 +2,7 @@
 /.env
 /.claude
 /vendor
+# /dump.md
+# /dev-log.md
+# /launch.md
+# /context.md

@@ -3,12 +3,7 @@ import { router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import type { Tour, PageProps } from '../types';
-
-function csrfToken(): string {
-    return (document.cookie.match(/XSRF-TOKEN=([^;]+)/) ?? [])[1]
-        ? decodeURIComponent((document.cookie.match(/XSRF-TOKEN=([^;]+)/) ?? [])[1])
-        : (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '';
-}
+import { csrfToken } from '../utils';
 
 interface Props {
     tour: Tour;
@@ -62,7 +57,7 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
                 style={{ background: 'linear-gradient(137.5deg,#3a5a45 0%,#1e3326 60%,#d9722a 100%)' }}
             >
                 <img
-                    src={tour.card_url || '/images/placeholder-safari.jpg'}
+                    src={tour.card_url || '/images/tours/serengeti.jpg'}
                     alt={tour.title}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
