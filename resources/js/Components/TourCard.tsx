@@ -1,7 +1,14 @@
 import { Heart, MapPin, Star, Zap } from 'lucide-react';
 import { router, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import type { Tour, PageProps } from '../types';
+
+function csrfToken(): string {
+    return (document.cookie.match(/XSRF-TOKEN=([^;]+)/) ?? [])[1]
+        ? decodeURIComponent((document.cookie.match(/XSRF-TOKEN=([^;]+)/) ?? [])[1])
+        : (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '';
+}
 
 interface Props {
     tour: Tour;
@@ -11,6 +18,7 @@ interface Props {
 export default function TourCard({ tour, onWishlistToggle }: Props) {
     const { auth, locale } = usePage<PageProps>().props;
     const { t } = useLaravelReactI18n();
+    const [isWishlisted, setIsWishlisted] = useState(tour.is_wishlisted ?? false);
 
     const price = Math.round(tour.base_price / 100).toLocaleString('en-US', {
         style: 'currency', currency: 'USD', maximumFractionDigits: 0,
@@ -29,12 +37,19 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
         e.preventDefault();
         e.stopPropagation();
         if (!auth.user) { router.visit('/login'); return; }
-        router.post(`/wishlist/${tour.id}`, {}, { preserveScroll: true, preserveState: true });
+        const next = !isWishlisted;
+        setIsWishlisted(next);
+        fetch(`/wishlist/${tour.id}`, {
+            method: 'POST',
+            headers: { 'X-XSRF-TOKEN': csrfToken(), 'Accept': 'application/json' },
+        }).catch(() => setIsWishlisted(!next));
         onWishlistToggle?.(tour.id);
     }
 
     const inclusions = Array.isArray(tour.inclusions) ? tour.inclusions : [];
     const tags: string[] = inclusions.slice(0, 3).map((i) => i.type);
+
+    
 
     return (
         <a
@@ -64,7 +79,7 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
                 >
                     <Heart
                         size={20}
-                        className={tour.is_wishlisted ? 'fill-[#f0a05e] text-[#f0a05e]' : 'text-[#1a211c]'}
+                        className={isWishlisted ? 'fill-[#f0a05e] text-[#f0a05e]' : 'text-[#1a211c]'}
                     />
                 </button>
             </div>

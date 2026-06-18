@@ -129,7 +129,7 @@ export default function ToursIndex({ tours, filters, totalCount, isPackages }: P
             <Head title={isPackages ? t('index.title_packages') : t('index.title_safaris')} />
 
             {/* ── Sticky SearchBar strip ──────────────────────────────── */}
-            <div className="sticky top-[71px] z-30 bg-[#fbf8f2] border-b border-[#e4ddd0] py-[14px]">
+            <div className="md:sticky top-[71px] z-30 bg-[#fbf8f2] border-b border-[#e4ddd0] py-[14px]">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
                     <SearchBar
                         sticky
@@ -156,7 +156,7 @@ export default function ToursIndex({ tours, filters, totalCount, isPackages }: P
 
                     {/* Page title */}
                     <div className="mb-[32px]">
-                        <h1 className="font-display not-italic text-[38px] leading-[1.2] tracking-[-0.38px] text-[#16241b] mb-[6px]">
+                        <h1 className="font-display not-italic text-[26px] leading-[1.2] sm:text-[38px] tracking-[-0.38px] text-[#16241b] mb-[6px]">
                             {isPackages ? t('index.title_packages') : t('index.title_safaris')}
                         </h1>
                         <p className="text-[14px] text-[#8a968d]">
@@ -225,22 +225,54 @@ export default function ToursIndex({ tours, filters, totalCount, isPackages }: P
                     {/* ── Main layout ── */}
                     <div className="flex gap-[32px] items-start">
 
+                        {/* Mobile overlay */}
+                        {mobileFiltersOpen && (
+                            <div
+                                className="lg:hidden fixed inset-0 z-40 bg-black/40"
+                                onClick={() => setMobileFiltersOpen(false)}
+                            />
+                        )}
+
                         {/* ── Sidebar ── */}
-                        <aside className={`w-[260px] shrink-0 sticky top-[calc(71px+60px)] max-h-[calc(100vh-160px)] overflow-y-auto ${mobileFiltersOpen ? 'block' : 'hidden'} lg:block`}>
-                            <div className="bg-white rounded-[22px] border border-[#e4ddd0] p-[24px]">
+                        <aside className={[
+                            // Mobile: fixed bottom sheet, slides in/out
+                            'fixed bottom-0 left-0 right-0 z-50',
+                            'transition-transform duration-300 ease-out',
+                            mobileFiltersOpen ? 'translate-y-0' : 'translate-y-full',
+                            // Desktop: sticky sidebar in flow
+                            'lg:static lg:translate-y-0 lg:z-auto',
+                            'lg:w-[260px] lg:shrink-0',
+                            'lg:sticky lg:top-[calc(71px+60px)]',
+                            'lg:max-h-[calc(100vh-160px)] lg:overflow-y-auto',
+                        ].join(' ')}>
+                            <div className="bg-white rounded-t-[24px] lg:rounded-[22px] border border-[#e4ddd0] p-[24px] max-h-[82vh] overflow-y-auto lg:max-h-none">
+
+                                {/* Drag handle (mobile only) */}
+                                <div className="lg:hidden flex justify-center mb-[16px] -mt-[8px]">
+                                    <div className="w-10 h-1 bg-[#e4ddd0] rounded-full" />
+                                </div>
 
                                 {/* Sidebar header */}
                                 <div className="flex items-center justify-between mb-[20px]">
                                     <h3 className="text-[14px] font-bold text-[#16241b]">{t('index.filters')}</h3>
-                                    {activeCount > 0 && (
+                                    <div className="flex items-center gap-[12px]">
+                                        {activeCount > 0 && (
+                                            <button
+                                                onClick={clearAll}
+                                                className="flex items-center gap-[4px] text-[12px] text-[#f0a05e] font-medium hover:text-[#c97b4b] transition-colors"
+                                            >
+                                                <X size={12} />
+                                                {t('index.clear_all')}
+                                            </button>
+                                        )}
                                         <button
-                                            onClick={clearAll}
-                                            className="flex items-center gap-[4px] text-[12px] text-[#f0a05e] font-medium hover:text-[#c97b4b] transition-colors"
+                                            onClick={() => setMobileFiltersOpen(false)}
+                                            className="lg:hidden p-[4px] text-[#8a968d] hover:text-[#16241b] transition-colors"
+                                            aria-label="Close filters"
                                         >
-                                            <X size={12} />
-                                            {t('index.clear_all')}
+                                            <X size={18} />
                                         </button>
-                                    )}
+                                    </div>
                                 </div>
 
                                 {/* Active chips */}
@@ -373,6 +405,14 @@ export default function ToursIndex({ tours, filters, totalCount, isPackages }: P
                                         )}
                                     </SidebarSection>
                                 </div>
+
+                                {/* Mobile apply button */}
+                                <button
+                                    onClick={() => setMobileFiltersOpen(false)}
+                                    className="lg:hidden mt-[20px] w-full py-[14px] bg-[#2E4A39] text-white text-[14px] font-semibold rounded-full hover:bg-[#1e3326] transition-colors"
+                                >
+                                    {t('index.show_results')} {activeCount > 0 && `(${activeCount})`}
+                                </button>
                             </div>
                         </aside>
 

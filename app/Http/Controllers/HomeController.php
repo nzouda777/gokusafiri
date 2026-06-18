@@ -10,8 +10,12 @@ use Inertia\Response;
 
 class HomeController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $wishlistedIds = $request->user()
+            ? $request->user()->wishlists()->pluck('tour_id')->flip()->all()
+            : [];
+
         $featured = Tour::published()
             ->packages()
             ->with(['destination', 'media'])
@@ -19,7 +23,7 @@ class HomeController extends Controller
             ->orderByDesc('rating_cache')
             ->limit(3)
             ->get()
-            ->map(fn (Tour $t) => $this->formatTour($t));
+            ->map(fn (Tour $t) => $this->formatTour($t, $wishlistedIds));
 
         $destinations = $this->getDestinations();
         $testimonials = $this->getTestimonials();
@@ -38,7 +42,7 @@ class HomeController extends Controller
         ]);
     }
 
-    private function formatTour(Tour $tour): array
+    private function formatTour(Tour $tour, array $wishlistedIds = []): array
     {
         $media = $tour->getMedia('gallery');
         $hero = $media->first()?->getUrl('hero') ?? '';
@@ -65,6 +69,7 @@ class HomeController extends Controller
             'hero_url' => $hero,
             'card_url' => $card,
             'thumb_url' => $thumb,
+            'is_wishlisted' => isset($wishlistedIds[$tour->id]),
             'destination' => $tour->destination ? [
                 'id' => $tour->destination->id,
                 'name' => $tour->destination->name,

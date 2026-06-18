@@ -130,8 +130,8 @@ export default function TourShow({ tour }: Props) {
             <div className="bg-[#f5f2ec]">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6 pt-[16px] pb-[0px]">
                     {(tour.gallery?.length ?? 0) > 0 ? (
-                        <div className="grid grid-cols-3 gap-[8px] h-[380px] rounded-t-[20px] overflow-hidden">
-                            <div className="col-span-2 relative overflow-hidden">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-[8px] h-[240px] sm:h-[380px] rounded-t-[20px] overflow-hidden">
+                            <div className="col-span-1 sm:col-span-2 relative overflow-hidden">
                                 <img
                                     src={tour.hero_url || tour.gallery[0]?.url || '/images/placeholder-safari.jpg'}
                                     alt={typeof tour.title === 'string' ? tour.title : ''}
@@ -144,7 +144,7 @@ export default function TourShow({ tour }: Props) {
                                     <Heart size={18} className={wishlisted ? 'fill-[#E07A3F] text-[#E07A3F]' : 'text-[#8a968d]'} />
                                 </button>
                             </div>
-                            <div className="flex flex-col gap-[8px]">
+                            <div className="hidden sm:flex flex-col gap-[8px]">
                                 {tour.gallery.slice(1, 3).map((img, i) => (
                                     <div key={i} className="flex-1 overflow-hidden">
                                         <img src={img.card_url || img.url} alt="" className="w-full h-full object-cover" />
@@ -154,7 +154,7 @@ export default function TourShow({ tour }: Props) {
                             </div>
                         </div>
                     ) : (
-                        <div className="h-[380px] rounded-t-[20px] bg-[#e4ddd0] flex items-center justify-center">
+                        <div className="h-[240px] sm:h-[380px] rounded-t-[20px] bg-[#e4ddd0] flex items-center justify-center">
                             <Camera size={48} className="text-[#8a968d] opacity-30" />
                         </div>
                     )}
@@ -164,7 +164,7 @@ export default function TourShow({ tour }: Props) {
             {/* ── Body ────────────────────────────────────────────────────── */}
             <div className="bg-white min-h-screen">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
-                    <div className="flex gap-[56px] items-start">
+                    <div className="flex flex-col lg:flex-row gap-[32px] lg:gap-[56px] items-start">
 
                         {/* ── Left column ─────────────────────────────────── */}
                         <div className="flex-1 min-w-0 pb-[80px]">
@@ -244,7 +244,7 @@ export default function TourShow({ tour }: Props) {
 
                                 {/* Feature highlight cards ────────────────── */}
                                 {highlights.length > 0 && (
-                                    <div className="grid grid-cols-2 gap-[12px] mt-[28px]">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-[12px] mt-[28px]">
                                         {highlights.map((h, i) => {
                                             const mapped = ICON_MAP[h.icon] ?? { icon: <CheckCircle2 size={18} />, bg: 'bg-[#2E4A39]' };
                                             return (
@@ -352,7 +352,7 @@ export default function TourShow({ tour }: Props) {
 
                             {/* ── Traveler reviews section ────────────── */}
                             <div id="reviews" ref={sectionRefs.reviews} className="pt-[56px]">
-                                <div className="flex items-center justify-between mb-[28px]">
+                                <div className="flex items-center justify-between flex-wrap gap-[10px] mb-[28px]">
                                     <h2 className="font-display not-italic text-[24px] text-[#16241b]">
                                         {t('show.reviews_title')}
                                     </h2>
@@ -407,7 +407,7 @@ export default function TourShow({ tour }: Props) {
                         </div>
 
                         {/* ── Right: sticky booking widget ────────────── */}
-                        <div className="w-[380px] shrink-0 sticky top-[24px] pt-[32px] pb-[80px]">
+                        <div className="w-full lg:w-[380px] shrink-0 lg:sticky top-[24px] pb-[40px] lg:pt-[32px] lg:pb-[80px]">
                             <div className="bg-white rounded-[20px] border border-[#e4ddd0] overflow-hidden shadow-sm">
 
                                 {/* Price header */}

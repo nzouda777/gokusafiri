@@ -60,35 +60,35 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
 
                 {/* Content */}
                 <div className="relative z-10 w-full max-w-[1440px] mx-auto px-[100px] max-lg:px-6 pb-[88px]">
-                    <div className="flex flex-col gap-[18px] max-w-[660px] pt-[74px] pb-[70px]">
+                    <div className="flex flex-col gap-[14px] sm:gap-[18px] max-w-[660px] pt-[50px] pb-[50px] sm:pt-[74px] sm:pb-[70px]">
 
                         <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase">
                             {t('hero.eyebrow')}
                         </p>
 
                         <div className="flex flex-col">
-                            <span className="font-display not-italic text-[62px] leading-[65px] tracking-[-0.62px] text-white">
+                            <span className="font-display not-italic text-[38px] leading-[46px] sm:text-[52px] sm:leading-[58px] lg:text-[62px] lg:leading-[65px] tracking-[-0.62px] text-white">
                                 {t('hero.line1')}
                             </span>
-                            <span className="font-display italic text-[62px] leading-[65px] tracking-[-0.62px] text-[#f0a05e]">
+                            <span className="font-display italic text-[38px] leading-[46px] sm:text-[52px] sm:leading-[58px] lg:text-[62px] lg:leading-[65px] tracking-[-0.62px] text-[#f0a05e]">
                                 {t('hero.line2')}
                             </span>
                         </div>
 
-                        <p className="text-[18px] leading-[27px] text-white/85 max-w-[480px]">
+                        <p className="text-[15px] leading-[23px] sm:text-[18px] sm:leading-[27px] text-white/85 max-w-[480px]">
                             {t('hero.subtitle')}
                         </p>
 
-                        <div className="flex items-center gap-[14px] pt-[12px]">
+                        <div className="flex flex-wrap items-center gap-[12px] pt-[12px]">
                             <Link
                                 href="/tours"
-                                className="px-[34px] py-[17px] rounded-full bg-[#6e8c79] text-white text-[16px] font-medium leading-[24px] hover:bg-[#5a7865] transition-colors"
+                                className="px-[24px] py-[13px] sm:px-[34px] sm:py-[17px] rounded-full bg-[#6e8c79] text-white text-[15px] sm:text-[16px] font-medium leading-[24px] hover:bg-[#5a7865] transition-colors"
                             >
                                 {t('hero.cta_explore')}
                             </Link>
                             <a
                                 href="#how-it-works"
-                                className="px-[27px] py-[15px] rounded-full border border-[#e4ddd0] text-[#dce6dd] text-[16px] font-medium leading-[24px] hover:bg-white/10 transition-colors"
+                                className="px-[20px] py-[11px] sm:px-[27px] sm:py-[15px] rounded-full border border-[#e4ddd0] text-[#dce6dd] text-[15px] sm:text-[16px] font-medium leading-[24px] hover:bg-white/10 transition-colors"
                             >
                                 {t('hero.cta_how')}
                             </a>
@@ -97,7 +97,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                 </div>
 
                 {/* Docked search — floats at bottom of hero, half-overlapping */}
-                <div className="absolute bottom-0 translate-y-1/2 left-1/2 -translate-x-1/2 w-full max-w-[1240px] px-4 lg:px-0 z-20 hidden md:block">
+                <div className="absolute bottom-0 translate-y-1/2 left-1/2 -translate-x-1/2 w-full max-w-[1240px] px-6 lg:px-0 z-20 hidden md:block">
                     <SearchBar />
                 </div>
             </section>
@@ -155,21 +155,21 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             </section>
 
             {/* Mobile search */}
-            <div className="md:hidden bg-[#fbf8f2] px-4 pb-6">
+            <div className="md:hidden bg-[#fbf8f2] px-6 pb-6">
                 <SearchBar />
             </div>
 
             {/* ── POPULAR PACKAGES ──────────────────────────────────────── */}
-            <section className="bg-[#fbf8f2] py-[100px]">
+            <section className="bg-[#fbf8f2] py-[60px] md:py-[100px]">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
 
                     {/* Section header */}
-                    <div className="flex items-end justify-between mb-[44px]">
+                    <div className="flex items-end justify-between mb-[32px] md:mb-[44px]">
                         <div className="flex flex-col items-start">
                             <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase mb-[0px]">
                                 {t('packages.eyebrow')}
                             </p>
-                            <h2 className="font-display not-italic text-[48px] leading-[65px] tracking-[-0.62px] text-[#16241b]">
+                            <h2 className="font-display not-italic text-[30px] leading-[38px] md:text-[48px] md:leading-[65px] tracking-[-0.62px] text-[#16241b]">
                                 {t('packages.title')}
                             </h2>
                         </div>
@@ -197,16 +197,16 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             </section>
 
             {/* ── FIND YOUR KIND OF AFRICA ─────────────────────────────── */}
-            <section className="py-[100px] bg-[#2E4A39]">
-                <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-0">
+            <section className="py-[60px] md:py-[100px] bg-[#2E4A39]">
+                <div className="max-w-[1240px] mx-auto px-6 lg:px-0">
 
                     {/* Header */}
-                    <div className="flex items-end mb-[30px]">
+                    <div className="flex items-end mb-[24px] md:mb-[30px]">
                         <div className="flex flex-col gap-[11.5px] pt-[4px]">
                             <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase">
                                 {t('explore.eyebrow')}
                             </p>
-                            <h2 className="font-display not-italic text-[#dce6dd] text-[48px] leading-[65px] tracking-[-0.62px]">
+                            <h2 className="font-display not-italic text-[#dce6dd] text-[30px] leading-[38px] md:text-[48px] md:leading-[65px] tracking-[-0.62px]">
                                 {t('explore.title')}
                             </h2>
                         </div>
@@ -288,13 +288,13 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             </section>
 
             {/* ── WHY GOKUSAFIRI ───────────────────────────────────────── */}
-            <section id="how-it-works" className="py-[100px] bg-[#fbf8f2]">
+            <section id="how-it-works" className="py-[60px] md:py-[100px] bg-[#fbf8f2]">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
-                    <div className="text-center mb-[60px]">
+                    <div className="text-center mb-[40px] md:mb-[60px]">
                         <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase mb-[10px]">
                             {t('why.eyebrow')}
                         </p>
-                        <h2 className="font-display not-italic text-[48px] leading-[65px] tracking-[-0.62px] text-[#16241b]">
+                        <h2 className="font-display not-italic text-[30px] leading-[38px] md:text-[48px] md:leading-[65px] tracking-[-0.62px] text-[#16241b]">
                             {t('why.title')}
                         </h2>
                         <p className="text-[16px] leading-[27px] text-[#8a968d] mt-[10px] max-w-[520px] mx-auto">
@@ -327,7 +327,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                     </div>
 
                     {/* Stats row — integrated below the feature cards */}
-                    <div className="mt-[70px] pt-[60px] border-t border-[#e4ddd0] grid grid-cols-3">
+                    <div className="mt-[40px] md:mt-[70px] pt-[40px] md:pt-[60px] border-t border-[#e4ddd0] grid grid-cols-3">
                         {[
                             { val: stats.travelers,         label: t('why.stat_travelers'), italic: false },
                             { val: String(stats.countries), label: t('why.stat_countries'), italic: false },
@@ -337,7 +337,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                                 key={s.label}
                                 className={`text-center ${i > 0 ? 'border-l border-[#e4ddd0]' : ''}`}
                             >
-                                <p className={`font-display text-[52px] leading-tight tracking-[-0.52px] text-[#16241b] ${s.italic ? 'italic' : 'not-italic'}`}>
+                                <p className={`font-display text-[30px] sm:text-[52px] leading-tight tracking-[-0.52px] text-[#16241b] ${s.italic ? 'italic' : 'not-italic'}`}>
                                     {s.val}
                                 </p>
                                 <p className="text-[14px] text-[#8a968d] mt-[6px]">{s.label}</p>
@@ -348,16 +348,16 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             </section>
 
             {/* ── TESTIMONIALS ─────────────────────────────────────────── */}
-            <section className="py-[100px] bg-[#2E4A39]">
+            <section className="py-[60px] md:py-[100px] bg-[#2E4A39]">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
-                    <div className="flex flex-col lg:flex-row gap-[80px] xl:gap-[110px] items-start">
+                    <div className="flex flex-col lg:flex-row gap-[48px] md:gap-[80px] xl:gap-[110px] items-start">
 
                         {/* Left: heading block */}
                         <div className="w-full lg:w-[290px] xl:w-[320px] shrink-0 pt-[6px]">
                             <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase mb-[16px]">
                                 {t('testimonials.eyebrow')}
                             </p>
-                            <h2 className="font-display italic text-[52px] xl:text-[56px] leading-[1.1] tracking-[-0.56px] text-white mb-[32px]">
+                            <h2 className="font-display italic text-[36px] sm:text-[52px] xl:text-[56px] leading-[1.1] tracking-[-0.56px] text-white mb-[24px] md:mb-[32px]">
                                 {t('testimonials.title')}
                             </h2>
 
@@ -441,16 +441,16 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             </section>
 
             {/* ── FAQ ──────────────────────────────────────────────────── */}
-            <section className="py-[100px] bg-[#fbf8f2]">
+            <section className="py-[60px] md:py-[100px] bg-[#fbf8f2]">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
-                    <div className="flex flex-col lg:flex-row gap-[80px] xl:gap-[110px] items-start">
+                    <div className="flex flex-col lg:flex-row gap-[40px] md:gap-[80px] xl:gap-[110px] items-start">
 
                         {/* Left: sticky heading */}
                         <div className="w-full lg:w-[340px] xl:w-[380px] shrink-0 lg:pt-[6px]">
                             <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase mb-[14px]">
                                 {t('faq.eyebrow')}
                             </p>
-                            <h2 className="font-display not-italic text-[44px] leading-[1.2] tracking-[-0.44px] text-[#16241b] mb-[20px]">
+                            <h2 className="font-display not-italic text-[28px] leading-[36px] md:text-[44px] md:leading-[1.2] tracking-[-0.44px] text-[#16241b] mb-[16px] md:mb-[20px]">
                                 {t('faq.title')}
                             </h2>
                             <p className="text-[15px] leading-[23px] text-[#8a968d] mb-[28px]">
@@ -476,7 +476,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             </section>
 
             {/* ── CTA ──────────────────────────────────────────────────── */}
-            <section className="relative py-[100px] overflow-hidden text-center">
+            <section className="relative py-[60px] md:py-[100px] overflow-hidden text-center">
                 {/* Gradient background — matches hero palette */}
                 <div
                     className="absolute inset-0"
@@ -489,7 +489,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                     <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase mb-[14px]">
                         {t('cta.eyebrow')}
                     </p>
-                    <h2 className="font-display not-italic text-[52px] leading-[1.15] tracking-[-0.52px] text-white mb-[20px]">
+                    <h2 className="font-display not-italic text-[32px] leading-[1.2] md:text-[52px] md:leading-[1.15] tracking-[-0.52px] text-white mb-[16px] md:mb-[20px]">
                         {t('cta.title')}
                     </h2>
                     <p className="text-[16px] leading-[27px] text-white/75 mb-[40px] max-w-[480px] mx-auto">

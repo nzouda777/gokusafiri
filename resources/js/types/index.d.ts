@@ -148,6 +148,7 @@ export interface PaginatedData<T> {
 }
 
 export interface PageProps {
+    [key: string]: unknown;
     auth: { user: User | null };
     locale: string;
     flash?: { success?: string; error?: string };

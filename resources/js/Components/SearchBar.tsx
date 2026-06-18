@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import {
-    Search, MapPin, Calendar, Users, Compass,
+    Search, MapPin, Compass,
     ChevronLeft, ChevronRight, Minus, Plus,
 } from 'lucide-react';
 import { router, usePage } from '@inertiajs/react';
@@ -47,17 +47,49 @@ interface Props {
     };
 }
 
-// ─── Popover shell ────────────────────────────────────────────────────────────
+// ─── Popover shell — bottom sheet on mobile, absolute panel on desktop ────────
 
-function Popover({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+function Popover({
+    children,
+    className = '',
+    onClose,
+}: {
+    children: React.ReactNode;
+    className?: string;
+    onClose?: () => void;
+}) {
     return (
-        <div
-            className={`absolute top-[calc(100%+10px)] bg-white border border-[#e4ddd0] rounded-[20px]
-                        shadow-[0px_8px_24px_rgba(0,0,0,0.10),0px_2px_6px_rgba(0,0,0,0.06)]
-                        z-[200] overflow-hidden ${className}`}
-        >
-            {children}
-        </div>
+        <>
+            {/* Mobile backdrop */}
+            <div
+                className="md:hidden fixed inset-0 z-[199] bg-black/40"
+                onMouseDown={e => e.preventDefault()}
+                onClick={onClose}
+            />
+            {/* Content */}
+            <div
+                className={[
+                    // Mobile: fixed bottom sheet
+                    'fixed md:absolute',
+                    'bottom-0 md:bottom-auto md:top-[calc(100%+10px)]',
+                    'left-0 right-0 md:left-auto md:right-auto',
+                    'w-full md:w-auto',
+                    'rounded-t-[20px] md:rounded-[20px]',
+                    // Common
+                    'bg-white border border-[#e4ddd0]',
+                    'shadow-[0px_8px_24px_rgba(0,0,0,0.10),0px_2px_6px_rgba(0,0,0,0.06)]',
+                    'z-[200] overflow-y-auto md:overflow-hidden',
+                    'max-h-[85vh] md:max-h-none',
+                    className,
+                ].join(' ')}
+            >
+                {/* Drag handle on mobile */}
+                <div className="md:hidden flex justify-center pt-3 pb-1 shrink-0">
+                    <div className="w-10 h-1 bg-[#e4ddd0] rounded-full" />
+                </div>
+                {children}
+            </div>
+        </>
     );
 }
 
@@ -71,9 +103,10 @@ interface CalendarProps {
     dateLocale: Locale;
     dayLabels: string[];
     t: (key: string) => string;
+    singleMonth?: boolean;
 }
 
-function CalendarPanel({ startDate, endDate, onSelect, onClose, dateLocale, dayLabels, t }: CalendarProps) {
+function CalendarPanel({ startDate, endDate, onSelect, onClose, dateLocale, dayLabels, t, singleMonth = false }: CalendarProps) {
     const today = startOfDay(new Date());
     const [viewMonth, setViewMonth] = useState(today);
     const [hovered, setHovered] = useState<Date | null>(null);
@@ -104,18 +137,20 @@ function CalendarPanel({ startDate, endDate, onSelect, onClose, dateLocale, dayL
         return isAfter(day, lo) && isBefore(day, hi);
     }
 
-    const months = [viewMonth, addMonths(viewMonth, 1)];
+    const months = singleMonth ? [viewMonth] : [viewMonth, addMonths(viewMonth, 1)];
 
     return (
         <div>
-            <div className="flex p-4 gap-5">
+            <div className="flex flex-col md:flex-row p-4 gap-5">
                 {months.map((month, mi) => {
                     const { days, offset } = buildDays(month);
+                    const isFirst = mi === 0;
+                    const isLast  = mi === months.length - 1;
                     return (
-                        <div key={mi} className="min-w-[210px]">
+                        <div key={mi} className={singleMonth ? 'w-full' : 'min-w-[210px]'}>
                             {/* Month header */}
                             <div className="flex items-center justify-between mb-3 px-1">
-                                {mi === 0 ? (
+                                {isFirst ? (
                                     <button
                                         onClick={() => setViewMonth(subMonths(viewMonth, 1))}
                                         className="p-1.5 rounded-lg hover:bg-[#eef3ec] transition-colors"
@@ -126,7 +161,7 @@ function CalendarPanel({ startDate, endDate, onSelect, onClose, dateLocale, dayL
                                 <span className="text-[13px] font-semibold text-[#1a211c] capitalize">
                                     {format(month, 'MMMM yyyy', { locale: dateLocale })}
                                 </span>
-                                {mi === 1 ? (
+                                {isLast ? (
                                     <button
                                         onClick={() => setViewMonth(addMonths(viewMonth, 1))}
                                         className="p-1.5 rounded-lg hover:bg-[#eef3ec] transition-colors"
@@ -149,7 +184,7 @@ function CalendarPanel({ startDate, endDate, onSelect, onClose, dateLocale, dayL
                             <div className="grid grid-cols-7">
                                 {Array.from({ length: offset }).map((_, i) => <span key={`e${i}`} />)}
                                 {days.map((day) => {
-                                    const past  = isBefore(day, today);
+                                    const past    = isBefore(day, today);
                                     const isStart = startDate && isSameDay(day, startDate);
                                     const isEnd   = endDate ? isSameDay(day, endDate) : (selecting && hovered ? isSameDay(day, hovered) : false);
                                     const inRng   = inRange(day);
@@ -231,7 +266,7 @@ function TravelersPanel({ value, onChange, onClose, t }: TravelersPanelProps) {
     }
 
     return (
-        <div className="w-[290px]">
+        <div className="w-full md:w-[290px]">
             <div className="px-5 pt-4 pb-2">
                 {rows.map((row, i) => (
                     <div
@@ -287,6 +322,15 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
     const barRef = useRef<HTMLDivElement>(null);
 
     const dateLocale = DATE_LOCALES[locale] ?? enUS;
+
+    // Track mobile breakpoint (md = 768px)
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth < 768);
+        check();
+        window.addEventListener('resize', check);
+        return () => window.removeEventListener('resize', check);
+    }, []);
 
     const DAY_LABELS = [
         t('cal.day_mo'), t('cal.day_tu'), t('cal.day_we'), t('cal.day_th'),
@@ -370,18 +414,25 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
         router.get(`/${locale}/tours`, params);
     }
 
-    // ── Shared styles ─────────────────────────────────────────────────────────
+    // ── Field style ───────────────────────────────────────────────────────────
     const field = (f: ActiveField) =>
-        `flex-1 min-w-0 px-[22px] py-[12px] flex flex-col gap-[3px] rounded-[100px] cursor-pointer transition-colors select-none
+        `w-full md:flex-1 md:min-w-0 px-[22px] py-[14px] md:py-[12px] flex flex-col gap-[3px]
+         md:rounded-[100px] cursor-pointer transition-colors select-none
          ${active === f ? 'bg-[#eef3ec]' : 'hover:bg-[#f9f9f9]'}`;
+
+    // ── Separator helpers ─────────────────────────────────────────────────────
+    const HDiv = () => <div className="md:hidden h-px bg-[#e4ddd0] mx-[12px]" />;
+    const VDiv = () => <div className="hidden md:block w-px h-[38px] bg-[#e4ddd0] shrink-0" />;
 
     return (
         <div ref={barRef} className="relative w-full">
 
             {/* ── Pill ─────────────────────────────────────────────────────── */}
-            <div className="bg-white border border-[#d8d8d8] rounded-[100px]
+            <div className="bg-white border border-[#d8d8d8]
+                            rounded-[22px] md:rounded-[100px]
                             shadow-[0px_7px_7.5px_rgba(0,0,0,0.05),0px_28px_14px_rgba(0,0,0,0.04),0px_63px_19px_rgba(0,0,0,0.03)]
-                            flex items-center px-[10px] py-[8px] w-full">
+                            flex flex-col md:flex-row md:items-center
+                            px-[10px] py-[8px] w-full gap-[2px] md:gap-0">
 
                 {/* Destination */}
                 <div className={field('destination')} onClick={() => toggle('destination')}>
@@ -400,7 +451,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                     />
                 </div>
 
-                <div className="w-px h-[38px] bg-[#e4ddd0] shrink-0" />
+                <HDiv /><VDiv />
 
                 {/* Dates */}
                 <div className={field('dates')} onClick={() => toggle('dates')}>
@@ -410,7 +461,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                     </span>
                 </div>
 
-                <div className="w-px h-[38px] bg-[#e4ddd0] shrink-0" />
+                <HDiv /><VDiv />
 
                 {/* Travelers */}
                 <div className={field('travelers')} onClick={() => toggle('travelers')}>
@@ -420,7 +471,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                     </span>
                 </div>
 
-                <div className="w-px h-[38px] bg-[#e4ddd0] shrink-0" />
+                <HDiv /><VDiv />
 
                 {/* Experience */}
                 <div className={field('experience')} onClick={() => toggle('experience')}>
@@ -431,13 +482,15 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                 </div>
 
                 {/* Search button */}
-                <div className="pl-[6px] shrink-0">
+                <div className="md:pl-[6px] md:shrink-0 px-[2px] pb-[2px] md:p-0">
                     <button
                         onClick={handleSearch}
-                        className="size-[62px] bg-[#6e8c79] rounded-full flex items-center justify-center
+                        className="w-full md:w-auto md:size-[62px] h-[52px] bg-[#6e8c79] rounded-full
+                                   flex items-center justify-center gap-[8px]
                                    text-white hover:bg-[#5a7865] transition-colors"
                     >
                         <Search size={22} />
+                        <span className="md:hidden font-semibold text-[15px]">{t('search.search_cta')}</span>
                     </button>
                 </div>
             </div>
@@ -446,7 +499,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
 
             {/* Destination dropdown */}
             {active === 'destination' && (
-                <Popover className="left-0 w-[320px]">
+                <Popover className="md:left-0 md:w-[320px]" onClose={() => setActive(null)}>
                     <div className="max-h-[300px] overflow-y-auto py-2">
                         {filtered.length === 0 ? (
                             <div className="px-5 py-4 text-[13px] text-[#8a968d]">{t('search.no_destinations')}</div>
@@ -476,7 +529,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
 
             {/* Dates calendar */}
             {active === 'dates' && (
-                <Popover className="left-0">
+                <Popover className="md:left-0" onClose={() => setActive(null)}>
                     <CalendarPanel
                         startDate={startDate}
                         endDate={endDate}
@@ -485,13 +538,14 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                         dateLocale={dateLocale}
                         dayLabels={DAY_LABELS}
                         t={t}
+                        singleMonth={isMobile}
                     />
                 </Popover>
             )}
 
             {/* Travelers counter */}
             {active === 'travelers' && (
-                <Popover className="left-[calc(50%-100px)]">
+                <Popover className="md:left-[calc(50%-100px)]" onClose={() => setActive(null)}>
                     <TravelersPanel
                         value={travelers}
                         onChange={setTravelers}
@@ -503,7 +557,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
 
             {/* Experience selector */}
             {active === 'experience' && (
-                <Popover className="right-[72px] w-[240px]">
+                <Popover className="md:right-[72px] md:w-[240px]" onClose={() => setActive(null)}>
                     <div className="py-2">
                         <button
                             onClick={() => { setExperience(''); setActive(null); }}

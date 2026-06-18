@@ -105,9 +105,13 @@ class TourIndexController extends Controller
         $totalCount = $query->count();
         $tours = $query->paginate(12)->withQueryString();
 
+        $wishlistedIds = $request->user()
+            ? $request->user()->wishlists()->pluck('tour_id')->flip()->all()
+            : [];
+
         return Inertia::render('Tours/Index', [
             'tours' => [
-                'data' => $tours->items() === [] ? [] : collect($tours->items())->map(fn ($t) => $this->formatTour($t)),
+                'data' => $tours->items() === [] ? [] : collect($tours->items())->map(fn ($t) => $this->formatTour($t, $wishlistedIds)),
                 'current_page' => $tours->currentPage(),
                 'last_page' => $tours->lastPage(),
                 'per_page' => $tours->perPage(),
@@ -121,7 +125,7 @@ class TourIndexController extends Controller
         ]);
     }
 
-    private function formatTour(Tour $tour): array
+    private function formatTour(Tour $tour, array $wishlistedIds = []): array
     {
         $media = $tour->getMedia('gallery');
 
@@ -144,6 +148,7 @@ class TourIndexController extends Controller
             'inclusions' => $tour->arr('inclusions'),
             'card_url' => $media->first()?->getUrl('card') ?? '',
             'thumb_url' => $media->first()?->getUrl('thumb') ?? '',
+            'is_wishlisted' => isset($wishlistedIds[$tour->id]),
             'destination' => $tour->destination ? [
                 'id' => $tour->destination->id,
                 'name' => $tour->destination->name,

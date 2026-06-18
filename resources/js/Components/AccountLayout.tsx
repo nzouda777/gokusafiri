@@ -25,7 +25,7 @@ export default function AccountLayout({ children, title }: { children: React.Rea
                         {/* decorative gorilla silhouette placeholder */}
                     </div>
                 </div>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 relative">
                     <span className="inline-block px-3 py-1 rounded-full bg-[#E07A3F] text-white text-xs font-semibold mb-3">
                         My account
                     </span>
@@ -36,7 +36,7 @@ export default function AccountLayout({ children, title }: { children: React.Rea
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
                 <div className="flex flex-col md:flex-row gap-6">
                     {/* Sidebar */}
                     <aside className="w-full md:w-64 flex-shrink-0">

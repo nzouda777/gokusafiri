@@ -36,21 +36,21 @@ export default function CheckoutLayout({ children, step }: { children: React.Rea
                     {/* Secure checkout badge */}
                     <div className="flex items-center gap-[6px] text-[13px] text-[#8a968d] font-medium">
                         <Lock size={13} className="text-[#2E4A39]" />
-                        {t('checkout.secure')}
+                        <span className="hidden sm:block">{t('checkout.secure')}</span>
                     </div>
 
                     {/* Right actions */}
                     <div className="flex items-center gap-[12px]">
                         {auth.user ? (
-                            <span className="text-[13px] text-[#4f5c53]">{auth.user.name}</span>
+                            <span className="hidden sm:block text-[13px] text-[#4f5c53]">{auth.user.name}</span>
                         ) : (
-                            <Link href={`/${locale}/login`} className="text-[13px] text-[#4f5c53] hover:text-[#2E4A39] transition-colors">
+                            <Link href={`/${locale}/login`} className="hidden sm:block text-[13px] text-[#4f5c53] hover:text-[#2E4A39] transition-colors">
                                 {t('nav.sign_in')}
                             </Link>
                         )}
                         <Link
                             href={`/${locale}/tours`}
-                            className="px-[18px] py-[8px] rounded-full bg-[#2E4A39] text-white text-[13px] font-semibold hover:bg-[#1e3326] transition-colors"
+                            className="hidden sm:inline-flex px-[18px] py-[8px] rounded-full bg-[#2E4A39] text-white text-[13px] font-semibold hover:bg-[#1e3326] transition-colors"
                         >
                             {t('nav.plan_trip')}
                         </Link>

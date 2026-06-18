@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tour;
 use App\Models\Wishlist;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class WishlistController extends Controller
 {
-    public function toggle(Request $request): JsonResponse
+    public function toggle(Request $request, Tour $tour): JsonResponse
     {
-        $tour = $request->route('tour');
         $user = $request->user();
 
         $existing = Wishlist::where('user_id', $user->id)->where('tour_id', $tour->id)->first();
