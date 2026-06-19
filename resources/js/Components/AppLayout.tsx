@@ -224,7 +224,7 @@ function Footer() {
                                 className="h-10 w-auto"
                                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'block'; }}
                             />
-                            <span className="font-display not-italic text-[20px]">Gokusafiri</span>
+                            {/* <span className="font-display not-italic text-[20px]">Gokusafiri</span> */}
                         </div>
                         <p className="text-[14px] text-white/60 leading-relaxed">{t('footer.tagline')}</p>
                     </div>
