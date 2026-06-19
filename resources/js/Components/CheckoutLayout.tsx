@@ -23,14 +23,14 @@ export default function CheckoutLayout({ children, step }: { children: React.Rea
                     {/* Logo */}
                     <Link href={`/${locale}`} className="flex items-center gap-[8px]">
                         <img
-                            src="/images/logo.svg"
+                            src="/images/logo.png"
                             alt="GokuSafiri"
                             className="h-[34px] w-auto"
-                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'block'; }}
                         />
-                        <span className="font-display not-italic text-[20px] text-[#2E4A39] font-semibold">
+                        {/* <span className="font-display not-italic text-[20px] text-[#2E4A39] font-semibold">
                             GokuSafiri
-                        </span>
+                        </span> */}
                     </Link>
 
                     {/* Secure checkout badge */}
@@ -108,7 +108,13 @@ export default function CheckoutLayout({ children, step }: { children: React.Rea
                 <div className="max-w-[1200px] mx-auto px-6 py-[40px]">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                         <div>
-                            <span className="font-display not-italic text-[18px] font-semibold">GokuSafiri</span>
+                            <img 
+                                 src="/images/logo-white.png"
+                                alt="Gokusafiri"
+                                className="h-10 w-auto  "
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'block'; }}
+                            />
+                            {/* <span className="font-display not-italic text-[18px] font-semibold">GokuSafiri</span> */}
                             <p className="mt-[10px] text-[13px] text-white/60 leading-[1.6]">
                                 {t('footer.tagline')}
                             </p>

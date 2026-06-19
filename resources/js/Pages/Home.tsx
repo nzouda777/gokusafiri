@@ -2,7 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import AppLayout from '../Components/AppLayout';
 import SearchBar from '../Components/SearchBar';
 import TourCard from '../Components/TourCard';
-import { Star, ChevronDown, ChevronUp, Shield, RefreshCw, Leaf, Sparkles, ArrowRight, Check } from 'lucide-react';
+import { Star, ChevronDown, ChevronUp, Compass, ShieldCheck, Leaf, Sparkles, ArrowRight, Check } from 'lucide-react';
 import { useState } from 'react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import type { Tour } from '../types';
@@ -47,7 +47,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                 {/* Background: gradient + hero image */}
                 <div
                     className="absolute inset-0 overflow-hidden"
-                    style={{ background: 'linear-gradient(133deg,#3a5a45 2%,#1e3326 61%,#d9722a 100%)' }}
+                    style={{ background: 'linear-gradient(133deg,#3a5a45 12%,#1e3326 61%,#d9722a 100%)' }}
                 >
                     <img
                         src="/images/hero-safari.jpg"
@@ -56,7 +56,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                     />
                 </div>
                 {/* Left-to-right overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#16241b] via-[rgba(19,34,25,0.50)_45%] to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#16241b] to-[rgba(19,34,25,0.50)] " />
 
                 {/* Content */}
                 <div className="relative z-10 w-full max-w-[1440px] mx-auto px-[100px] max-lg:px-6 pb-[88px]">
@@ -288,61 +288,66 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             </section>
 
             {/* ── WHY GOKUSAFIRI ───────────────────────────────────────── */}
-            <section id="how-it-works" className="py-[60px] md:py-[100px] bg-[#fbf8f2]">
-                <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
-                    <div className="text-center mb-[40px] md:mb-[60px]">
-                        <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase mb-[10px]">
-                            {t('why.eyebrow')}
-                        </p>
-                        <h2 className="font-display not-italic text-[30px] leading-[38px] md:text-[48px] md:leading-[65px] tracking-[-0.62px] text-[#16241b]">
-                            {t('why.title')}
-                        </h2>
-                        <p className="text-[16px] leading-[27px] text-[#8a968d] mt-[10px] max-w-[520px] mx-auto">
-                            {t('why.subtitle')}
-                        </p>
+            <section id="how-it-works" className="py-[100px] bg-[#fbf8f2]">
+                <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6 flex flex-col gap-[44px]">
+
+                    {/* Header — left-aligned */}
+                    <div className="flex items-end justify-between">
+                        <div className="flex flex-col items-start max-w-[490px]">
+                            <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase">
+                                {t('why.eyebrow')}
+                            </p>
+                            <h2 className="font-display not-italic text-[30px] leading-[38px] md:text-[48px] md:leading-[65px] tracking-[-0.62px] text-[#16241b]">
+                                {t('why.title')}
+                            </h2>
+                        </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[20px]">
+                    {/* 4 feature columns — open layout, no white cards */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[24px]">
                         {[
-                            { icon: <Sparkles size={22} />, title: t('why.f1_title'), desc: t('why.f1_body') },
-                            { icon: <Shield size={22} />,   title: t('why.f2_title'), desc: t('why.f2_body') },
-                            { icon: <Leaf size={22} />,     title: t('why.f3_title'), desc: t('why.f3_body') },
-                            { icon: <RefreshCw size={22} />,title: t('why.f4_title'), desc: t('why.f4_body') },
+                            { icon: <Compass size={28} className="text-[#6e8c79]" />,     title: t('why.f1_title'), desc: t('why.f1_body') },
+                            { icon: <ShieldCheck size={28} className="text-[#6e8c79]" />, title: t('why.f2_title'), desc: t('why.f2_body') },
+                            { icon: <Sparkles size={28} className="text-[#6e8c79]" />,    title: t('why.f4_title'), desc: t('why.f4_body') },
+                            { icon: <Leaf size={28} className="text-[#6e8c79]" />,        title: t('why.f3_title'), desc: t('why.f3_body') },
                         ].map((f) => (
-                            <div
-                                key={f.title}
-                                className="bg-white rounded-[22px] p-[30px] border border-[rgba(0,0,0,0.06)] flex flex-col gap-[16px]"
-                            >
-                                <div className="w-[46px] h-[46px] rounded-[14px] bg-[#eef3ec] flex items-center justify-center text-[#6e8c79]">
+                            <div key={f.title} className="flex flex-col gap-[11px] items-start">
+                                <div className="w-[54px] h-[54px] rounded-[14px] bg-[#eef3ec] flex items-center justify-center shrink-0">
                                     {f.icon}
                                 </div>
-                                <div>
-                                    <h3 className="font-display not-italic text-[20px] leading-[28px] text-[#16241b] mb-[8px]">
-                                        {f.title}
-                                    </h3>
-                                    <p className="text-[14px] text-[#8a968d] leading-[21px]">{f.desc}</p>
-                                </div>
+                                <h3 className="font-display not-italic text-[21px] leading-[22px] tracking-[-0.21px] text-[#1a211c]">
+                                    {f.title}
+                                </h3>
+                                <p className="text-[14.5px] text-[#4f5c53] leading-[21.75px]">{f.desc}</p>
                             </div>
                         ))}
                     </div>
 
-                    {/* Stats row — integrated below the feature cards */}
-                    <div className="mt-[40px] md:mt-[70px] pt-[40px] md:pt-[60px] border-t border-[#e4ddd0] grid grid-cols-3">
-                        {[
-                            { val: stats.travelers,         label: t('why.stat_travelers'), italic: false },
-                            { val: String(stats.countries), label: t('why.stat_countries'), italic: false },
-                            { val: `${stats.rating}★`,      label: t('why.stat_rating'),    italic: true  },
-                        ].map((s, i) => (
-                            <div
-                                key={s.label}
-                                className={`text-center ${i > 0 ? 'border-l border-[#e4ddd0]' : ''}`}
-                            >
-                                <p className={`font-display text-[30px] sm:text-[52px] leading-tight tracking-[-0.52px] text-[#16241b] ${s.italic ? 'italic' : 'not-italic'}`}>
-                                    {s.val}
-                                </p>
-                                <p className="text-[14px] text-[#8a968d] mt-[6px]">{s.label}</p>
+                    {/* Stats — #eef3ec rounded card */}
+                    <div className="bg-[#eef3ec] rounded-[22px] p-[30px] md:p-[54px] grid md:grid-cols-3 grid-cols-1 gap-[30px]">
+                        <div className="flex flex-col items-center gap-[1.5px]">
+                            <p className="font-display not-italic text-[40px] md:text-[64px] leading-[1.125] text-center">
+                                {(() => {
+                                    const m = stats.travelers.match(/^(\d+)(k)(.*)$/i);
+                                    return m
+                                        ? <><span className="text-[#2e4a39]">{m[1]}</span><span className="text-[#e8853b]">k</span><span className="text-[#2e4a39]">{m[3]}</span></>
+                                        : <span className="text-[#2e4a39]">{stats.travelers}</span>;
+                                })()}
+                            </p>
+                            <p className="font-medium text-[14px] leading-[21px] text-[#2e4a39] text-center">{t('why.stat_travelers')}</p>
+                        </div>
+                        <div className="flex flex-col items-center gap-[1.5px]">
+                            <p className="font-display not-italic text-[40px] md:text-[64px] leading-[1.125] text-[#2e4a39] text-center">{stats.countries}</p>
+                            <p className="font-medium text-[14px] leading-[21px] text-[#2e4a39] text-center">{t('why.stat_countries')}</p>
+                        </div>
+                        <div className="flex flex-col items-center gap-[1.5px]">
+                            <div className="flex items-center gap-[5px]">
+                                <p className="font-display not-italic text-[40px] md:text-[64px] leading-[1.125] text-[#2e4a39] text-center">{stats.rating}</p>
+                                <Star size={28} className="fill-[#e8853b] text-[#e8853b] md:hidden" />
+                                <Star size={37} className="fill-[#e8853b] text-[#e8853b] hidden md:block" />
                             </div>
-                        ))}
+                            <p className="font-medium text-[14px] leading-[21px] text-[#2e4a39] text-center">{t('why.stat_rating')}</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -476,7 +481,8 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             </section>
 
             {/* ── CTA ──────────────────────────────────────────────────── */}
-            <section className="relative py-[60px] md:py-[100px] overflow-hidden text-center">
+            <section className='!bg-[#fbf8f2] w-full py-[32px] px-8'>
+            <section className="relative py-[80px] overflow-hidden  max-w-[1240px] mx-auto  rounded-[22px] md:px-[70px] px-[30px] ">
                 {/* Gradient background — matches hero palette */}
                 <div
                     className="absolute inset-0"
@@ -485,17 +491,17 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                 {/* Subtle texture overlay */}
                 <div className="absolute inset-0 bg-[url('/images/hero-safari.jpg')] bg-cover bg-center opacity-[0.12]" />
 
-                <div className="relative z-10 max-w-[640px] mx-auto px-6">
-                    <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase mb-[14px]">
+                <div className="relative z-10 max-w-[640px] mx-auto md:mx-0 px-6">
+                    <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase mb-[14px] md:text-left text-center">
                         {t('cta.eyebrow')}
                     </p>
-                    <h2 className="font-display not-italic text-[32px] leading-[1.2] md:text-[52px] md:leading-[1.15] tracking-[-0.52px] text-white mb-[16px] md:mb-[20px]">
+                    <h2 className="font-display not-italic text-[32px] leading-[1.2] md:text-[52px] md:leading-[1.15] tracking-[-0.52px] text-white mb-[16px] md:mb-[20px] md:text-left text-center">
                         {t('cta.title')}
                     </h2>
-                    <p className="text-[16px] leading-[27px] text-white/75 mb-[40px] max-w-[480px] mx-auto">
+                    <p className="text-[16px] leading-[27px] text-white/75 mb-[40px] max-w-[480px] mx-auto md:mx-0 md:text-left text-center">
                         {t('cta.subtitle')}
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-[12px] justify-center">
+                    <div className="flex flex-col sm:flex-row gap-[12px] justify-center md:justify-start">
                         <Link
                             href="/tours"
                             className="px-[34px] py-[17px] rounded-full bg-white text-[#16241b] text-[16px] font-semibold hover:bg-[#f0ede8] transition-colors"
@@ -510,6 +516,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                         </a>
                     </div>
                 </div>
+            </section>
             </section>
         </AppLayout>
     );

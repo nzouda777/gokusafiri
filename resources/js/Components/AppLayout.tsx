@@ -29,11 +29,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                             src="/images/logo.png"
                             alt="Gokusafiri"
                             className="h-10 w-auto"
-                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                            // onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                         />
-                        <span className="font-display not-italic text-[20px] text-[#16241b] hidden sm:block">
+                        {/* <span className="font-display not-italic text-[20px] text-[#16241b] hidden sm:block">
                             Gokusafiri
-                        </span>
+                        </span> */}
                     </Link>
 
                     {/* Desktop nav */}
@@ -219,10 +219,10 @@ function Footer() {
                     <div className="md:col-span-1">
                         <div className="flex items-center gap-2.5 mb-5">
                             <img
-                                src="/images/logo.png"
+                                src="/images/logo-white.png"
                                 alt="Gokusafiri"
-                                className="h-10 w-auto brightness-0 invert"
-                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                className="h-10 w-auto"
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'block'; }}
                             />
                             <span className="font-display not-italic text-[20px]">Gokusafiri</span>
                         </div>
