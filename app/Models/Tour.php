@@ -131,8 +131,8 @@ class Tour extends Model implements HasMedia
 
     public function registerMediaConversions(?Media $media = null): void
     {
-        $this->addMediaConversion('thumb')->width(400)->height(300)->format('jpg');
-        $this->addMediaConversion('card')->width(800)->height(600)->format('jpg');
-        $this->addMediaConversion('hero')->width(1920)->height(1080)->format('jpg');
+        $this->addMediaConversion('thumb')->width(400)->height(300)->format('jpg')->nonQueued();
+        $this->addMediaConversion('card')->width(800)->height(600)->format('jpg')->nonQueued();
+        $this->addMediaConversion('hero')->width(1920)->height(1080)->format('jpg')->nonQueued();
     }
 }

@@ -93,7 +93,7 @@ export default function BookingSummary({
                 {tour.destination && (
                     <p className="flex items-center gap-[5px] text-[12px] text-[#8a968d]">
                         <MapPin size={11} className="shrink-0" />
-                        {tour.destination.name}, {tour.destination.country}
+                        {typeof tour.destination.name === 'string' ? tour.destination.name : ''}{tour.destination.country ? `, ${tour.destination.country}` : ''}
                     </p>
                 )}
 

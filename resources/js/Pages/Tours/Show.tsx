@@ -242,16 +242,16 @@ export default function TourShow({ tour }: Props) {
                                     {tour.destination && (
                                         <div className="flex items-center gap-[5px] text-[#8a968d]">
                                             <MapPin size={13} />
-                                            <span>{tour.destination.name}, {tour.destination.country}</span>
+                                            <span>{typeof tour.destination.name === 'string' ? tour.destination.name : ''}{tour.destination.country ? `, ${tour.destination.country}` : ''}</span>
                                         </div>
                                     )}
                                     <div className="flex items-center gap-[5px] text-[#8a968d]">
                                         <Clock size={13} />
-                                        <span>{t('show.days_label', { count: tour.duration_days })}</span>
+                                        <span>{t('show.days_label', { count: tour.duration_days ?? 0 })}</span>
                                     </div>
                                     <div className="flex items-center gap-[5px] text-[#8a968d]">
                                         <Users size={13} />
-                                        <span>{t('show.max_group', { count: tour.max_group_size })}</span>
+                                        <span>{t('show.max_group', { count: tour.max_group_size ?? 0 })}</span>
                                     </div>
                                 </div>
                             </div>
@@ -472,7 +472,7 @@ export default function TourShow({ tour }: Props) {
                                         </span>
                                         <span className="text-[13px] text-white/60">{t('show.per_person')}</span>
                                     </div>
-                                    {tour.seats_left !== undefined && tour.seats_left > 0 && tour.seats_left <= 5 && (
+                                    {tour.seats_left != null && tour.seats_left > 0 && tour.seats_left <= 5 && (
                                         <p className="flex items-center gap-[5px] text-[11px] text-[#f0a05e] mt-[8px]">
                                             <AlertTriangle size={11} />
                                             {t('show.seats_left', { count: tour.seats_left })}
@@ -496,7 +496,7 @@ export default function TourShow({ tour }: Props) {
                                                 <option key={s.id} value={s.id}>
                                                     {new Date(s.start_date).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric' })} –{' '}
                                                     {new Date(s.end_date).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })}
-                                                    {s.seats_left <= 5 ? ` ${t('show.n_left', { count: s.seats_left })}` : ''}
+                                                    {s.seats_left != null && s.seats_left <= 5 ? ` ${t('show.n_left', { count: s.seats_left })}` : ''}
                                                 </option>
                                             ))}
                                         </select>

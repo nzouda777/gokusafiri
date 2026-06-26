@@ -49,6 +49,22 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 
+        'mailpit' => [
+            'transport' => 'smtp',
+            'host' => env('MAILPIT_HOST', 'mailpit'),
+            'port' => env('MAILPIT_PORT', 1025),
+            'timeout' => null,
+        ],
+
+        'mailtrap' => [
+            'transport' => 'smtp',
+            'host' => env('MAILTRAP_HOST', 'sandbox.smtp.mailtrap.io'),
+            'port' => env('MAILTRAP_PORT', 2525),
+            'username' => env('MAILTRAP_USERNAME'),
+            'password' => env('MAILTRAP_PASSWORD'),
+            'timeout' => null,
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],

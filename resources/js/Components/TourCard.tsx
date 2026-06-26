@@ -22,9 +22,9 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
     const badge = tour.discount_percent > 0 ? `${tour.discount_percent}% OFF` : tour.badge;
     const badgeBg = badge === 'NEW' ? 'bg-white text-[#16241b]' : 'bg-[#f0a05e] text-white';
 
-    const urgency = tour.seats_left !== undefined && tour.seats_left <= 5
+    const urgency = tour.seats_left != null && tour.seats_left <= 5
         ? t('tour.seats_left', { count: tour.seats_left })
-        : tour.booked_this_week && tour.booked_this_week > 0
+        : tour.booked_this_week != null && tour.booked_this_week > 0
         ? t('tour.booked_week', { count: tour.booked_this_week })
         : null;
 
@@ -58,8 +58,9 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
             >
                 <img
                     src={tour.card_url || '/images/tours/serengeti.jpg'}
-                    alt={tour.title}
+                    alt={typeof tour.title === 'string' ? tour.title : ''}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => { e.currentTarget.src = '/images/tours/serengeti.jpg'; }}
                 />
 
                 {badge && (
@@ -88,7 +89,7 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
                         <div className="flex items-center gap-[3px]">
                             <MapPin size={14} className="text-[#8a968d] shrink-0" />
                             <span className="text-[13px] leading-[19.5px] text-[#8a968d] font-medium whitespace-nowrap overflow-hidden text-ellipsis">
-                                {tour.destination?.name}{tour.destination?.country ? `, ${tour.destination.country}` : ''} · {t('tour.days', { count: tour.duration_days })}
+                                {tour.destination?.name}{tour.destination?.country ? `, ${tour.destination.country}` : ''} · {t('tour.days', { count: tour.duration_days ?? 0 })}
                             </span>
                         </div>
                         <div className="flex items-center gap-[5px] shrink-0">
@@ -101,7 +102,7 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
 
                     {/* Title */}
                     <h3 className="font-display not-italic text-[23px] leading-[24.15px] tracking-[-0.23px] text-[#1a211c]">
-                        {tour.title}
+                        {typeof tour.title === 'string' ? tour.title : ''}
                     </h3>
 
                     {/* Tags */}

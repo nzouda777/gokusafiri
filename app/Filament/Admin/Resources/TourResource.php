@@ -51,7 +51,7 @@ class TourResource extends Resource
                         Forms\Components\TextInput::make('title.en')
                             ->label('Title (EN)')->required()->maxLength(200),
                         Forms\Components\Textarea::make('excerpt.en')
-                            ->label('Short Excerpt (EN)')->rows(2)->maxLength(500),
+                            ->label('Short Excerpt (EN)')->required()->rows(2)->maxLength(500),
                     ]),
                     Schemas\Components\Tabs\Tab::make('Français')->schema([
                         Forms\Components\TextInput::make('title.fr')
@@ -131,6 +131,7 @@ class TourResource extends Resource
                     Schemas\Components\Tabs\Tab::make('English')->schema([
                         Forms\Components\RichEditor::make('description.en')
                             ->label('Description (EN)')
+                            ->required()
                             ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList', 'h2', 'h3', 'blockquote'])
                             ->columnSpanFull(),
                     ]),
