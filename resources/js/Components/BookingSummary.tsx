@@ -76,11 +76,12 @@ export default function BookingSummary({
         <div className="bg-white rounded-[20px] border border-[#e4ddd0] overflow-hidden sticky top-[120px]">
 
             {/* Tour image */}
-            <div className="aspect-[4/3] overflow-hidden">
+            <div className="aspect-[4/3] overflow-hidden bg-[#f0ede8]">
                 <img
                     src={tour.card_url || '/images/tours/serengeti.jpg'}
                     alt={typeof tour.title === 'string' ? tour.title : ''}
                     className="w-full h-full object-cover"
+                    onError={(e) => { e.currentTarget.src = '/images/tours/serengeti.jpg'; }}
                 />
             </div>
 

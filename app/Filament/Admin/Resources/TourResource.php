@@ -178,7 +178,7 @@ class TourResource extends Resource
                     ->columns(4)
                     ->addActionLabel('Add Day')
                     ->cloneable()
-                    ->defaultItems(0),
+                    ->defaultItems(1),
             ])->collapsed(),
 
             Schemas\Components\Section::make('Package Inclusions')
@@ -299,7 +299,7 @@ class TourResource extends Resource
                     ])
                     ->columns(5)
                     ->addActionLabel('Add Departure Date')
-                    ->defaultItems(0),
+                    ->defaultItems(1),
             ])->collapsed(),
 
             Schemas\Components\Section::make('Photo Gallery')->schema([

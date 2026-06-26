@@ -112,6 +112,11 @@ class Booking extends Model
         return $this->expires_at && $this->expires_at->isPast() && $this->status instanceof Pending;
     }
 
+    public function clientEmail(): ?string
+    {
+        return $this->lead_email ?? $this->user?->email;
+    }
+
     public function scopePending($query)
     {
         return $query->whereState('status', Pending::class);

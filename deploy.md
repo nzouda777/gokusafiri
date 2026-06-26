@@ -499,3 +499,23 @@ Le fichier `public/.htaccess` est déjà présent dans le projet. S'assurer qu'i
 | `SESSION_DRIVER` | `redis` (VPS) / `file` (mutualisé) | Driver de session |
 | `FILESYSTEM_DISK` | `local` ou `s3` | Stockage des images |
 | `LOG_LEVEL` | `warning` | Réduire le volume de logs en prod |
+
+
+app/Console/Commands/SetupProduction.php
+
+  Commande php artisan app:setup-production qui enchaîne : migrations → cache
+  clear → cache warm-up → storage:link → vérification tables queue/cache.
+
+
+         
+  Template complet avec les bons drivers pour mutualisé (sans Redis) :
+  - QUEUE_CONNECTION=database
+  - CACHE_STORE=file
+  - SESSION_DRIVER=file
+  - MAIL_MAILER=resend
+ La seule action à faire côté serveur
+
+  Dans cPanel → Cron Jobs :
+
+  * * * * *   /usr/bin/php /home/TON_USER/public_html/artisan schedule:run >>
+  /dev/null 2>&1
