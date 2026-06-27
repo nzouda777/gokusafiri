@@ -145,11 +145,7 @@ function PaymentForm({ booking, initialClientSecret }: { booking: BookingData; i
             return;
         }
 
-        if (paymentIntent?.status === 'succeeded') {
-            router.visit(`/booking/${booking.reference}/confirmation`);
-        } else {
-            router.visit(`/booking/${booking.reference}/payment/complete?payment_intent=${paymentIntent?.id}&redirect_status=${paymentIntent?.status}`);
-        }
+        router.visit(`/booking/${booking.reference}/payment/complete?payment_intent=${paymentIntent?.id}&redirect_status=${paymentIntent?.status ?? 'succeeded'}`);
     }
 
     const { tour, schedule } = booking;

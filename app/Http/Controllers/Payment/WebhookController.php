@@ -23,8 +23,33 @@ class WebhookController extends Controller
             return $this->handleStripe($request);
         }
 
-        // Legacy fake provider
+        if ($provider === 'fake') {
+            return $this->handleFake($request);
+        }
+
         return response('Unknown provider', 400);
+    }
+
+    private function handleFake(Request $request): Response
+    {
+        $ref     = $request->input('provider_reference');
+        $status  = $request->input('status');
+        $payment = Payment::where('provider_reference', $ref)->with('booking')->first();
+
+        if (! $payment) {
+            return response('Payment not found', 404);
+        }
+
+        if ($status === 'succeeded') {
+            if ($payment->status !== 'succeeded') {
+                $payment->update(['status' => 'succeeded', 'paid_at' => now()]);
+                $this->transitions->onPaymentSucceeded($payment->fresh(['booking']));
+            }
+        } else {
+            $payment->update(['status' => 'failed']);
+        }
+
+        return response('OK', 200);
     }
 
     private function handleStripe(Request $request): Response
