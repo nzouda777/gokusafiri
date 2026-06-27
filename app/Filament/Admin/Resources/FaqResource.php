@@ -29,12 +29,12 @@ class FaqResource extends Resource
                     Forms\Components\Textarea::make('answer.en')->label('Answer (EN)')->required(),
                 ]),
                 Schemas\Components\Tabs\Tab::make('🇫🇷 FR')->schema([
-                    Forms\Components\TextInput::make('question.fr')->label('Question (FR)'),
-                    Forms\Components\Textarea::make('answer.fr')->label('Answer (FR)'),
+                    Forms\Components\TextInput::make('question.fr')->label('Question (FR)')->required(),
+                    Forms\Components\Textarea::make('answer.fr')->label('Answer (FR)')->required(),
                 ]),
                 Schemas\Components\Tabs\Tab::make('🇪🇸 ES')->schema([
-                    Forms\Components\TextInput::make('question.es')->label('Question (ES)'),
-                    Forms\Components\Textarea::make('answer.es')->label('Answer (ES)'),
+                    Forms\Components\TextInput::make('question.es')->label('Question (ES)')->required(),
+                    Forms\Components\Textarea::make('answer.es')->label('Answer (ES)')->required(),
                 ]),
             ]),
             Forms\Components\TextInput::make('position')->numeric()->default(0),

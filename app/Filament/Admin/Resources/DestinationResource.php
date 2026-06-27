@@ -51,11 +51,11 @@ class DestinationResource extends Resource
                     ]),
                     Schemas\Components\Tabs\Tab::make('Français')->schema([
                         Forms\Components\TextInput::make('name.fr')
-                            ->label('Nom (FR)')->maxLength(100),
+                            ->label('Nom (FR)')->required()->maxLength(100),
                     ]),
                     Schemas\Components\Tabs\Tab::make('Español')->schema([
                         Forms\Components\TextInput::make('name.es')
-                            ->label('Nombre (ES)')->maxLength(100),
+                            ->label('Nombre (ES)')->required()->maxLength(100),
                     ]),
                 ])->columnSpanFull(),
             ]),

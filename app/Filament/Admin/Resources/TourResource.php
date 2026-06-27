@@ -55,15 +55,15 @@ class TourResource extends Resource
                     ]),
                     Schemas\Components\Tabs\Tab::make('Français')->schema([
                         Forms\Components\TextInput::make('title.fr')
-                            ->label('Titre (FR)')->maxLength(200),
+                            ->label('Titre (FR)')->required()->maxLength(200),
                         Forms\Components\Textarea::make('excerpt.fr')
-                            ->label('Extrait (FR)')->rows(2)->maxLength(500),
+                            ->label('Extrait (FR)')->required()->rows(2)->maxLength(500),
                     ]),
                     Schemas\Components\Tabs\Tab::make('Español')->schema([
                         Forms\Components\TextInput::make('title.es')
-                            ->label('Título (ES)')->maxLength(200),
+                            ->label('Título (ES)')->required()->maxLength(200),
                         Forms\Components\Textarea::make('excerpt.es')
-                            ->label('Extracto (ES)')->rows(2)->maxLength(500),
+                            ->label('Extracto (ES)')->required()->rows(2)->maxLength(500),
                     ]),
                 ])->columnSpanFull(),
 
@@ -160,12 +160,14 @@ class TourResource extends Resource
                     Schemas\Components\Tabs\Tab::make('Français')->schema([
                         Forms\Components\RichEditor::make('description.fr')
                             ->label('Description (FR)')
+                            ->required()
                             ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList', 'h2', 'h3', 'blockquote'])
                             ->columnSpanFull(),
                     ]),
                     Schemas\Components\Tabs\Tab::make('Español')->schema([
                         Forms\Components\RichEditor::make('description.es')
                             ->label('Description (ES)')
+                            ->required()
                             ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList', 'h2', 'h3', 'blockquote'])
                             ->columnSpanFull(),
                     ]),
@@ -182,12 +184,14 @@ class TourResource extends Resource
                     Schemas\Components\Tabs\Tab::make('Français')->schema([
                         Forms\Components\RichEditor::make('practical_info.fr')
                             ->label('Informations Pratiques (FR)')
+                            ->required()
                             ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
                             ->columnSpanFull(),
                     ]),
                     Schemas\Components\Tabs\Tab::make('Español')->schema([
                         Forms\Components\RichEditor::make('practical_info.es')
                             ->label('Información Práctica (ES)')
+                            ->required()
                             ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
                             ->columnSpanFull(),
                     ]),
@@ -195,50 +199,148 @@ class TourResource extends Resource
             ]),
 
             Schemas\Components\Section::make('Inclusions & Exclusions')->schema([
-                Forms\Components\TagsInput::make('included.en')
-                    ->label('Included (EN)')
-                    ->placeholder('Type item then press Enter')
-                    ->reorderable(),
-                Forms\Components\TagsInput::make('excluded.en')
-                    ->label('Excluded (EN)')
-                    ->placeholder('Type item then press Enter')
-                    ->reorderable(),
-            ])->columns(2),
+                Schemas\Components\Tabs::make('Inclusions Translations')->tabs([
+                    Schemas\Components\Tabs\Tab::make('English')->schema([
+                        Forms\Components\TagsInput::make('included.en')
+                            ->label('Included (EN)')
+                            ->placeholder('Type item then press Enter')
+                            ->reorderable(),
+                        Forms\Components\TagsInput::make('excluded.en')
+                            ->label('Excluded (EN)')
+                            ->placeholder('Type item then press Enter')
+                            ->reorderable(),
+                    ])->columns(2),
+                    Schemas\Components\Tabs\Tab::make('Français')->schema([
+                        Forms\Components\TagsInput::make('included.fr')
+                            ->label('Inclus (FR)')
+                            ->placeholder('Saisir un élément puis Entrée')
+                            ->reorderable(),
+                        Forms\Components\TagsInput::make('excluded.fr')
+                            ->label('Non inclus (FR)')
+                            ->placeholder('Saisir un élément puis Entrée')
+                            ->reorderable(),
+                    ])->columns(2),
+                    Schemas\Components\Tabs\Tab::make('Español')->schema([
+                        Forms\Components\TagsInput::make('included.es')
+                            ->label('Incluido (ES)')
+                            ->placeholder('Escriba un elemento y presione Enter')
+                            ->reorderable(),
+                        Forms\Components\TagsInput::make('excluded.es')
+                            ->label('No incluido (ES)')
+                            ->placeholder('Escriba un elemento y presione Enter')
+                            ->reorderable(),
+                    ])->columns(2),
+                ])->columnSpanFull(),
+            ]),
 
             Schemas\Components\Section::make('Day-by-Day Itinerary')->schema([
-                Forms\Components\Repeater::make('itinerary.en')
-                    ->label('Itinerary (English)')
-                    ->schema([
-                        Forms\Components\TextInput::make('day')
-                            ->label('Day #')->numeric()->required()->minValue(1)->default(1),
-                        Forms\Components\TextInput::make('title')
-                            ->label('Title')->required()->maxLength(150),
-                        Forms\Components\TextInput::make('location')
-                            ->label('Location / Stay')->maxLength(200),
-                        Forms\Components\TextInput::make('meals')
-                            ->label('Meals (B/L/D)')->maxLength(20),
-                        Forms\Components\Textarea::make('description')
-                            ->label('Description')->rows(3)->columnSpanFull(),
-                    ])
-                    ->columns(4)
-                    ->addActionLabel('Add Day')
-                    ->cloneable()
-                    ->defaultItems(1),
+                Schemas\Components\Tabs::make('Itinerary Translations')->tabs([
+                    Schemas\Components\Tabs\Tab::make('English')->schema([
+                        Forms\Components\Repeater::make('itinerary.en')
+                            ->label('Itinerary (EN)')
+                            ->schema([
+                                Forms\Components\TextInput::make('day')
+                                    ->label('Day #')->numeric()->required()->minValue(1)->default(1),
+                                Forms\Components\TextInput::make('title')
+                                    ->label('Title')->required()->maxLength(150),
+                                Forms\Components\TextInput::make('location')
+                                    ->label('Location / Stay')->maxLength(200),
+                                Forms\Components\TextInput::make('meals')
+                                    ->label('Meals (B/L/D)')->maxLength(20),
+                                Forms\Components\Textarea::make('description')
+                                    ->label('Description')->rows(3)->columnSpanFull(),
+                            ])
+                            ->columns(4)
+                            ->addActionLabel('Add Day')
+                            ->cloneable()
+                            ->defaultItems(1),
+                    ]),
+                    Schemas\Components\Tabs\Tab::make('Français')->schema([
+                        Forms\Components\Repeater::make('itinerary.fr')
+                            ->label('Itinéraire (FR)')
+                            ->schema([
+                                Forms\Components\TextInput::make('day')
+                                    ->label('Jour #')->numeric()->required()->minValue(1)->default(1),
+                                Forms\Components\TextInput::make('title')
+                                    ->label('Titre')->required()->maxLength(150),
+                                Forms\Components\TextInput::make('location')
+                                    ->label('Lieu / Hébergement')->maxLength(200),
+                                Forms\Components\TextInput::make('meals')
+                                    ->label('Repas (P/D/S)')->maxLength(20),
+                                Forms\Components\Textarea::make('description')
+                                    ->label('Description')->rows(3)->columnSpanFull(),
+                            ])
+                            ->columns(4)
+                            ->addActionLabel('Ajouter un jour')
+                            ->cloneable()
+                            ->defaultItems(1),
+                    ]),
+                    Schemas\Components\Tabs\Tab::make('Español')->schema([
+                        Forms\Components\Repeater::make('itinerary.es')
+                            ->label('Itinerario (ES)')
+                            ->schema([
+                                Forms\Components\TextInput::make('day')
+                                    ->label('Día #')->numeric()->required()->minValue(1)->default(1),
+                                Forms\Components\TextInput::make('title')
+                                    ->label('Título')->required()->maxLength(150),
+                                Forms\Components\TextInput::make('location')
+                                    ->label('Lugar / Alojamiento')->maxLength(200),
+                                Forms\Components\TextInput::make('meals')
+                                    ->label('Comidas (D/A/C)')->maxLength(20),
+                                Forms\Components\Textarea::make('description')
+                                    ->label('Descripción')->rows(3)->columnSpanFull(),
+                            ])
+                            ->columns(4)
+                            ->addActionLabel('Agregar día')
+                            ->cloneable()
+                            ->defaultItems(1),
+                    ]),
+                ])->columnSpanFull(),
             ])->collapsed(),
 
             Schemas\Components\Section::make('Package Inclusions')
                 ->schema([
-                    Forms\Components\Repeater::make('inclusions.en')
-                        ->label('Included Experiences (English)')
-                        ->schema([
-                            Forms\Components\TextInput::make('type')
-                                ->label('Title / Type')->required()->maxLength(200),
-                            Forms\Components\TextInput::make('icon')
-                                ->label('Icon key (optional)')->maxLength(50),
-                        ])
-                        ->columns(2)
-                        ->addActionLabel('Add Inclusion')
-                        ->defaultItems(0),
+                    Schemas\Components\Tabs::make('Inclusions Translations')->tabs([
+                        Schemas\Components\Tabs\Tab::make('English')->schema([
+                            Forms\Components\Repeater::make('inclusions.en')
+                                ->label('Included Experiences (EN)')
+                                ->schema([
+                                    Forms\Components\TextInput::make('type')
+                                        ->label('Title / Type')->required()->maxLength(200),
+                                    Forms\Components\TextInput::make('icon')
+                                        ->label('Icon key (optional)')->maxLength(50),
+                                ])
+                                ->columns(2)
+                                ->addActionLabel('Add Inclusion')
+                                ->defaultItems(0),
+                        ]),
+                        Schemas\Components\Tabs\Tab::make('Français')->schema([
+                            Forms\Components\Repeater::make('inclusions.fr')
+                                ->label('Expériences incluses (FR)')
+                                ->schema([
+                                    Forms\Components\TextInput::make('type')
+                                        ->label('Titre / Type')->required()->maxLength(200),
+                                    Forms\Components\TextInput::make('icon')
+                                        ->label('Clé icône (optionnel)')->maxLength(50),
+                                ])
+                                ->columns(2)
+                                ->addActionLabel('Ajouter')
+                                ->defaultItems(0),
+                        ]),
+                        Schemas\Components\Tabs\Tab::make('Español')->schema([
+                            Forms\Components\Repeater::make('inclusions.es')
+                                ->label('Experiencias incluidas (ES)')
+                                ->schema([
+                                    Forms\Components\TextInput::make('type')
+                                        ->label('Título / Tipo')->required()->maxLength(200),
+                                    Forms\Components\TextInput::make('icon')
+                                        ->label('Clave de icono (opcional)')->maxLength(50),
+                                ])
+                                ->columns(2)
+                                ->addActionLabel('Agregar')
+                                ->defaultItems(0),
+                        ]),
+                    ])->columnSpanFull(),
                 ])
                 ->collapsed()
                 ->hidden(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('type') !== 'package'),
@@ -295,12 +397,38 @@ class TourResource extends Resource
                                         'camera'    => '📷 Photography',
                                         'shield'    => '🛡 Safety',
                                         'star'      => '⭐ Premium',
-                                    ]),
-                                Forms\Components\TextInput::make('title')->label('Titre')->maxLength(80),
+                                    ])
+                                    ->required(),
+                                Forms\Components\TextInput::make('title')->label('Titre')->required()->maxLength(80),
                                 Forms\Components\TextInput::make('subtitle')->label('Sous-titre')->maxLength(120),
                             ])
                             ->columns(3)
                             ->addActionLabel('Ajouter')
+                            ->maxItems(6)
+                            ->defaultItems(0),
+                    ]),
+                    Schemas\Components\Tabs\Tab::make('Español')->schema([
+                        Forms\Components\Repeater::make('highlights.es')
+                            ->label('Highlights (ES)')
+                            ->schema([
+                                Forms\Components\Select::make('icon')
+                                    ->label('Icon')
+                                    ->options([
+                                        'user'      => '👤 Guide / Person',
+                                        'tent'      => '⛺ Accommodation',
+                                        'utensils'  => '🍽 Meals',
+                                        'balloon'   => '🎈 Balloon / Activity',
+                                        'binoculars'=> '🔭 Game drives',
+                                        'camera'    => '📷 Photography',
+                                        'shield'    => '🛡 Safety',
+                                        'star'      => '⭐ Premium',
+                                    ])
+                                    ->required(),
+                                Forms\Components\TextInput::make('title')->label('Título')->required()->maxLength(80),
+                                Forms\Components\TextInput::make('subtitle')->label('Subtítulo')->maxLength(120),
+                            ])
+                            ->columns(3)
+                            ->addActionLabel('Agregar')
                             ->maxItems(6)
                             ->defaultItems(0),
                     ]),
@@ -311,12 +439,26 @@ class TourResource extends Resource
                 Forms\Components\Repeater::make('addons')
                     ->relationship('addons')
                     ->schema([
-                        Forms\Components\TextInput::make('label.en')
-                            ->label('Label (EN)')->required()->maxLength(150),
-                        Forms\Components\TextInput::make('label.fr')
-                            ->label('Label (FR)')->maxLength(150),
-                        Forms\Components\Textarea::make('description.en')
-                            ->label('Description (EN)')->rows(2)->columnSpanFull(),
+                        Schemas\Components\Tabs::make('Add-on Translations')->tabs([
+                            Schemas\Components\Tabs\Tab::make('English')->schema([
+                                Forms\Components\TextInput::make('label.en')
+                                    ->label('Label (EN)')->required()->maxLength(150),
+                                Forms\Components\Textarea::make('description.en')
+                                    ->label('Description (EN)')->rows(2)->columnSpanFull(),
+                            ]),
+                            Schemas\Components\Tabs\Tab::make('Français')->schema([
+                                Forms\Components\TextInput::make('label.fr')
+                                    ->label('Libellé (FR)')->required()->maxLength(150),
+                                Forms\Components\Textarea::make('description.fr')
+                                    ->label('Description (FR)')->rows(2)->columnSpanFull(),
+                            ]),
+                            Schemas\Components\Tabs\Tab::make('Español')->schema([
+                                Forms\Components\TextInput::make('label.es')
+                                    ->label('Etiqueta (ES)')->required()->maxLength(150),
+                                Forms\Components\Textarea::make('description.es')
+                                    ->label('Descripción (ES)')->rows(2)->columnSpanFull(),
+                            ]),
+                        ])->columnSpanFull(),
                         Forms\Components\TextInput::make('price_per_person')
                             ->label('Price / Person (cents)')->numeric()->required()->minValue(0)->suffix('cts'),
                         Forms\Components\Hidden::make('position')->default(0),

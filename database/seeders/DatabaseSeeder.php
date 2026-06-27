@@ -28,8 +28,8 @@ class DatabaseSeeder extends Seeder
         // Users démo
         $admin = User::factory()->create([
             'name' => 'Admin GKS', 'first_name' => 'Admin', 'last_name' => 'GKS',
-            'email' => 'admin@gokusafiri.test',
-            'password' => Hash::make('password'),
+            'email' => 'admin@gokusafiri.com',
+            'password' => Hash::make('$RootAppManager2020'),
             'email_verified_at' => now(),
         ]);
         $admin->assignRole($adminRole);

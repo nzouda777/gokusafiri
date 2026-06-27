@@ -92,8 +92,11 @@ export default function TourShow({ tour }: Props) {
 
     const TABS = [
         { id: 'overview',  label: t('show.tab_overview') },
-        { id: 'itinerary', label: t('show.tab_itinerary') },
-        { id: 'included',  label: t('show.tab_included') },
+        ...((Array.isArray(tour.itinerary) && (tour.itinerary as any[]).length > 0)
+            ? [{ id: 'itinerary', label: t('show.tab_itinerary') }] : []),
+        ...((Array.isArray(tour.included) && (tour.included as any[]).length > 0) ||
+            (Array.isArray(tour.excluded) && (tour.excluded as any[]).length > 0)
+            ? [{ id: 'included', label: t('show.tab_included') }] : []),
         { id: 'reviews',   label: t('show.tab_reviews') },
     ];
 
@@ -136,6 +139,8 @@ export default function TourShow({ tour }: Props) {
     const itinerary                   = Array.isArray(tour.itinerary) ? tour.itinerary : [];
     const included                    = Array.isArray(tour.included) ? tour.included : [];
     const excluded                    = Array.isArray(tour.excluded) ? tour.excluded : [];
+    const hasItinerary                = itinerary.length > 0;
+    const hasIncluded                 = included.length > 0 || excluded.length > 0;
 
     return (
         <AppLayout>
@@ -302,10 +307,10 @@ export default function TourShow({ tour }: Props) {
                                     {tour.type === 'package' ? t('show.about_package') : t('show.about_safari')}
                                 </h2>
 
-                                {tour.description && (
+                                {typeof tour.description === 'string' && tour.description.replace(/<[^>]*>/g, '').trim().length > 0 && (
                                     <div
                                         className="text-[15px] text-[#4f5c53] leading-[1.75] [&_p]:mb-[14px] [&_h2]:text-[#16241b] [&_h2]:font-bold [&_h3]:text-[#16241b] [&_h3]:font-bold [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-4"
-                                        dangerouslySetInnerHTML={{ __html: typeof tour.description === 'string' ? tour.description : '' }}
+                                        dangerouslySetInnerHTML={{ __html: tour.description }}
                                     />
                                 )}
 
@@ -341,7 +346,7 @@ export default function TourShow({ tour }: Props) {
                                 )}
 
                                 {/* Practical info ──────────────────────────── */}
-                                {tour.practical_info && typeof tour.practical_info === 'string' && tour.practical_info.length > 0 && (
+                                {typeof tour.practical_info === 'string' && tour.practical_info.replace(/<[^>]*>/g, '').trim().length > 0 && (
                                     <div className="mt-[36px]">
                                         <h3 className="font-display not-italic text-[20px] text-[#16241b] mb-[14px]">
                                             Important Notes
@@ -355,62 +360,61 @@ export default function TourShow({ tour }: Props) {
                             </div>
 
                             {/* ── Itinerary section ───────────────────── */}
+                            {hasItinerary && (
                             <div id="itinerary" ref={sectionRefs.itinerary} className="pt-[56px]">
                                 <h2 className="font-display not-italic text-[24px] text-[#16241b] mb-[28px]">
                                     {t('show.itinerary_title')}
                                 </h2>
-
-                                {itinerary.length > 0 ? (
-                                    <div className="relative">
-                                        <div className="absolute left-[17px] top-[36px] bottom-[36px] w-[2px] bg-[#e4ddd0]" />
-                                        <div className="space-y-[28px]">
-                                            {itinerary.map((day: any, i: number) => (
-                                                <div key={i} className="flex gap-[20px]">
-                                                    <div className="relative shrink-0">
-                                                        <div className="w-[36px] h-[36px] rounded-full bg-[#2E4A39] text-white text-[13px] font-bold flex items-center justify-center relative z-10">
-                                                            {day.day}
-                                                        </div>
-                                                    </div>
-                                                    <div className="pb-[4px]">
-                                                        <p className="text-[15px] font-bold text-[#16241b] mb-[6px] leading-[1.3]">
-                                                            {day.title}
-                                                        </p>
-                                                        {(day.location || day.meals) && (
-                                                            <div className="flex items-center flex-wrap gap-x-[12px] gap-y-[2px] mb-[8px]">
-                                                                {day.location && (
-                                                                    <span className="flex items-center gap-[4px] text-[12px] text-[#8a968d]">
-                                                                        <MapPin size={10} />
-                                                                        {day.location}
-                                                                    </span>
-                                                                )}
-                                                                {day.meals && (
-                                                                    <span className="flex items-center gap-[4px] text-[12px] text-[#8a968d]">
-                                                                        <Utensils size={10} />
-                                                                        {t('show.meals', { meals: day.meals })}
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                        )}
-                                                        <p className="text-[14px] text-[#4f5c53] leading-[1.65]">
-                                                            {day.description}
-                                                        </p>
+                                <div className="relative">
+                                    <div className="absolute left-[17px] top-[36px] bottom-[36px] w-[2px] bg-[#e4ddd0]" />
+                                    <div className="space-y-[28px]">
+                                        {itinerary.map((day: any, i: number) => (
+                                            <div key={i} className="flex gap-[20px]">
+                                                <div className="relative shrink-0">
+                                                    <div className="w-[36px] h-[36px] rounded-full bg-[#2E4A39] text-white text-[13px] font-bold flex items-center justify-center relative z-10">
+                                                        {day.day}
                                                     </div>
                                                 </div>
-                                            ))}
-                                        </div>
+                                                <div className="pb-[4px]">
+                                                    <p className="text-[15px] font-bold text-[#16241b] mb-[6px] leading-[1.3]">
+                                                        {day.title}
+                                                    </p>
+                                                    {(day.location || day.meals) && (
+                                                        <div className="flex items-center flex-wrap gap-x-[12px] gap-y-[2px] mb-[8px]">
+                                                            {day.location && (
+                                                                <span className="flex items-center gap-[4px] text-[12px] text-[#8a968d]">
+                                                                    <MapPin size={10} />
+                                                                    {day.location}
+                                                                </span>
+                                                            )}
+                                                            {day.meals && (
+                                                                <span className="flex items-center gap-[4px] text-[12px] text-[#8a968d]">
+                                                                    <Utensils size={10} />
+                                                                    {t('show.meals', { meals: day.meals })}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                    <p className="text-[14px] text-[#4f5c53] leading-[1.65]">
+                                                        {day.description}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ) : (
-                                    <p className="text-[14px] text-[#8a968d]">{t('show.no_itinerary')}</p>
-                                )}
+                                </div>
                             </div>
+                            )}
 
                             {/* ── What's included section ─────────────── */}
+                            {hasIncluded && (
                             <div id="included" ref={sectionRefs.included} className="pt-[56px]">
                                 <h2 className="font-display not-italic text-[24px] text-[#16241b] mb-[28px]">
                                     {t('show.whats_included')}
                                 </h2>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-[40px]">
+                                    {included.length > 0 && (
                                     <div>
                                         <p className="text-[12px] font-bold text-[#16241b] uppercase tracking-[0.8px] mb-[16px]">
                                             {t('show.included_col')}
@@ -424,7 +428,9 @@ export default function TourShow({ tour }: Props) {
                                             ))}
                                         </ul>
                                     </div>
+                                    )}
 
+                                    {excluded.length > 0 && (
                                     <div>
                                         <p className="text-[12px] font-bold text-[#16241b] uppercase tracking-[0.8px] mb-[16px]">
                                             {t('show.excluded_col')}
@@ -438,8 +444,10 @@ export default function TourShow({ tour }: Props) {
                                             ))}
                                         </ul>
                                     </div>
+                                    )}
                                 </div>
                             </div>
+                            )}
 
                             {/* ── Traveler reviews section ────────────── */}
                             <div id="reviews" ref={sectionRefs.reviews} className="pt-[56px]">
