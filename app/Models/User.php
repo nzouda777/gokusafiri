@@ -20,7 +20,7 @@ class User extends Authenticatable implements HasMedia
         'name', 'first_name', 'last_name', 'email', 'password',
         'google_id', 'avatar', 'locale', 'country', 'phone',
         'tier', 'newsletter_opt_in',
-        'passport_number', 'passport_expiry', 'nationality',
+        'passport_number', 'passport_expiry', 'nationality','email_verified_at',
     ];
 
     protected $hidden = ['password', 'remember_token'];

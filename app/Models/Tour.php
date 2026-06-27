@@ -19,7 +19,7 @@ class Tour extends Model implements HasMedia
 {
     use HasFactory, HasSlug, HasTranslations, InteractsWithMedia, SoftDeletes;
 
-    public array $translatable = ['title', 'excerpt', 'description', 'itinerary', 'included', 'excluded', 'inclusions', 'highlights'];
+    public array $translatable = ['title', 'excerpt', 'description', 'itinerary', 'included', 'excluded', 'inclusions', 'highlights', 'practical_info'];
 
     protected $fillable = [
         'operator_id', 'destination_id', 'type', 'title', 'slug', 'excerpt', 'description',
@@ -27,6 +27,7 @@ class Tour extends Model implements HasMedia
         'base_price', 'child_price', 'currency', 'duration_days', 'max_group_size', 'style',
         'lat', 'lng', 'cancellation_days', 'badge', 'discount_percent', 'status',
         'rating_cache', 'reviews_count_cache',
+        'deposit_percent', 'difficulty', 'min_age', 'languages', 'practical_info',
     ];
 
     protected $casts = [
@@ -40,6 +41,9 @@ class Tour extends Model implements HasMedia
         'duration_days' => 'integer',
         'max_group_size' => 'integer',
         'cancellation_days' => 'integer',
+        'deposit_percent' => 'integer',
+        'min_age' => 'integer',
+        'languages' => 'array',
         'discount_percent' => 'integer',
         'rating_cache' => 'float',
         'reviews_count_cache' => 'integer',

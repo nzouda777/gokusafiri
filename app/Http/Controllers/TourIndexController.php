@@ -145,6 +145,8 @@ class TourIndexController extends Controller
             'badge' => $tour->badge,
             'discount_percent' => $tour->discount_percent,
             'cancellation_days' => $tour->cancellation_days,
+            'deposit_percent' => $tour->deposit_percent ?? 20,
+            'difficulty' => $tour->difficulty,
             'inclusions' => $tour->arr('inclusions'),
             'card_url' => $media->first()?->getUrl('card') ?? '',
             'thumb_url' => $media->first()?->getUrl('thumb') ?? '',

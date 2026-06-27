@@ -119,12 +119,34 @@ class TourResource extends Resource
                     ->label('Max Group Size')->numeric()->required()->minValue(1)->maxValue(200),
                 Forms\Components\TextInput::make('cancellation_days')
                     ->label('Free Cancel (days before dept.)')->numeric()->default(30)->minValue(0),
+                Forms\Components\TextInput::make('deposit_percent')
+                    ->label('Deposit (%)')->numeric()->default(20)->minValue(1)->maxValue(100)
+                    ->helperText('% of total charged as deposit'),
                 Forms\Components\TextInput::make('discount_percent')
                     ->label('Discount (%)')->numeric()->default(0)->minValue(0)->maxValue(100),
                 Forms\Components\Select::make('badge')
                     ->options(['bestseller' => 'Bestseller', 'new' => 'New', 'limited' => 'Limited'])
                     ->nullable()->placeholder('— No badge —'),
             ])->columns(4),
+
+            Schemas\Components\Section::make('Tour Details')->schema([
+                Forms\Components\Select::make('difficulty')
+                    ->options([
+                        'easy'        => 'Easy — suitable for all fitness levels',
+                        'moderate'    => 'Moderate — some walking / light activity',
+                        'challenging' => 'Challenging — good fitness required',
+                        'extreme'     => 'Extreme — high fitness / experience required',
+                    ])
+                    ->nullable()->placeholder('— Not specified —'),
+                Forms\Components\TextInput::make('min_age')
+                    ->label('Minimum Age')->numeric()->nullable()->minValue(0)->maxValue(99)
+                    ->helperText('Leave blank for no restriction'),
+                Forms\Components\TagsInput::make('languages')
+                    ->label('Guide Languages')
+                    ->placeholder('Type a language, press Enter')
+                    ->helperText('e.g. English, French, Swahili')
+                    ->reorderable(),
+            ])->columns(3),
 
             Schemas\Components\Section::make('Full Description')->schema([
                 Schemas\Components\Tabs::make('Description Translations')->tabs([
@@ -145,6 +167,28 @@ class TourResource extends Resource
                         Forms\Components\RichEditor::make('description.es')
                             ->label('Description (ES)')
                             ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList', 'h2', 'h3', 'blockquote'])
+                            ->columnSpanFull(),
+                    ]),
+                ])->columnSpanFull(),
+
+                Schemas\Components\Tabs::make('Practical Info Translations')->tabs([
+                    Schemas\Components\Tabs\Tab::make('English')->schema([
+                        Forms\Components\RichEditor::make('practical_info.en')
+                            ->label('Practical Info (EN) — Important Notes')
+                            ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
+                            ->helperText('Vehicle type, what to bring, payment tips, flexibility notes...')
+                            ->columnSpanFull(),
+                    ]),
+                    Schemas\Components\Tabs\Tab::make('Français')->schema([
+                        Forms\Components\RichEditor::make('practical_info.fr')
+                            ->label('Informations Pratiques (FR)')
+                            ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
+                            ->columnSpanFull(),
+                    ]),
+                    Schemas\Components\Tabs\Tab::make('Español')->schema([
+                        Forms\Components\RichEditor::make('practical_info.es')
+                            ->label('Información Práctica (ES)')
+                            ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
                             ->columnSpanFull(),
                     ]),
                 ])->columnSpanFull(),

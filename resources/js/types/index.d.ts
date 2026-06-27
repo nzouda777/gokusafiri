@@ -33,6 +33,11 @@ export interface Tour {
     discount_percent: number;
     status: string;
     cancellation_days: number;
+    deposit_percent: number;
+    difficulty: 'easy' | 'moderate' | 'challenging' | 'extreme' | null;
+    min_age: number | null;
+    languages: string[];
+    practical_info: string | null;
     destination: Destination;
     inclusions: { type: string; icon?: string }[];
     highlights: TourHighlight[];

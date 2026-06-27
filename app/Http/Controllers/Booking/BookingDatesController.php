@@ -133,7 +133,7 @@ class BookingDatesController extends Controller
         $memberDiscount = $booking->user_id ? (int) round($subtotal * 0.05) : 0;
         $taxesFees      = (int) round(($subtotal + $addonsTotal - $memberDiscount) * 0.008);
         $total          = $subtotal + $addonsTotal - $memberDiscount + $taxesFees;
-        $deposit        = (int) round($total * 0.20);
+        $deposit        = (int) round($total * (($tour->deposit_percent ?? 20) / 100));
         $balanceDue     = $schedule ? $schedule->starts_at->subDays(30) : null;
 
         $booking->update([

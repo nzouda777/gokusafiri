@@ -4,7 +4,7 @@ import {
     MapPin, Clock, Users, Star, Check, X,
     CheckCircle2, AlertTriangle, Heart,
     Utensils, Tent, User, Camera, Shield, Binoculars, Sparkles, Wind,
-    ChevronLeft, ChevronRight, LayoutGrid,
+    ChevronLeft, ChevronRight, LayoutGrid, Globe, Activity,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
@@ -82,6 +82,8 @@ export default function TourShow({ tour }: Props) {
     const taxes          = Math.round((subtotal - memberDiscount) * 0.008);
     const total          = subtotal - memberDiscount + taxes;
     const fullSaving     = Math.round(total * 0.02);
+    const depositPct     = tour.deposit_percent ?? 20;
+    const depositAmount  = Math.round(total * depositPct / 100);
 
     const cancellationDate = selectedSchedule
         ? new Date(new Date(selectedSchedule.start_date).getTime() - (tour.cancellation_days ?? 30) * 86400000)
@@ -253,6 +255,22 @@ export default function TourShow({ tour }: Props) {
                                         <Users size={13} />
                                         <span>{t('show.max_group', { count: tour.max_group_size ?? 0 })}</span>
                                     </div>
+                                    {tour.difficulty && (
+                                        <span className={`inline-flex items-center gap-[4px] px-[8px] py-[2px] rounded-full text-[12px] font-medium ${{
+                                            easy:        'bg-[#eef3ec] text-[#2E4A39]',
+                                            moderate:    'bg-[#e8f0fe] text-[#1a56db]',
+                                            challenging: 'bg-[#fff3e0] text-[#c97b4b]',
+                                            extreme:     'bg-[#fde8e8] text-[#c81e1e]',
+                                        }[tour.difficulty] ?? 'bg-[#f0ede8] text-[#6b7280]'}`}>
+                                            <Activity size={11} />
+                                            {tour.difficulty.charAt(0).toUpperCase() + tour.difficulty.slice(1)}
+                                        </span>
+                                    )}
+                                    {tour.min_age != null && (
+                                        <span className="text-[13px] text-[#8a968d]">
+                                            Ages {tour.min_age}+
+                                        </span>
+                                    )}
                                 </div>
                             </div>
 
@@ -308,6 +326,30 @@ export default function TourShow({ tour }: Props) {
                                                 </div>
                                             );
                                         })}
+                                    </div>
+                                )}
+
+                                {/* Guide languages ─────────────────────────── */}
+                                {Array.isArray(tour.languages) && tour.languages.length > 0 && (
+                                    <div className="flex items-center gap-[10px] mt-[24px] bg-[#f7f5f0] rounded-[12px] px-[16px] py-[12px] border border-[#ede9e2]">
+                                        <Globe size={15} className="text-[#6e8c79] shrink-0" />
+                                        <p className="text-[13px] text-[#4f5c53]">
+                                            <span className="font-semibold text-[#16241b]">Guide languages: </span>
+                                            {tour.languages.join(' · ')}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {/* Practical info ──────────────────────────── */}
+                                {tour.practical_info && typeof tour.practical_info === 'string' && tour.practical_info.length > 0 && (
+                                    <div className="mt-[36px]">
+                                        <h3 className="font-display not-italic text-[20px] text-[#16241b] mb-[14px]">
+                                            Important Notes
+                                        </h3>
+                                        <div
+                                            className="text-[14px] text-[#4f5c53] leading-[1.75] bg-[#fffbf5] border border-[#ede9e2] rounded-[14px] px-[20px] py-[18px] [&_p]:mb-[10px] [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-3"
+                                            dangerouslySetInnerHTML={{ __html: tour.practical_info }}
+                                        />
                                     </div>
                                 )}
                             </div>
@@ -534,6 +576,16 @@ export default function TourShow({ tour }: Props) {
                                             <span className="text-[14px] font-bold text-[#16241b]">{t('show.total')}</span>
                                             <span className="text-[20px] font-bold text-[#16241b]">{fmt(total)}</span>
                                         </div>
+                                        {!payFull && (
+                                            <div className="flex justify-between items-center bg-[#eef3ec] rounded-[10px] px-[12px] py-[9px]">
+                                                <span className="text-[12px] font-medium text-[#2E4A39]">
+                                                    Deposit today ({depositPct}%)
+                                                </span>
+                                                <span className="text-[14px] font-bold text-[#2E4A39]">
+                                                    {fmt(depositAmount)}
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Free cancellation */}
