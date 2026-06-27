@@ -74,9 +74,9 @@ export default function AccountTrips({ bookings, stats, next_departure, tab = 'u
 
             {/* Next departure banner */}
             {next_departure && (
-                <div className="bg-[#2C4A3B] text-white rounded-[16px] p-4 mb-6 flex items-center gap-4">
+                <div className="bg-[#2C4A3B] text-white rounded-[16px] p-4 mb-6 flex items-center md:flex-row flex-col gap-4">
                     {next_departure.card_url && (
-                        <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+                        <div className="md:w-16 md:h-16 w-full h-64 rounded-xl overflow-hidden flex-shrink-0">
                             <img src={next_departure.card_url} alt="" className="w-full h-full object-cover" />
                         </div>
                     )}
@@ -93,9 +93,9 @@ export default function AccountTrips({ bookings, stats, next_departure, tab = 'u
                         <button className="px-4 py-2 rounded-full border border-white/30 text-xs font-medium hover:bg-white/10 transition-colors">
                             Contact Guide
                         </button>
-                        <Link href={`/booking/${next_departure.reference}/itinerary.pdf`} className="px-4 py-2 rounded-full bg-white text-[#2C4A3B] text-xs font-semibold hover:bg-gray-100 transition-colors">
+                        {/* <Link href={`/booking/${next_departure.reference}/itinerary.pdf`} className="px-4 py-2 rounded-full bg-white text-[#2C4A3B] text-xs font-semibold hover:bg-gray-100 transition-colors">
                             View Itinerary
-                        </Link>
+                        </Link> */}
                     </div>
                 </div>
             )}

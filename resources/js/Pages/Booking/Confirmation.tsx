@@ -117,14 +117,14 @@ export default function BookingConfirmation({ booking }: Props) {
                         >
                             {t('confirm.view_trips')}
                         </Link>
-                        <a
+                        {/* <a
                             href={`/booking/${booking.reference}/itinerary.pdf`}
                             target="_blank"
                             className="flex-1 flex items-center justify-center gap-[8px] py-[14px] rounded-full border-[1.5px] border-[#2E4A39] text-[#2E4A39] text-[14px] font-semibold hover:bg-[#eef3ec] transition-colors"
                         >
                             <Download size={14} />
                             {t('confirm.download_pdf')}
-                        </a>
+                        </a> */}
                     </div>
                 </div>
 
