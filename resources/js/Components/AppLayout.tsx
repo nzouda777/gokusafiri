@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { Menu, X, Heart, Globe } from 'lucide-react';
+import { Menu, X, Heart, Globe, PlaneIcon } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import type { PageProps } from '../types';
@@ -78,7 +78,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                             href={`${p}/tours`}
                             className="hidden sm:inline-flex items-center px-[18px] py-[12px] rounded-full bg-[#6e8c79] text-white text-[14px] font-medium hover:bg-[#5a7865] transition-colors"
                         >
-                            {t('nav.plan_trip')}
+                            {/* {t('nav.plan_trip')} */}
+                            <PlaneIcon size={20} className="text-white" />
                         </Link>
 
                         <button

@@ -277,14 +277,14 @@ export default function TourShow({ tour }: Props) {
                             {/* Sticky tab nav ────────────────────────────── */}
                             <div
                                 ref={tabsRef}
-                                className="sticky top-0 z-20 bg-white border-b border-[#e4ddd0] -mx-[100px] max-lg:-mx-6 px-[100px] max-lg:px-6"
+                                className="sticky top-0 z-20 bg-white border-b border-[#e4ddd0]  max-lg:-mx-6 md:px-[10px] p-0 max-lg:px-6"
                             >
                                 <div className="flex gap-0 overflow-x-auto scrollbar-hide">
                                     {TABS.map(tab => (
                                         <button
                                             key={tab.id}
                                             onClick={() => scrollTo(tab.id)}
-                                            className={`px-[20px] py-[16px] text-[14px] font-medium whitespace-nowrap border-b-[2.5px] transition-colors ${
+                                            className={`md:px-[20px] md:py-[16px] px-[11px] py-[8px] text-[14px] font-medium whitespace-nowrap border-b-[2.5px] transition-colors ${
                                                 activeTab === tab.id
                                                     ? 'border-[#2E4A39] text-[#2E4A39]'
                                                     : 'border-transparent text-[#8a968d] hover:text-[#16241b]'

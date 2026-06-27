@@ -446,7 +446,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                             setDestSelected('');
                             setActive('destination');
                         }}
-                        onClick={e => { e.stopPropagation(); setActive('destination'); }}
+                        onClick={e => { e.preventDefault; e.stopPropagation(); setActive('destination'); }}
                         className="text-[15px] text-[#1a211c] bg-transparent outline-none placeholder-[#8a968d] w-full cursor-pointer"
                     />
                 </div>
@@ -485,7 +485,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                 <div className="md:pl-[6px] md:shrink-0 px-[2px] pb-[2px] md:p-0">
                     <button
                         onClick={handleSearch}
-                        className="w-full md:w-auto md:size-[62px] h-[52px] w-[52px] bg-[#6e8c79] rounded-full
+                        className="w-full   md:size-[52px] h-[52px] md:w-[52px] bg-[#6e8c79] rounded-full
                                    flex items-center justify-center gap-[8px]
                                    text-white hover:bg-[#5a7865] transition-colors"
                     >
