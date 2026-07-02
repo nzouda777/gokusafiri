@@ -261,9 +261,9 @@ function Footer() {
                     <div className="md:col-span-2">
                         <div className="flex items-center gap-2.5 mb-5">
                             <img
-                                src="/images/logo-white.png"
+                                src="/images/main-white.png"
                                 alt="Gokusafiri"
-                                className="h-10 w-auto"
+                                className="md:h-20 h-10 w-auto"
                                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'block'; }}
                             />
                             {/* <span className="font-display not-italic text-[20px]">Gokusafiri</span> */}
