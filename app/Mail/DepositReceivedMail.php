@@ -24,7 +24,7 @@ class DepositReceivedMail extends Mailable implements ShouldQueue
         $tourTitle = $this->booking->tour->getTranslation('title', 'en', false);
 
         return new Envelope(
-            subject: "Deposit received — {$tourTitle}",
+            subject: "Deposit received  {$tourTitle}",
         );
     }
 

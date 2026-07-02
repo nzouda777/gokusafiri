@@ -121,7 +121,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'title' => ['en' => 'Victoria Falls Adventure', 'fr' => 'Aventure aux Chutes Victoria', 'es' => 'Aventura en las Cataratas Victoria'],
-                'excerpt' => ['en' => 'The smoke that thunders — Victoria Falls and wildlife safari.', 'fr' => 'La fumée qui tonne — Chutes Victoria et safari.'],
+                'excerpt' => ['en' => 'The smoke that thunders  Victoria Falls and wildlife safari.', 'fr' => 'La fumée qui tonne  Chutes Victoria et safari.'],
                 'type' => 'tour', 'style' => 'safari', 'duration_days' => 5,
                 'base_price' => 195000, 'max_group_size' => 14,
                 'dest_en' => 'Victoria Falls', 'status' => 'published', 'lat' => -17.9243, 'lng' => 25.8572,
@@ -137,7 +137,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'title' => ['en' => 'Sahara & Marrakech Discovery', 'fr' => 'Découverte Sahara & Marrakech', 'es' => 'Descubrimiento del Sahara y Marrakech'],
-                'excerpt' => ['en' => 'Dunes, medinas and riads — the magic of Morocco.', 'fr' => 'Dunes, médinas et riads — la magie du Maroc.'],
+                'excerpt' => ['en' => 'Dunes, medinas and riads  the magic of Morocco.', 'fr' => 'Dunes, médinas et riads  la magie du Maroc.'],
                 'type' => 'tour', 'style' => 'culture', 'duration_days' => 9,
                 'base_price' => 189000, 'max_group_size' => 15,
                 'dest_en' => 'Sahara & Marrakech', 'status' => 'published', 'lat' => 31.6295, 'lng' => -7.9811,
@@ -203,7 +203,7 @@ class DatabaseSeeder extends Seeder
             ['q' => ['en' => 'What is your cancellation policy?', 'fr' => 'Quelle est votre politique d\'annulation ?'], 'a' => ['en' => 'Free cancellation up to 30 days before departure. After that, the deposit is non-refundable.', 'fr' => 'Annulation gratuite jusqu\'à 30 jours avant le départ. Après, l\'acompte n\'est pas remboursable.']],
             ['q' => ['en' => 'Can I book as a guest?', 'fr' => 'Puis-je réserver sans compte ?'], 'a' => ['en' => 'Yes! Book with just your email. We\'ll offer account creation after confirmation.', 'fr' => 'Oui ! Réservez avec votre email. Nous proposerons la création de compte après confirmation.']],
             ['q' => ['en' => 'What payment options are available?', 'fr' => 'Quelles options de paiement sont disponibles ?'], 'a' => ['en' => 'Pay in full or reserve with a 20% deposit, balance due 30 days before departure.', 'fr' => 'Paiement intégral ou acompte de 20%, solde dû 30 jours avant le départ.']],
-            ['q' => ['en' => 'Do I need travel insurance?', 'fr' => 'Ai-je besoin d\'une assurance voyage ?'], 'a' => ['en' => 'We strongly recommend it — add it as an optional add-on during checkout.', 'fr' => 'Nous vous le recommandons — ajoutez-la comme option lors de la réservation.']],
+            ['q' => ['en' => 'Do I need travel insurance?', 'fr' => 'Ai-je besoin d\'une assurance voyage ?'], 'a' => ['en' => 'We strongly recommend it  add it as an optional add-on during checkout.', 'fr' => 'Nous vous le recommandons  ajoutez-la comme option lors de la réservation.']],
         ];
         foreach ($faqData as $i => $faq) {
             Faq::create(['question' => $faq['q'], 'answer' => $faq['a'], 'position' => $i + 1, 'is_active' => true]);

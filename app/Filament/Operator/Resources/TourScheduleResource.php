@@ -56,7 +56,7 @@ class TourScheduleResource extends Resource
                     ->color(fn ($state) => $state <= 5 ? 'danger' : 'success'),
                 Tables\Columns\TextColumn::make('price_override')
                     ->label('Price Override')
-                    ->formatStateUsing(fn ($state) => $state ? '$' . number_format($state / 100, 2) : '—'),
+                    ->formatStateUsing(fn ($state) => $state ? '$' . number_format($state / 100, 2) : ''),
             ])
             ->filters([
                 Tables\Filters\Filter::make('upcoming')

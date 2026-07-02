@@ -29,7 +29,7 @@ function I18nLocaleSync() {
 }
 
 createInertiaApp({
-    title: (title) => (title ? `${title} — ${appName}` : appName),
+    title: (title) => (title ? `${title}  ${appName}` : appName),
     resolve: (name) => {
         const page = pages[`./Pages/${name}.tsx`];
         if (!page) throw new Error(`Inertia page not found: ${name}`);

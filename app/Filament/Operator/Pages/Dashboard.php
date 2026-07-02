@@ -22,7 +22,7 @@ class Dashboard extends BaseDashboard
             default    => 'Good evening',
         };
 
-        return $greeting . ' — ' . ($operator?->name ?? 'Operator');
+        return $greeting . '  ' . ($operator?->name ?? 'Operator');
     }
 
     public function getSubheading(): string | Htmlable | null

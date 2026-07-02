@@ -27,7 +27,7 @@ class BalanceReminderMail extends Mailable implements ShouldQueue
         $dueDate   = $this->booking->balance_due_at?->format('M j, Y') ?? '';
 
         return new Envelope(
-            subject: "Balance due {$dueDate} — {$tourTitle}",
+            subject: "Balance due {$dueDate}  {$tourTitle}",
         );
     }
 

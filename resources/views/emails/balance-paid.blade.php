@@ -12,12 +12,12 @@
     $pax = $b->adults + $b->children + ($b->infants ?? 0);
 @endphp
 
-@component('emails.layout', ['preheader' => "Balance received — {$title} is now fully paid. Everything is set!"])
+@component('emails.layout', ['preheader' => "Balance received  {$title} is now fully paid. Everything is set!"])
 
 {{-- Hero --}}
 <div style="text-align:center;padding-bottom:28px;border-bottom:1px solid #f0ede8;margin-bottom:28px;">
     <div style="display:inline-block;background-color:#eef3ec;border-radius:50%;width:56px;height:56px;line-height:56px;text-align:center;font-size:26px;margin-bottom:16px;">🎉</div>
-    <h1 style="margin:0 0 8px;font-size:24px;font-weight:700;color:#16241b;line-height:1.2;">Fully Paid — You're All Set!</h1>
+    <h1 style="margin:0 0 8px;font-size:24px;font-weight:700;color:#16241b;line-height:1.2;">Fully Paid  You're All Set!</h1>
     <p style="margin:0;font-size:15px;color:#4f5c53;">Your balance for <strong>{{ $title }}</strong> has been received.</p>
 </div>
 

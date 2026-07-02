@@ -106,7 +106,7 @@ class TourResource extends Resource
                 Forms\Components\TextInput::make('base_price')
                     ->label('Adult Price')->numeric()->required()->minValue(100)
                     ->suffix('cents')
-                    ->helperText('In cents — e.g. 229000 = $2,290.00'),
+                    ->helperText('In cents  e.g. 229000 = $2,290.00'),
                 Forms\Components\TextInput::make('child_price')
                     ->label('Child Price (under 12)')->numeric()->nullable()->minValue(0)
                     ->suffix('cents')
@@ -126,18 +126,18 @@ class TourResource extends Resource
                     ->label('Discount (%)')->numeric()->default(0)->minValue(0)->maxValue(100),
                 Forms\Components\Select::make('badge')
                     ->options(['bestseller' => 'Bestseller', 'new' => 'New', 'limited' => 'Limited'])
-                    ->nullable()->placeholder('— No badge —'),
+                    ->nullable()->placeholder(' No badge '),
             ])->columns(4),
 
             Schemas\Components\Section::make('Tour Details')->schema([
                 Forms\Components\Select::make('difficulty')
                     ->options([
-                        'easy'        => 'Easy — suitable for all fitness levels',
-                        'moderate'    => 'Moderate — some walking / light activity',
-                        'challenging' => 'Challenging — good fitness required',
-                        'extreme'     => 'Extreme — high fitness / experience required',
+                        'easy'        => 'Easy  suitable for all fitness levels',
+                        'moderate'    => 'Moderate  some walking / light activity',
+                        'challenging' => 'Challenging  good fitness required',
+                        'extreme'     => 'Extreme  high fitness / experience required',
                     ])
-                    ->nullable()->placeholder('— Not specified —'),
+                    ->nullable()->placeholder(' Not specified '),
                 Forms\Components\TextInput::make('min_age')
                     ->label('Minimum Age')->numeric()->nullable()->minValue(0)->maxValue(99)
                     ->helperText('Leave blank for no restriction'),
@@ -176,7 +176,7 @@ class TourResource extends Resource
                 Schemas\Components\Tabs::make('Practical Info Translations')->tabs([
                     Schemas\Components\Tabs\Tab::make('English')->schema([
                         Forms\Components\RichEditor::make('practical_info.en')
-                            ->label('Practical Info (EN) — Important Notes')
+                            ->label('Practical Info (EN)  Important Notes')
                             ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
                             ->helperText('Vehicle type, what to bring, payment tips, flexibility notes...')
                             ->columnSpanFull(),
@@ -498,7 +498,7 @@ class TourResource extends Resource
                     ->maxFiles(20)
                     ->maxSize(8192)
                     ->label('Tour Photos')
-                    ->helperText('Up to 20 photos — JPG, PNG, WebP. Max 8MB each.'),
+                    ->helperText('Up to 20 photos  JPG, PNG, WebP. Max 8MB each.'),
             ])->collapsed(),
         ]);
     }

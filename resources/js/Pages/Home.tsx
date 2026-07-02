@@ -42,7 +42,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             <Head title="Hand-crafted safaris & coastal escapes" />
 
             {/* ── HERO ──────────────────────────────────────────────────── */}
-            {/* overflow-hidden is on the image wrapper, NOT the section — keeps search bar dropdowns visible */}
+            {/* overflow-hidden is on the image wrapper, NOT the section  keeps search bar dropdowns visible */}
             <section className="relative min-h-[560px] flex items-center">
                 {/* Background: gradient + hero image */}
                 <div
@@ -96,7 +96,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                     </div>
                 </div>
 
-                {/* Docked search — floats at bottom of hero, half-overlapping */}
+                {/* Docked search  floats at bottom of hero, half-overlapping */}
                 <div className="absolute bottom-0 translate-y-1/2 left-1/2 -translate-x-1/2 w-full max-w-[1240px] px-6 lg:px-0 z-20 hidden md:block">
                     <SearchBar />
                 </div>
@@ -291,7 +291,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             <section id="how-it-works" className="py-[100px] bg-[#fbf8f2]">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6 flex flex-col gap-[44px]">
 
-                    {/* Header — left-aligned */}
+                    {/* Header  left-aligned */}
                     <div className="flex items-end justify-between">
                         <div className="flex flex-col items-start max-w-[490px]">
                             <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase">
@@ -303,7 +303,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                         </div>
                     </div>
 
-                    {/* 4 feature columns — open layout, no white cards */}
+                    {/* 4 feature columns  open layout, no white cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[24px]">
                         {[
                             { icon: <Compass size={28} className="text-[#6e8c79]" />,     title: t('why.f1_title'), desc: t('why.f1_body') },
@@ -323,7 +323,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                         ))}
                     </div>
 
-                    {/* Stats — #eef3ec rounded card */}
+                    {/* Stats  #eef3ec rounded card */}
                     <div className="bg-[#eef3ec] rounded-[22px] p-[30px] md:p-[54px] grid md:grid-cols-3 grid-cols-1 gap-[30px]">
                         <div className="flex flex-col items-center gap-[1.5px]">
                             <p className="font-display not-italic text-[40px] md:text-[64px] leading-[1.125] text-center">
@@ -483,7 +483,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             {/* ── CTA ──────────────────────────────────────────────────── */}
             <section className='!bg-[#fbf8f2] w-full py-[32px] px-8'>
             <section className="relative py-[80px] overflow-hidden  max-w-[1240px] mx-auto  rounded-[22px] md:px-[70px] px-[30px] ">
-                {/* Gradient background — matches hero palette */}
+                {/* Gradient background  matches hero palette */}
                 <div
                     className="absolute inset-0"
                     style={{ background: 'linear-gradient(133deg,#3a5a45 2%,#1e3326 55%,#c97b4b 100%)' }}

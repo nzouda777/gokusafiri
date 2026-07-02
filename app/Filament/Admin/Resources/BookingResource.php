@@ -40,7 +40,7 @@ class BookingResource extends Resource
                             ->get()
                             ->mapWithKeys(fn (TourSchedule $s) => [
                                 $s->id => $s->tour->getTranslation('title', 'en')
-                                    . ' — ' . $s->starts_at->format('d M Y')
+                                    . '  ' . $s->starts_at->format('d M Y')
                                     . ' ($' . number_format($s->effectivePrice() / 100, 0) . '/pp'
                                     . ', ' . $s->seats_left . ' seats)',
                             ])

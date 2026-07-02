@@ -47,7 +47,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors(['primary' => Color::Emerald])
-            ->brandName('GoKuSafiri — Admin')
+            ->brandName('GoKuSafiri  Admin')
             ->authGuard('web')
             ->authMiddleware([
                 Authenticate::class,

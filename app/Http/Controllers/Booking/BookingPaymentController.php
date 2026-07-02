@@ -150,7 +150,7 @@ class BookingPaymentController extends Controller
                 ->withErrors(['payment' => 'Your payment was declined. Please try a different payment method.']);
         }
 
-        // Payment still processing — show confirmation and rely on webhook
+        // Payment still processing  show confirmation and rely on webhook
         return redirect("/booking/{$reference}/confirmation");
     }
 

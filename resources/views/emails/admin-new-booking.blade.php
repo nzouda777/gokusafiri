@@ -14,7 +14,7 @@
     $clientName = trim(($b->lead_first_name ?? '') . ' ' . ($b->lead_last_name ?? ''));
 @endphp
 
-@component('emails.layout', ['preheader' => "[Admin] {$payType} payment received for {$b->reference} — {$title}"])
+@component('emails.layout', ['preheader' => "[Admin] {$payType} payment received for {$b->reference}  {$title}"])
 
 {{-- Header --}}
 <div style="padding-bottom:20px;border-bottom:1px solid #f0ede8;margin-bottom:24px;">
@@ -26,7 +26,7 @@
 
 {{-- Payment badge --}}
 <div style="display:inline-block;background-color:{{ $payment->type === 'deposit' ? '#fff3eb' : '#eef3ec' }};color:{{ $payment->type === 'deposit' ? '#E07A3F' : '#2E4A39' }};font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:20px;text-transform:uppercase;letter-spacing:0.5px;">
-    {{ $payType }} — {{ $fmt($payment->amount) }}
+    {{ $payType }}  {{ $fmt($payment->amount) }}
 </div>
 
 {{-- Booking details --}}

@@ -9,7 +9,7 @@ use Illuminate\Support\Carbon;
 
 class RevenueChartWidget extends ChartWidget
 {
-    protected ?string $heading = 'Monthly Revenue — Last 12 Months';
+    protected ?string $heading = 'Monthly Revenue  Last 12 Months';
     protected ?string $description = 'Total succeeded payments per calendar month (USD)';
     protected static ?int $sort = 4;
     protected int|string|array $columnSpan = 'full';

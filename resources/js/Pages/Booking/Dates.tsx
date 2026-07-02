@@ -38,7 +38,7 @@ export default function BookingDates({ booking }: Props) {
 
     const selectedSchedule = tour.schedules?.find(s => s.id === Number(data.schedule_id)) ?? null;
 
-    // Live price calculation — adults at schedule/base price, children at child_price, infants free
+    // Live price calculation  adults at schedule/base price, children at child_price, infants free
     const adultPrice     = selectedSchedule?.price_override ?? tour.base_price;
     const childPrice     = tour.child_price ?? adultPrice;
     const subtotal       = adultPrice * data.adults + childPrice * data.children;

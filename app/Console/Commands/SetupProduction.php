@@ -69,21 +69,21 @@ class SetupProduction extends Command
             DB::table('jobs')->count();
             $this->line('  ✓ Table jobs présente');
         } catch (\Exception) {
-            $this->warn('  ⚠ Table jobs manquante — lance: php artisan queue:table && php artisan migrate');
+            $this->warn('  ⚠ Table jobs manquante  lance: php artisan queue:table && php artisan migrate');
         }
 
         try {
             DB::table('failed_jobs')->count();
             $this->line('  ✓ Table failed_jobs présente');
         } catch (\Exception) {
-            $this->warn('  ⚠ Table failed_jobs manquante — lance: php artisan queue:failed-table && php artisan migrate');
+            $this->warn('  ⚠ Table failed_jobs manquante  lance: php artisan queue:failed-table && php artisan migrate');
         }
 
         try {
             DB::table('cache')->count();
             $this->line('  ✓ Table cache présente (withoutOverlapping() fonctionnel)');
         } catch (\Exception) {
-            $this->warn('  ⚠ Table cache manquante — nécessaire pour withoutOverlapping()');
+            $this->warn('  ⚠ Table cache manquante  nécessaire pour withoutOverlapping()');
             $this->warn('    Lance: php artisan cache:table && php artisan migrate');
         }
     }

@@ -24,7 +24,7 @@ class BookingCancelledMail extends Mailable implements ShouldQueue
         $tourTitle = $this->booking->tour->getTranslation('title', 'en', false);
 
         return new Envelope(
-            subject: "Booking cancelled — {$tourTitle}",
+            subject: "Booking cancelled  {$tourTitle}",
         );
     }
 

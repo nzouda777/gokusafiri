@@ -28,7 +28,7 @@ class NewBookingAdminMail extends Mailable implements ShouldQueue
         $type      = ucfirst($this->payment->type);
 
         return new Envelope(
-            subject: "[GokuSafiri] {$type} payment — {$this->booking->reference} — {$tourTitle}",
+            subject: "[GokuSafiri] {$type} payment  {$this->booking->reference}  {$tourTitle}",
         );
     }
 

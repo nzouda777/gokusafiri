@@ -47,7 +47,7 @@ interface Props {
     };
 }
 
-// ─── Popover shell — bottom sheet on mobile, absolute panel on desktop ────────
+// ─── Popover shell  bottom sheet on mobile, absolute panel on desktop ────────
 
 function Popover({
     children,

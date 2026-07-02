@@ -49,7 +49,7 @@ class ReviewsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('author_name')
                     ->label('Author')
-                    ->getStateUsing(fn (Review $record) => $record->author_name ?? $record->user?->name ?? '—'),
+                    ->getStateUsing(fn (Review $record) => $record->author_name ?? $record->user?->name ?? ''),
                 Tables\Columns\TextColumn::make('rating')
                     ->formatStateUsing(fn ($state) => str_repeat('★', $state))
                     ->color('warning'),

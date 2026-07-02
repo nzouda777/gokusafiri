@@ -25,7 +25,7 @@ export default function ForgotPassword({ status }: Props) {
                 </div>
                 <div className="relative z-10">
                     <blockquote className="font-serif text-2xl font-bold text-white leading-relaxed mb-6">
-                        "Africa changes you. It doesn't just give you memories — it gives you a different way of seeing the world."
+                        "Africa changes you. It doesn't just give you memories  it gives you a different way of seeing the world."
                     </blockquote>
                     <div className="flex items-center gap-2 mb-8">
                         <div className="flex -space-x-2">

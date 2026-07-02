@@ -24,7 +24,7 @@ class BookingConfirmedMail extends Mailable implements ShouldQueue
         $tourTitle = $this->booking->tour->getTranslation('title', 'en', false);
 
         return new Envelope(
-            subject: "Your booking is confirmed — {$tourTitle}",
+            subject: "Your booking is confirmed  {$tourTitle}",
         );
     }
 

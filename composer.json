@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "laravel/laravel",
     "type": "project",
-    "description": "GoKuSafiri — African safari booking platform",
+    "description": "GoKuSafiri  African safari booking platform",
     "license": "MIT",
     "require": {
         "php": "^8.4",

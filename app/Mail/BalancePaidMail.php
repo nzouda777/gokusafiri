@@ -24,7 +24,7 @@ class BalancePaidMail extends Mailable implements ShouldQueue
         $tourTitle = $this->booking->tour->getTranslation('title', 'en', false);
 
         return new Envelope(
-            subject: "Balance received — {$tourTitle} is fully paid",
+            subject: "Balance received  {$tourTitle} is fully paid",
         );
     }
 

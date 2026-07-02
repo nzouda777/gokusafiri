@@ -17,7 +17,7 @@ class TourSeeder extends Seeder
     {
         $operator = Operator::first();
         if (! $operator) {
-            $this->command->error('No operator found — run DatabaseSeeder first.');
+            $this->command->error('No operator found  run DatabaseSeeder first.');
             return;
         }
 
@@ -27,12 +27,12 @@ class TourSeeder extends Seeder
             [
                 'title'   => ['en' => 'Great Migration Explorer', 'fr' => 'Explorateur de la Grande Migration', 'es' => 'Explorador de la Gran Migración'],
                 'excerpt' => [
-                    'en' => 'Witness the legendary wildebeest migration across the Serengeti plains — one of nature\'s greatest spectacles.',
-                    'fr' => 'Assistez à la légendaire migration des gnous dans les plaines du Serengeti — l\'un des plus grands spectacles de la nature.',
+                    'en' => 'Witness the legendary wildebeest migration across the Serengeti plains  one of nature\'s greatest spectacles.',
+                    'fr' => 'Assistez à la légendaire migration des gnous dans les plaines du Serengeti  l\'un des plus grands spectacles de la nature.',
                 ],
                 'description' => [
-                    'en' => '<p>Witness the world\'s greatest wildlife spectacle — over 2 million wildebeest, zebras and gazelles surging across the Serengeti in their annual cycle. This 7-day expedition puts you at the heart of the action: waiting at the Mara River crossings, tracking predators at dawn, and returning to a luxury tented camp as the savanna turns amber at dusk.</p><p>Your private guide is a third-generation Maasai ranger who reads the land like a map. Small groups (12 max) mean you\'re never in a convoy — just you, your safari vehicle, and the wild.</p>',
-                    'fr' => '<p>Observez le plus grand spectacle faunique du monde — plus de 2 millions de gnous, zèbres et gazelles déferlant sur le Serengeti. Ce séjour de 7 jours vous place au cœur de l\'action : aux passages de la rivière Mara, à la traque des prédateurs à l\'aube, et retour dans un camp de luxe au coucher du soleil.</p>',
+                    'en' => '<p>Witness the world\'s greatest wildlife spectacle  over 2 million wildebeest, zebras and gazelles surging across the Serengeti in their annual cycle. This 7-day expedition puts you at the heart of the action: waiting at the Mara River crossings, tracking predators at dawn, and returning to a luxury tented camp as the savanna turns amber at dusk.</p><p>Your private guide is a third-generation Maasai ranger who reads the land like a map. Small groups (12 max) mean you\'re never in a convoy  just you, your safari vehicle, and the wild.</p>',
+                    'fr' => '<p>Observez le plus grand spectacle faunique du monde  plus de 2 millions de gnous, zèbres et gazelles déferlant sur le Serengeti. Ce séjour de 7 jours vous place au cœur de l\'action : aux passages de la rivière Mara, à la traque des prédateurs à l\'aube, et retour dans un camp de luxe au coucher du soleil.</p>',
                 ],
                 'highlights' => [
                     'en' => [
@@ -51,19 +51,19 @@ class TourSeeder extends Seeder
                 'itinerary' => [
                     'en' => [
                         ['day' => 1, 'title' => 'Arrival in Arusha',                'location' => 'Arusha, Tanzania',                   'meals' => 'D',     'description' => 'Welcome briefing with your guide. Transfer to Arusha lodge. Equipment check and safari orientation over sunset dinner.'],
-                        ['day' => 2, 'title' => 'Serengeti Central — game drives',  'location' => 'Serengeti (Seronera)',                'meals' => 'B/L/D', 'description' => 'Fly to the Serengeti (Seronera). Afternoon game drive through the central plains. First big cat sightings: lions, cheetahs and leopards.'],
-                        ['day' => 3, 'title' => 'Northern Serengeti — Mara River',  'location' => 'Northern Serengeti',                 'meals' => 'B/L/D', 'description' => 'Drive north to the Mara River. Wait at the crossing points for the thunderous wildebeest crossing — the most dramatic moment in nature.'],
+                        ['day' => 2, 'title' => 'Serengeti Central  game drives',  'location' => 'Serengeti (Seronera)',                'meals' => 'B/L/D', 'description' => 'Fly to the Serengeti (Seronera). Afternoon game drive through the central plains. First big cat sightings: lions, cheetahs and leopards.'],
+                        ['day' => 3, 'title' => 'Northern Serengeti  Mara River',  'location' => 'Northern Serengeti',                 'meals' => 'B/L/D', 'description' => 'Drive north to the Mara River. Wait at the crossing points for the thunderous wildebeest crossing  the most dramatic moment in nature.'],
                         ['day' => 4, 'title' => 'Full day Mara River crossings',    'location' => 'Mara River',                         'meals' => 'B/L/D', 'description' => 'Full day at the river. Optional sunrise balloon flight over the migration (add-on). Sundowner drinks on the savanna at dusk.'],
-                        ['day' => 5, 'title' => 'Ngorongoro Crater descent',        'location' => 'Ngorongoro Conservation Area',       'meals' => 'B/L/D', 'description' => 'Drive to Ngorongoro. Descend into the world\'s largest intact volcanic caldera — a natural Noah\'s Ark with all Big Five within sight.'],
-                        ['day' => 6, 'title' => 'Crater & Maasai village',          'location' => 'Ngorongoro / Maasai Boma',           'meals' => 'B/L/D', 'description' => 'Morning game drive in the crater. Afternoon visit a traditional Maasai boma — hear stories, share tea, learn about life on the plains.'],
+                        ['day' => 5, 'title' => 'Ngorongoro Crater descent',        'location' => 'Ngorongoro Conservation Area',       'meals' => 'B/L/D', 'description' => 'Drive to Ngorongoro. Descend into the world\'s largest intact volcanic caldera  a natural Noah\'s Ark with all Big Five within sight.'],
+                        ['day' => 6, 'title' => 'Crater & Maasai village',          'location' => 'Ngorongoro / Maasai Boma',           'meals' => 'B/L/D', 'description' => 'Morning game drive in the crater. Afternoon visit a traditional Maasai boma  hear stories, share tea, learn about life on the plains.'],
                         ['day' => 7, 'title' => 'Departure',                        'location' => 'Arusha → Home',                      'meals' => 'B',     'description' => 'Final breakfast, farewell, and transfer to Kilimanjaro Airport. Your Africa story is just beginning.'],
                     ],
                     'fr' => [
                         ['day' => 1, 'title' => 'Arrivée à Arusha',                 'location' => 'Arusha, Tanzanie',                   'meals' => 'D',     'description' => 'Briefing d\'accueil avec votre guide. Transfert au lodge d\'Arusha. Vérification de l\'équipement et briefing safari autour d\'un dîner au coucher du soleil.'],
-                        ['day' => 2, 'title' => 'Serengeti Central — game drives',  'location' => 'Serengeti (Seronera)',                'meals' => 'B/L/D', 'description' => 'Vol vers le Serengeti (Seronera). Safari de l\'après-midi dans les plaines centrales. Premières observations de grands félins : lions, guépards et léopards.'],
-                        ['day' => 3, 'title' => 'Serengeti Nord — Rivière Mara',    'location' => 'Serengeti Nord',                     'meals' => 'B/L/D', 'description' => 'Direction nord vers la rivière Mara. Attente aux points de passage pour la spectaculaire traversée des gnous.'],
+                        ['day' => 2, 'title' => 'Serengeti Central  game drives',  'location' => 'Serengeti (Seronera)',                'meals' => 'B/L/D', 'description' => 'Vol vers le Serengeti (Seronera). Safari de l\'après-midi dans les plaines centrales. Premières observations de grands félins : lions, guépards et léopards.'],
+                        ['day' => 3, 'title' => 'Serengeti Nord  Rivière Mara',    'location' => 'Serengeti Nord',                     'meals' => 'B/L/D', 'description' => 'Direction nord vers la rivière Mara. Attente aux points de passage pour la spectaculaire traversée des gnous.'],
                         ['day' => 4, 'title' => 'Journée complète rivière Mara',    'location' => 'Rivière Mara',                       'meals' => 'B/L/D', 'description' => 'Journée entière au bord de la rivière. Vol en montgolfière en option. Sundowner sur la savane au crépuscule.'],
-                        ['day' => 5, 'title' => 'Descente dans le cratère du Ngorongoro', 'location' => 'Zone de Conservation du Ngorongoro', 'meals' => 'B/L/D', 'description' => 'Route vers le Ngorongoro. Descente dans la plus grande caldeira volcanique intacte du monde — un refuge naturel avec les Big Five à portée de vue.'],
+                        ['day' => 5, 'title' => 'Descente dans le cratère du Ngorongoro', 'location' => 'Zone de Conservation du Ngorongoro', 'meals' => 'B/L/D', 'description' => 'Route vers le Ngorongoro. Descente dans la plus grande caldeira volcanique intacte du monde  un refuge naturel avec les Big Five à portée de vue.'],
                         ['day' => 6, 'title' => 'Cratère & Village Maasai',         'location' => 'Ngorongoro / Boma Maasai',           'meals' => 'B/L/D', 'description' => 'Safari matinal dans le cratère. Visite d\'un boma Maasai traditionnel dans l\'après-midi.'],
                         ['day' => 7, 'title' => 'Départ',                           'location' => 'Arusha → Départ',                   'meals' => 'B',     'description' => 'Dernier petit-déjeuner, au revoir et transfert vers l\'aéroport du Kilimandjaro.'],
                     ],
@@ -116,7 +116,7 @@ class TourSeeder extends Seeder
                 'title'   => ['en' => 'Masai Mara Big Five Safari', 'fr' => 'Safari des Cinq Grands du Masai Mara', 'es' => 'Safari de los Cinco Grandes del Masai Mara'],
                 'excerpt' => ['en' => 'Track the Big Five across Kenya\'s most iconic reserve, with expert guides and exclusive private game drives.', 'fr' => 'Pistez les Big Five dans la réserve la plus emblématique du Kenya avec des guides experts.'],
                 'description' => [
-                    'en' => '<p>The Masai Mara National Reserve is Kenya\'s crown jewel of wildlife conservation. This 6-day safari takes you deep into lion country where you\'ll track the Big Five — lion, leopard, elephant, buffalo and rhino — across the open savanna grasslands.</p><p>Stay in intimate safari camps on the reserve boundary, with expert Maasai guides who\'ve spent their lives understanding the wildlife movements. Enjoy morning and evening game drives in private 4x4 vehicles, night drives (unique to private concessions), and optional bush walks.</p>',
+                    'en' => '<p>The Masai Mara National Reserve is Kenya\'s crown jewel of wildlife conservation. This 6-day safari takes you deep into lion country where you\'ll track the Big Five  lion, leopard, elephant, buffalo and rhino  across the open savanna grasslands.</p><p>Stay in intimate safari camps on the reserve boundary, with expert Maasai guides who\'ve spent their lives understanding the wildlife movements. Enjoy morning and evening game drives in private 4x4 vehicles, night drives (unique to private concessions), and optional bush walks.</p>',
                     'fr' => '<p>La Réserve Nationale du Masai Mara est le joyau de la faune kenyane. Ce safari de 6 jours vous emmène au cœur du territoire des lions où vous pisterez les Big Five à travers les savanes herbeuses.</p>',
                 ],
                 'highlights' => [
@@ -139,7 +139,7 @@ class TourSeeder extends Seeder
                         ['day' => 2, 'title' => 'Fly to Masai Mara',           'location' => 'Masai Mara Reserve',     'meals' => 'B/L/D', 'description' => 'Morning flight to Wilson Airport, then a light aircraft to the Mara airstrip. Afternoon game drive into the heart of the reserve.'],
                         ['day' => 3, 'title' => 'Big Five Tracking',           'location' => 'Masai Mara Reserve',     'meals' => 'B/L/D', 'description' => 'Full day game drives with your expert Maasai guide. Focus on tracking lion prides, leopard sightings, and the famous Mara elephant herds.'],
                         ['day' => 4, 'title' => 'Private Concession & Night Drive', 'location' => 'OI Kinyei Conservancy', 'meals' => 'B/L/D', 'description' => 'Explore the private OI Kinyei Conservancy. Fewer tourists, more wildlife encounters. Exclusive night drive for nocturnal predators.'],
-                        ['day' => 5, 'title' => 'Rhino Sanctuary & Bush Walk', 'location' => 'Mara North Conservancy', 'meals' => 'B/L/D', 'description' => 'Visit the rhino sanctuary — one of Kenya\'s last black rhino strongholds. Guided bush walk with armed ranger. Sundowner at a scenic hippo pool.'],
+                        ['day' => 5, 'title' => 'Rhino Sanctuary & Bush Walk', 'location' => 'Mara North Conservancy', 'meals' => 'B/L/D', 'description' => 'Visit the rhino sanctuary  one of Kenya\'s last black rhino strongholds. Guided bush walk with armed ranger. Sundowner at a scenic hippo pool.'],
                         ['day' => 6, 'title' => 'Final Drive & Departure',     'location' => 'Nairobi',                'meals' => 'B',     'description' => 'Early morning final game drive at sunrise. Fly back to Nairobi for your international connection.'],
                     ],
                     'fr' => [
@@ -170,7 +170,7 @@ class TourSeeder extends Seeder
                     ['label' => ['en' => 'Travel Insurance',      'fr' => 'Assurance voyage'],    'price_per_person' => 8900],
                 ],
                 'reviews' => [
-                    ['author_name' => 'Sophie L.',  'rating' => 5, 'location_label' => 'Masai Mara, 2025', 'traveled_at' => '2025-08-10', 'body' => '"Seeing lions at sunrise from our private vehicle was unforgettable. Our guide David was extraordinary — patient, knowledgeable and passionate."'],
+                    ['author_name' => 'Sophie L.',  'rating' => 5, 'location_label' => 'Masai Mara, 2025', 'traveled_at' => '2025-08-10', 'body' => '"Seeing lions at sunrise from our private vehicle was unforgettable. Our guide David was extraordinary  patient, knowledgeable and passionate."'],
                     ['author_name' => 'Marcus T.',  'rating' => 5, 'location_label' => 'Nairobi, 2025',    'traveled_at' => '2025-06-18', 'body' => '"The night drive experience was unlike anything I\'ve ever done. We tracked a leopard for over an hour. Simply magical."'],
                     ['author_name' => 'Claire D.',  'rating' => 4, 'location_label' => 'London, 2024',     'traveled_at' => '2024-10-05', 'body' => '"Excellent organisation from start to finish. The camp was beautiful and food was superb. Would absolutely recommend."'],
                 ],
@@ -179,9 +179,9 @@ class TourSeeder extends Seeder
             // ── 3. Gorilla Trekking Bwindi ─────────────────────────────────────
             [
                 'title'   => ['en' => 'Gorilla Trekking Bwindi', 'fr' => 'Trekking des Gorilles à Bwindi', 'es' => 'Trekking de Gorilas en Bwindi'],
-                'excerpt' => ['en' => 'A face-to-face encounter with endangered mountain gorillas in Bwindi Impenetrable Forest — the most profound wildlife experience on Earth.', 'fr' => 'Une rencontre face à face avec les gorilles de montagne en danger dans la forêt impénétrable de Bwindi.'],
+                'excerpt' => ['en' => 'A face-to-face encounter with endangered mountain gorillas in Bwindi Impenetrable Forest  the most profound wildlife experience on Earth.', 'fr' => 'Une rencontre face à face avec les gorilles de montagne en danger dans la forêt impénétrable de Bwindi.'],
                 'description' => [
-                    'en' => '<p>There are fewer than 1,000 mountain gorillas left in the world, and Bwindi Impenetrable Forest in southwest Uganda is home to almost half of them. Trekking through dense jungle to spend a magical hour with a wild gorilla family is one of the most humbling and extraordinary wildlife experiences on the planet.</p><p>Your trained trackers will locate a gorilla family, and you\'ll spend one precious hour observing mothers nursing infants, silverbacks displaying their power, and juveniles playing in the trees. Each permit guarantees your hour — so come prepared to be moved.</p>',
+                    'en' => '<p>There are fewer than 1,000 mountain gorillas left in the world, and Bwindi Impenetrable Forest in southwest Uganda is home to almost half of them. Trekking through dense jungle to spend a magical hour with a wild gorilla family is one of the most humbling and extraordinary wildlife experiences on the planet.</p><p>Your trained trackers will locate a gorilla family, and you\'ll spend one precious hour observing mothers nursing infants, silverbacks displaying their power, and juveniles playing in the trees. Each permit guarantees your hour  so come prepared to be moved.</p>',
                     'fr' => '<p>Il reste moins de 1 000 gorilles de montagne dans le monde, et la forêt impénétrable de Bwindi en abrite presque la moitié. Progresser à travers la jungle dense pour passer une heure magique avec une famille de gorilles sauvages est l\'une des expériences les plus émouvantes.</p>',
                 ],
                 'highlights' => [
@@ -202,7 +202,7 @@ class TourSeeder extends Seeder
                     'en' => [
                         ['day' => 1, 'title' => 'Fly to Entebbe & Transfer',    'location' => 'Entebbe / Bwindi',           'meals' => 'D',     'description' => 'Arrive at Entebbe International Airport. Transfer to a luxury eco-lodge on the edge of Bwindi Forest. Briefing dinner.'],
                         ['day' => 2, 'title' => 'Gorilla Trekking',             'location' => 'Bwindi Impenetrable Forest', 'meals' => 'B/L/D', 'description' => 'Early start for gorilla trekking. Your expert tracker guides you through the forest. When you find the gorilla family, you\'ll have one magical hour with them.'],
-                        ['day' => 3, 'title' => 'Village Walk & Bird Watching', 'location' => 'Buhoma Village',             'meals' => 'B/L/D', 'description' => 'Morning village walk with local Batwa community. Afternoon optional forest bird walk — over 350 species recorded in Bwindi.'],
+                        ['day' => 3, 'title' => 'Village Walk & Bird Watching', 'location' => 'Buhoma Village',             'meals' => 'B/L/D', 'description' => 'Morning village walk with local Batwa community. Afternoon optional forest bird walk  over 350 species recorded in Bwindi.'],
                         ['day' => 4, 'title' => 'Departure via Entebbe',        'location' => 'Entebbe',                    'meals' => 'B',     'description' => 'Transfer back to Entebbe for your flight home, carrying memories that will last a lifetime.'],
                     ],
                     'fr' => [
@@ -232,28 +232,28 @@ class TourSeeder extends Seeder
                 ],
                 'reviews' => [
                     ['author_name' => 'Nina P.',   'rating' => 5, 'location_label' => 'Bwindi, 2025',     'traveled_at' => '2025-03-20', 'body' => '"Meeting the gorilla family was beyond words. Watching the silverback walk right past us was humbling. An experience I\'ll never forget."'],
-                    ['author_name' => 'Thomas K.', 'rating' => 5, 'location_label' => 'Uganda, 2025',     'traveled_at' => '2025-01-14', 'body' => '"Our tracker John was phenomenal — he found the gorillas in 90 minutes. The eco-lodge was beautiful. Worth every penny."'],
+                    ['author_name' => 'Thomas K.', 'rating' => 5, 'location_label' => 'Uganda, 2025',     'traveled_at' => '2025-01-14', 'body' => '"Our tracker John was phenomenal  he found the gorillas in 90 minutes. The eco-lodge was beautiful. Worth every penny."'],
                 ],
             ],
 
             // ── 4. Kilimanjaro Summit Trek ─────────────────────────────────────
             [
                 'title'   => ['en' => 'Kilimanjaro Summit Trek', 'fr' => 'Ascension du Kilimandjaro', 'es' => 'Trekking a la Cima del Kilimanjaro'],
-                'excerpt' => ['en' => 'Reach Uhuru Peak — the Roof of Africa — via the scenic Lemosho Route, with expert guides and full porter support.', 'fr' => 'Atteignez Uhuru Peak — le Toit de l\'Afrique — via la route panoramique Lemosho avec des guides experts.'],
+                'excerpt' => ['en' => 'Reach Uhuru Peak  the Roof of Africa  via the scenic Lemosho Route, with expert guides and full porter support.', 'fr' => 'Atteignez Uhuru Peak  le Toit de l\'Afrique  via la route panoramique Lemosho avec des guides experts.'],
                 'description' => [
-                    'en' => '<p>Standing at 5,895 metres above sea level, Mount Kilimanjaro is the highest peak in Africa and one of the world\'s Seven Summits. Our Lemosho Route is considered the most scenic and has the highest success rates due to the gradual acclimatisation profile.</p><p>You\'ll trek through five distinct climate zones — from rainforest to alpine desert — guided by our team of highly experienced mountain guides and supported by a full crew of trained porters who carry all equipment, cook your meals and ensure your safety every step of the way.</p>',
+                    'en' => '<p>Standing at 5,895 metres above sea level, Mount Kilimanjaro is the highest peak in Africa and one of the world\'s Seven Summits. Our Lemosho Route is considered the most scenic and has the highest success rates due to the gradual acclimatisation profile.</p><p>You\'ll trek through five distinct climate zones  from rainforest to alpine desert  guided by our team of highly experienced mountain guides and supported by a full crew of trained porters who carry all equipment, cook your meals and ensure your safety every step of the way.</p>',
                     'fr' => '<p>À 5 895 mètres d\'altitude, le Kilimandjaro est le plus haut sommet d\'Afrique. Notre route Lemosho affiche les meilleurs taux de réussite grâce à un profil d\'acclimatation progressif à travers cinq zones climatiques distinctes.</p>',
                 ],
                 'highlights' => [
                     'en' => [
                         ['icon' => 'user',      'title' => 'Experienced guides',    'subtitle' => 'KPAP-certified team'],
-                        ['icon' => 'shield',    'title' => 'Highest success rate',  'subtitle' => 'Lemosho — 95% summit rate'],
+                        ['icon' => 'shield',    'title' => 'Highest success rate',  'subtitle' => 'Lemosho  95% summit rate'],
                         ['icon' => 'star',      'title' => 'Full porter support',   'subtitle' => '1:1 ratio, fair wages'],
                         ['icon' => 'utensils',  'title' => 'All meals on mountain', 'subtitle' => 'Hot meals at every camp'],
                     ],
                     'fr' => [
                         ['icon' => 'user',      'title' => 'Guides expérimentés',   'subtitle' => 'Équipe certifiée KPAP'],
-                        ['icon' => 'shield',    'title' => 'Meilleur taux de succès','subtitle' => 'Lemosho — 95% au sommet'],
+                        ['icon' => 'shield',    'title' => 'Meilleur taux de succès','subtitle' => 'Lemosho  95% au sommet'],
                         ['icon' => 'star',      'title' => 'Support porteurs complet','subtitle' => 'Ratio 1:1, salaires équitables'],
                         ['icon' => 'utensils',  'title' => 'Tous les repas',        'subtitle' => 'Repas chauds à chaque camp'],
                     ],
@@ -262,11 +262,11 @@ class TourSeeder extends Seeder
                     'en' => [
                         ['day' => 1, 'title' => 'Arrival & Briefing',              'location' => 'Arusha / Moshi',     'meals' => 'D',     'description' => 'Arrive in Arusha. Transfer to Moshi. Equipment check and mountain briefing. Early night before the climb.'],
                         ['day' => 2, 'title' => 'Lemosho Glades → Big Tree Camp',  'location' => '2,650m',             'meals' => 'B/L/D', 'description' => 'Enter the forest zone at Londorossi Gate. Trek through pristine montane forest to Big Tree Camp. Buffalo and colobus monkey sightings possible.'],
-                        ['day' => 3, 'title' => 'Big Tree Camp → Shira 2',        'location' => '3,840m',             'meals' => 'B/L/D', 'description' => 'Emerge from the forest onto the spectacular Shira Plateau — a vast volcanic plateau with panoramic mountain views.'],
+                        ['day' => 3, 'title' => 'Big Tree Camp → Shira 2',        'location' => '3,840m',             'meals' => 'B/L/D', 'description' => 'Emerge from the forest onto the spectacular Shira Plateau  a vast volcanic plateau with panoramic mountain views.'],
                         ['day' => 4, 'title' => 'Shira 2 → Lava Tower → Baranco', 'location' => '3,976m',            'meals' => 'B/L/D', 'description' => 'Classic acclimatisation day: climb high to Lava Tower (4,630m), then descend to Baranco Camp. Climb high, sleep low.'],
-                        ['day' => 5, 'title' => 'Baranco Wall → Karanga Camp',    'location' => '4,035m',             'meals' => 'B/L/D', 'description' => 'Scramble up the famous Baranco Wall — a highlight of the Lemosho route. Stunning views across the Southern Ice Fields.'],
+                        ['day' => 5, 'title' => 'Baranco Wall → Karanga Camp',    'location' => '4,035m',             'meals' => 'B/L/D', 'description' => 'Scramble up the famous Baranco Wall  a highlight of the Lemosho route. Stunning views across the Southern Ice Fields.'],
                         ['day' => 6, 'title' => 'Karanga → Barafu Base Camp',     'location' => '4,673m',             'meals' => 'B/L/D', 'description' => 'Short but steep ascent to Barafu. Rest and sleep as much as possible. Wake-up call at midnight for the summit.'],
-                        ['day' => 7, 'title' => 'SUMMIT DAY — Uhuru Peak',        'location' => '5,895m → 3,100m',   'meals' => 'B/L/D', 'description' => 'Midnight start. Push through Stella Point to Uhuru Peak (5,895m) — the Roof of Africa. Celebrate, then descend to Millennium Camp.'],
+                        ['day' => 7, 'title' => 'SUMMIT DAY  Uhuru Peak',        'location' => '5,895m → 3,100m',   'meals' => 'B/L/D', 'description' => 'Midnight start. Push through Stella Point to Uhuru Peak (5,895m)  the Roof of Africa. Celebrate, then descend to Millennium Camp.'],
                         ['day' => 8, 'title' => 'Descent & Departure',            'location' => 'Moshi',              'meals' => 'B/L',   'description' => 'Final descent through the forest to Mweka Gate. Receive your summit certificate. Transfer to Moshi for a well-earned celebration.'],
                     ],
                     'fr' => [
@@ -276,7 +276,7 @@ class TourSeeder extends Seeder
                         ['day' => 4, 'title' => 'Shira 2 → Lava Tower → Baranco', 'location' => '3 976m',            'meals' => 'B/L/D', 'description' => 'Journée d\'acclimatation classique: montée à Lava Tower, descente au Camp Baranco.'],
                         ['day' => 5, 'title' => 'Mur Baranco → Camp Karanga',     'location' => '4 035m',             'meals' => 'B/L/D', 'description' => 'Escalade du célèbre mur Baranco, temps fort de la route Lemosho.'],
                         ['day' => 6, 'title' => 'Karanga → Camp de Base Barafu',  'location' => '4 673m',             'meals' => 'B/L/D', 'description' => 'Montée courte mais raide jusqu\'à Barafu. Repos avant le sommet.'],
-                        ['day' => 7, 'title' => 'JOUR SOMMET — Uhuru Peak',       'location' => '5 895m → 3 100m',   'meals' => 'B/L/D', 'description' => 'Départ à minuit pour le sommet. Célébration au Toit de l\'Afrique, puis descente.'],
+                        ['day' => 7, 'title' => 'JOUR SOMMET  Uhuru Peak',       'location' => '5 895m → 3 100m',   'meals' => 'B/L/D', 'description' => 'Départ à minuit pour le sommet. Célébration au Toit de l\'Afrique, puis descente.'],
                         ['day' => 8, 'title' => 'Descente & Départ',              'location' => 'Moshi',              'meals' => 'B/L',   'description' => 'Descente finale jusqu\'à la porte Mweka. Certificat de sommet. Transfert à Moshi.'],
                     ],
                 ],
@@ -299,8 +299,8 @@ class TourSeeder extends Seeder
                     ['label' => ['en' => 'Airport Transfers',    'fr' => 'Transferts aéroport'],       'price_per_person' => 4000],
                 ],
                 'reviews' => [
-                    ['author_name' => 'Ben W.',    'rating' => 5, 'location_label' => 'Kilimanjaro, 2025', 'traveled_at' => '2025-02-18', 'body' => '"Reached the summit at sunrise — tears in my eyes. Our guide Charles was extraordinary, monitoring everyone for altitude sickness constantly."'],
-                    ['author_name' => 'Priya S.',  'rating' => 5, 'location_label' => 'Tanzania, 2024',   'traveled_at' => '2024-08-22', 'body' => '"As a first-time high-altitude trekker I was nervous. The team made me feel completely supported. Made it to Uhuru Peak — incredible!"'],
+                    ['author_name' => 'Ben W.',    'rating' => 5, 'location_label' => 'Kilimanjaro, 2025', 'traveled_at' => '2025-02-18', 'body' => '"Reached the summit at sunrise  tears in my eyes. Our guide Charles was extraordinary, monitoring everyone for altitude sickness constantly."'],
+                    ['author_name' => 'Priya S.',  'rating' => 5, 'location_label' => 'Tanzania, 2024',   'traveled_at' => '2024-08-22', 'body' => '"As a first-time high-altitude trekker I was nervous. The team made me feel completely supported. Made it to Uhuru Peak  incredible!"'],
                 ],
             ],
         ];

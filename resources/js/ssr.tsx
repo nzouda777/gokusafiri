@@ -7,7 +7,7 @@ const appName = 'GokuSafiri';
 export default function render(page: Parameters<typeof createInertiaApp>[0]['page']) {
     return createInertiaApp({
         page,
-        title: (title) => (title ? `${title} — ${appName}` : appName),
+        title: (title) => (title ? `${title}  ${appName}` : appName),
         resolve: (name) =>
             resolvePageComponent(
                 `./Pages/${name}.tsx`,

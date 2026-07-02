@@ -4,6 +4,7 @@ use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\BookingDatesController;
 use App\Http\Controllers\Booking\BookingPaymentController;
 use App\Http\Controllers\Booking\BookingTravelersController;
+use App\Http\Controllers\PagesController;
 use App\Http\Controllers\Payment\FakePayController;
 use App\Http\Controllers\Payment\WebhookController;
 use Illuminate\Support\Facades\Route;
@@ -11,7 +12,7 @@ use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
-| Public app routes — closure used twice:
+| Public app routes  closure used twice:
 |  1. With explicit locale prefix  : /en/tours, /fr/tours, /es/tours
 |  2. Without locale prefix        : /tours (fallback, unnamed to avoid conflicts)
 |--------------------------------------------------------------------------
@@ -65,7 +66,7 @@ $appRoutes = function (bool $named) {
     $r = Route::get('/booking/{reference}/payment', [BookingPaymentController::class, 'show']);
     if ($named) $r->name('booking.payment');
 
-    // Switch deposit ↔ full — returns new client_secret as JSON
+    // Switch deposit ↔ full  returns new client_secret as JSON
     Route::post('/booking/{reference}/payment/plan', [BookingPaymentController::class, 'updatePlan']);
 
     // Stripe redirects here after 3DS / bank auth
@@ -82,6 +83,43 @@ $appRoutes = function (bool $named) {
     $r = Route::get('/booking/{booking}/pay-balance', [BookingPaymentController::class, 'payBalance'])
         ->middleware('signed');
     if ($named) $r->name('booking.balance.pay');
+
+    // Static pages
+    $r = Route::get('/about',               [PagesController::class, 'about']);
+    if ($named) $r->name('about');
+
+    $r = Route::get('/guides',              [PagesController::class, 'guides']);
+    if ($named) $r->name('guides');
+
+    $r = Route::get('/sustainability',      [PagesController::class, 'sustainability']);
+    if ($named) $r->name('sustainability');
+
+    $r = Route::get('/careers',             [PagesController::class, 'careers']);
+    if ($named) $r->name('careers');
+
+    $r = Route::get('/help',                [PagesController::class, 'help']);
+    if ($named) $r->name('help');
+
+    $r = Route::get('/contact',             [PagesController::class, 'contact']);
+    if ($named) $r->name('contact');
+
+    $r = Route::get('/cancellation-policy', [PagesController::class, 'cancellationPolicy']);
+    if ($named) $r->name('cancellation-policy');
+
+    $r = Route::get('/travel-insurance',    [PagesController::class, 'insurance']);
+    if ($named) $r->name('insurance');
+
+    $r = Route::get('/privacy',             [PagesController::class, 'privacy']);
+    if ($named) $r->name('privacy');
+
+    $r = Route::get('/terms',               [PagesController::class, 'terms']);
+    if ($named) $r->name('terms');
+
+    $r = Route::get('/cookies',             [PagesController::class, 'cookies']);
+    if ($named) $r->name('cookies');
+
+    $r = Route::get('/faq',                 [PagesController::class, 'faq']);
+    if ($named) $r->name('faq');
 
     // Auth account
     Route::middleware('auth')->prefix('account')
@@ -106,7 +144,7 @@ $appRoutes = function (bool $named) {
 
 /*
 |--------------------------------------------------------------------------
-| 1) With explicit locale prefix — named routes
+| 1) With explicit locale prefix  named routes
 |--------------------------------------------------------------------------
 */
 Route::prefix('{locale}')
@@ -116,7 +154,7 @@ Route::prefix('{locale}')
 
 /*
 |--------------------------------------------------------------------------
-| 2) Without locale prefix — fallback (unnamed, inherits locale from session)
+| 2) Without locale prefix  fallback (unnamed, inherits locale from session)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['web', 'setlocale'])

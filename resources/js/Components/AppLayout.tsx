@@ -26,9 +26,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     {/* Logo */}
                     <Link href={p} className="flex items-center gap-2.5 shrink-0">
                         <img
-                            src="/images/logo.png"
+                            src="/images/main-logo.png"
                             alt="Gokusafiri"
-                            className="h-10 w-auto"
+                            className=" md:h-20 h-12 w-auto"
                             // onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                         />
                         {/* <span className="font-display not-italic text-[20px] text-[#16241b] hidden sm:block">
@@ -257,8 +257,8 @@ function Footer() {
     return (
         <footer className="bg-[#16241b] text-white">
             <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-                    <div className="md:col-span-1">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
+                    <div className="md:col-span-2">
                         <div className="flex items-center gap-2.5 mb-5">
                             <img
                                 src="/images/logo-white.png"
@@ -289,16 +289,17 @@ function Footer() {
                         { label: t('footer.custom'),    href: `${p}/tours?style=custom` },
                     ]} />
                     <FooterCol title={t('footer.company')} links={[
-                        { label: t('footer.about'),          href: '#' },
-                        { label: t('footer.guides'),         href: '#' },
-                        { label: t('footer.sustainability'), href: '#' },
-                        { label: t('footer.careers'),        href: '#' },
+                        { label: t('footer.about'),          href: `${p}/about` },
+                        { label: t('footer.guides'),         href: `${p}/guides` },
+                        // { label: t('footer.sustainability'), href: `${p}/sustainability` },
+                        // { label: t('footer.careers'),        href: `${p}/careers` },
                     ]} />
                     <FooterCol title={t('footer.support')} links={[
-                        { label: t('footer.help'),           href: '#' },
-                        { label: t('footer.contact'),        href: '#' },
-                        { label: t('footer.cancel_policy'),  href: '#' },
-                        { label: t('footer.insurance'),      href: '#' },
+                        { label: t('footer.faq'),            href: `${p}/faq` },
+                        { label: t('footer.help'),           href: `${p}/help` },
+                        { label: t('footer.contact'),        href: `${p}/contact` },
+                        { label: t('footer.cancel_policy'),  href: `${p}/cancellation-policy` },
+                        // { label: t('footer.insurance'),      href: `${p}/travel-insurance` },
                     ]} />
                 </div>
             </div>
@@ -306,9 +307,9 @@ function Footer() {
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-[12px] text-white/40">
                     <span>{t('footer.rights', { year: new Date().getFullYear() })}</span>
                     <div className="flex gap-5">
-                        <a href="#" className="hover:text-white/70 transition-colors">{t('footer.privacy')}</a>
-                        <a href="#" className="hover:text-white/70 transition-colors">{t('footer.terms')}</a>
-                        <a href="#" className="hover:text-white/70 transition-colors">{t('footer.cookies')}</a>
+                        <Link href={`${p}/privacy`} className="hover:text-white/70 transition-colors">{t('footer.privacy')}</Link>
+                        <Link href={`${p}/terms`} className="hover:text-white/70 transition-colors">{t('footer.terms')}</Link>
+                        <Link href={`${p}/cookies`} className="hover:text-white/70 transition-colors">{t('footer.cookies')}</Link>
                     </div>
                 </div>
             </div>
@@ -318,12 +319,12 @@ function Footer() {
 
 function FooterCol({ title, links }: { title: string; links: { label: string; href: string }[] }) {
     return (
-        <div>
+        <div className=''>
             <h4 className="text-[14px] font-semibold mb-5">{title}</h4>
             <ul className="space-y-3">
                 {links.map((l) => (
                     <li key={l.label}>
-                        <a href={l.href} className="text-[14px] text-white/60 hover:text-white transition-colors">{l.label}</a>
+                        <Link href={l.href} className="text-[14px] text-white/60 hover:text-white transition-colors">{l.label}</Link>
                     </li>
                 ))}
             </ul>

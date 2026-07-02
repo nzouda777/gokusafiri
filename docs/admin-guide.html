@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GokuSafiri — Guide Administrateur</title>
+<title>GokuSafiri  Guide Administrateur</title>
 <style>
   :root {
     --green:  #2E4A39;
@@ -322,7 +322,7 @@
   <p>Documentation complète pour la gestion de la plateforme : création de tours, suivi des réservations, gestion des utilisateurs et configuration générale.</p>
 
   <div class="cover-meta">
-    <strong>Confidentiel — Usage interne uniquement</strong><br>
+    <strong>Confidentiel  Usage interne uniquement</strong><br>
     Document généré le 27 juin 2026 · Version 1.0
   </div>
 </div>
@@ -378,7 +378,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     CHAPITRE 1 — VUE D'ENSEMBLE
+     CHAPITRE 1  VUE D'ENSEMBLE
 ═══════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="chapter-header">
@@ -439,7 +439,7 @@
       <tr><td>Catalog</td><td>Tours, Packages, Destinations, Reviews, FAQs</td><td>Gérer le contenu public</td></tr>
       <tr><td>Bookings</td><td>Bookings, Payments</td><td>Suivi des réservations et encaissements</td></tr>
       <tr><td>Users</td><td>Users, Operators</td><td>Comptes clients et partenaires</td></tr>
-      <tr><td>—</td><td>Settings</td><td>Configuration globale de la plateforme</td></tr>
+      <tr><td></td><td>Settings</td><td>Configuration globale de la plateforme</td></tr>
     </tbody>
   </table>
 
@@ -450,7 +450,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     CHAPITRE 2 — DESTINATIONS
+     CHAPITRE 2  DESTINATIONS
 ═══════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="chapter-header">
@@ -476,7 +476,7 @@
     <tbody>
       <tr><td>Country (code ISO)</td><td><span class="req">Oui</span></td><td>Code pays sur 2 lettres : TZ (Tanzanie), KE (Kenya), ZA (Afrique du Sud), UG (Ouganda), RW (Rwanda)…</td></tr>
       <tr><td>Region</td><td><span class="req">Oui</span></td><td>Région : East Africa, Southern Africa, North Africa, West Africa, Central Africa</td></tr>
-      <tr><td>Name (EN)</td><td><span class="req">Oui</span></td><td>Nom en anglais — sert de base au slug URL</td></tr>
+      <tr><td>Name (EN)</td><td><span class="req">Oui</span></td><td>Nom en anglais  sert de base au slug URL</td></tr>
       <tr><td>Name (FR / ES)</td><td><span class="opt">Non</span></td><td>Traductions optionnelles affichées selon la langue du visiteur</td></tr>
       <tr><td>Cover Image</td><td><span class="opt">Non</span></td><td>Photo représentative de la destination (16:9, max 5 Mo)</td></tr>
     </tbody>
@@ -492,7 +492,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     CHAPITRE 3 — OPÉRATEURS
+     CHAPITRE 3  OPÉRATEURS
 ═══════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="chapter-header">
@@ -513,7 +513,7 @@
       <tr><td>Name</td><td><span class="req">Oui</span></td><td>Nom commercial de l'opérateur (ex. : Serengeti Expedition)</td></tr>
       <tr><td>Email</td><td><span class="req">Oui</span></td><td>Adresse e-mail de contact. Doit être unique.</td></tr>
       <tr><td>Phone</td><td><span class="opt">Non</span></td><td>Numéro de téléphone international</td></tr>
-      <tr><td>Approved</td><td>—</td><td>Cocher pour approuver immédiatement, ou laisser décochée pour validation ultérieure</td></tr>
+      <tr><td>Approved</td><td></td><td>Cocher pour approuver immédiatement, ou laisser décochée pour validation ultérieure</td></tr>
       <tr><td>Logo</td><td><span class="opt">Non</span></td><td>Logo carré (1:1 recommandé, max 2 Mo)</td></tr>
     </tbody>
   </table>
@@ -539,7 +539,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     CHAPITRE 4 — TOURS & PACKAGES
+     CHAPITRE 4  TOURS & PACKAGES
 ═══════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="chapter-header">
@@ -552,14 +552,14 @@
 
   <div class="nav-path"><span class="arrow">→</span> <strong>Catalog</strong> <span class="arrow">›</span> <strong>Tours</strong> (ou <strong>Packages</strong>)</div>
 
-  <h2>4.1 Créer un tour — Vue d'ensemble</h2>
+  <h2>4.1 Créer un tour  Vue d'ensemble</h2>
   <div class="steps">
     <div class="step"><div class="step-num">1</div><div class="step-content"><h4>Cliquer sur «&nbsp;New Tour&nbsp;»</h4><p>Le formulaire s'ouvre, organisé en sections dépliables.</p></div></div>
     <div class="step"><div class="step-num">2</div><div class="step-content"><h4>Remplir «&nbsp;Basic Information&nbsp;»</h4><p>Titre, type, style, destination, opérateur, statut.</p></div></div>
     <div class="step"><div class="step-num">3</div><div class="step-content"><h4>Remplir «&nbsp;Pricing &amp; Logistics&nbsp;»</h4><p>Prix adulte (en centimes), durée, taille du groupe, dépôt, annulation.</p></div></div>
     <div class="step"><div class="step-num">4</div><div class="step-content"><h4>Rédiger la description complète</h4><p>Éditeur riche disponible en anglais, français et espagnol.</p></div></div>
     <div class="step"><div class="step-num">5</div><div class="step-content"><h4>Remplir les sections optionnelles</h4><p>Inclusions/exclusions, itinéraire, highlights, add-ons, photos.</p></div></div>
-    <div class="step"><div class="step-num">6</div><div class="step-content"><h4>Ajouter les dates de départ</h4><p>Section «&nbsp;Departure Schedules&nbsp;» — au moins une date recommandée.</p></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-content"><h4>Ajouter les dates de départ</h4><p>Section «&nbsp;Departure Schedules&nbsp;»  au moins une date recommandée.</p></div></div>
     <div class="step"><div class="step-num">7</div><div class="step-content"><h4>Cliquer sur «&nbsp;Create&nbsp;»</h4><p>Le tour est sauvegardé en brouillon (Draft). Passez à «&nbsp;Published&nbsp;» quand tout est prêt.</p></div></div>
   </div>
 </div>
@@ -567,7 +567,7 @@
 <div class="page">
   <div class="chapter-header">
     <div class="chapter-number">Chapitre 4 (suite)</div>
-    <div class="chapter-title">Champs détaillés — Informations de base</div>
+    <div class="chapter-title">Champs détaillés  Informations de base</div>
     <div class="chapter-subtitle"></div>
   </div>
 
@@ -589,7 +589,7 @@
   <h2>4.3 Section «&nbsp;Pricing &amp; Logistics&nbsp;»</h2>
 
   <div class="box box-warn">
-    <div class="box-label">Important — Prix en centimes</div>
+    <div class="box-label">Important  Prix en centimes</div>
     <p>Tous les prix sont saisis <strong>en centimes de dollar (USD)</strong>. Exemple : pour un prix de <strong>2 290 $</strong>, saisissez <strong>229000</strong>. Un prix de 500 $ = <code>50000</code>.</p>
   </div>
 
@@ -612,7 +612,7 @@
   <table>
     <thead><tr><th>Champ</th><th>Description</th></tr></thead>
     <tbody>
-      <tr><td>Difficulty</td><td>Easy, Moderate, Challenging, Extreme — affiché sur la fiche tour</td></tr>
+      <tr><td>Difficulty</td><td>Easy, Moderate, Challenging, Extreme  affiché sur la fiche tour</td></tr>
       <tr><td>Minimum Age</td><td>Âge minimum requis (laisser vide = pas de restriction)</td></tr>
       <tr><td>Guide Languages</td><td>Langues des guides (saisir et appuyer Entrée pour chaque langue)</td></tr>
     </tbody>
@@ -629,16 +629,16 @@
   <h2>4.5 Section «&nbsp;Full Description&nbsp;»</h2>
   <p>Deux zones de texte riche disponibles :</p>
   <ul>
-    <li><strong>Description</strong> — texte principal présentant le tour (histoire, expériences, points forts narratifs)</li>
-    <li><strong>Practical Info / Important Notes</strong> — informations pratiques (type de véhicule, matériel à apporter, conseils de paiement sur place, flexibilité de l'itinéraire…)</li>
+    <li><strong>Description</strong>  texte principal présentant le tour (histoire, expériences, points forts narratifs)</li>
+    <li><strong>Practical Info / Important Notes</strong>  informations pratiques (type de véhicule, matériel à apporter, conseils de paiement sur place, flexibilité de l'itinéraire…)</li>
   </ul>
   <p>Chaque zone est disponible en <strong>anglais</strong>, <strong>français</strong> et <strong>espagnol</strong> via les onglets de traduction. L'anglais est obligatoire.</p>
 
   <h2>4.6 Section «&nbsp;Inclusions &amp; Exclusions&nbsp;»</h2>
   <p>Saisissez chaque élément inclus ou exclu, puis appuyez sur <strong>Entrée</strong> pour l'ajouter à la liste. Les éléments peuvent être réordonnés par glisser-déposer.</p>
   <div class="cols cols-2">
-    <div class="col-card"><h4>Exemples — Inclus</h4><p>Transport aéroport → hôtel, Safari en 4x4, Pension complète, Parcs nationaux, Guide expert…</p></div>
-    <div class="col-card"><h4>Exemples — Exclus</h4><p>Vols internationaux, Visa, Boissons alcoolisées, Pourboires, Assurance voyage…</p></div>
+    <div class="col-card"><h4>Exemples  Inclus</h4><p>Transport aéroport → hôtel, Safari en 4x4, Pension complète, Parcs nationaux, Guide expert…</p></div>
+    <div class="col-card"><h4>Exemples  Exclus</h4><p>Vols internationaux, Visa, Boissons alcoolisées, Pourboires, Assurance voyage…</p></div>
   </div>
 
   <h2>4.7 Section «&nbsp;Day-by-Day Itinerary&nbsp;»</h2>
@@ -647,7 +647,7 @@
     <thead><tr><th>Champ</th><th>Description</th></tr></thead>
     <tbody>
       <tr><td>Day #</td><td>Numéro du jour (1, 2, 3…)</td></tr>
-      <tr><td>Title</td><td>Intitulé de la journée (ex. : «&nbsp;Serengeti — Grande Migration&nbsp;»)</td></tr>
+      <tr><td>Title</td><td>Intitulé de la journée (ex. : «&nbsp;Serengeti  Grande Migration&nbsp;»)</td></tr>
       <tr><td>Location / Stay</td><td>Camp ou lodge pour la nuit</td></tr>
       <tr><td>Meals (B/L/D)</td><td>Repas inclus (B = breakfast, L = lunch, D = dinner)</td></tr>
       <tr><td>Description</td><td>Récit détaillé de la journée</td></tr>
@@ -657,9 +657,9 @@
   <h2>4.8 Section «&nbsp;Feature Highlights&nbsp;»</h2>
   <p>Cartes visuelles affichées sur la fiche tour pour mettre en avant les points forts. Maximum 6 highlights. Chaque highlight comporte :</p>
   <ul>
-    <li><strong>Icon</strong> — choisir parmi : Guide/Person, Accommodation, Meals, Balloon, Game drives, Photography, Safety, Premium</li>
-    <li><strong>Title</strong> — texte court (ex. : «&nbsp;Expert Wildlife Guide&nbsp;»)</li>
-    <li><strong>Subtitle</strong> — détail optionnel (ex. : «&nbsp;10+ years experience&nbsp;»)</li>
+    <li><strong>Icon</strong>  choisir parmi : Guide/Person, Accommodation, Meals, Balloon, Game drives, Photography, Safety, Premium</li>
+    <li><strong>Title</strong>  texte court (ex. : «&nbsp;Expert Wildlife Guide&nbsp;»)</li>
+    <li><strong>Subtitle</strong>  détail optionnel (ex. : «&nbsp;10+ years experience&nbsp;»)</li>
   </ul>
 
   <h2>4.9 Section «&nbsp;Photo Gallery&nbsp;»</h2>
@@ -667,10 +667,10 @@
 
   <div class="box box-tip">
     <div class="box-label">Conseil photo</div>
-    <p>Préférez des photos horizontales (ratio 4:3 ou 16:9) de haute qualité. La première photo est la plus importante — elle est affichée en plein format sur la fiche tour.</p>
+    <p>Préférez des photos horizontales (ratio 4:3 ou 16:9) de haute qualité. La première photo est la plus importante  elle est affichée en plein format sur la fiche tour.</p>
   </div>
 
-  <h2>4.10 Section «&nbsp;Departure Schedules&nbsp;» — Dates de départ</h2>
+  <h2>4.10 Section «&nbsp;Departure Schedules&nbsp;»  Dates de départ</h2>
   <p>Chaque tour doit avoir au moins une date de départ pour être réservable. Cliquez sur <strong>«&nbsp;Add Departure Date&nbsp;»</strong>.</p>
   <table>
     <thead><tr><th>Champ</th><th>Obligatoire</th><th>Description</th></tr></thead>
@@ -693,7 +693,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     CHAPITRE 5 — RÉSERVATIONS
+     CHAPITRE 5  RÉSERVATIONS
 ═══════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="chapter-header">
@@ -707,13 +707,13 @@
   <h2>5.1 Liste des réservations</h2>
   <p>La liste affiche toutes les réservations, triées par date de création (la plus récente en premier). Colonnes disponibles :</p>
   <ul>
-    <li><strong>Reference</strong> — code unique cliquable et copiable (ex. : GS-2024-0001)</li>
-    <li><strong>Customer</strong> — prénom + nom du voyageur principal</li>
-    <li><strong>Tour</strong> — nom du tour réservé</li>
-    <li><strong>Departure</strong> — date de départ prévue</li>
-    <li><strong>Status</strong> — statut actuel de la réservation</li>
-    <li><strong>Total</strong> — montant total en USD</li>
-    <li><strong>Plan</strong> — Full Payment ou Deposit</li>
+    <li><strong>Reference</strong>  code unique cliquable et copiable (ex. : GS-2024-0001)</li>
+    <li><strong>Customer</strong>  prénom + nom du voyageur principal</li>
+    <li><strong>Tour</strong>  nom du tour réservé</li>
+    <li><strong>Departure</strong>  date de départ prévue</li>
+    <li><strong>Status</strong>  statut actuel de la réservation</li>
+    <li><strong>Total</strong>  montant total en USD</li>
+    <li><strong>Plan</strong>  Full Payment ou Deposit</li>
   </ul>
 
   <p>Utilisez les <strong>filtres</strong> pour affiner par statut, plan de paiement ou période de création.</p>
@@ -753,8 +753,8 @@
     <thead><tr><th>Statut</th><th>Signification</th><th>Action attendue</th></tr></thead>
     <tbody>
       <tr><td><span class="badge badge-gray">Pending</span></td><td>Réservation créée, aucun paiement reçu</td><td>Attendre le paiement. Expire automatiquement si non réglée.</td></tr>
-      <tr><td><span class="badge badge-amber">Deposit Paid</span></td><td>Acompte reçu</td><td>Transitoire — passe automatiquement en Confirmed</td></tr>
-      <tr><td><span class="badge badge-green">Paid</span></td><td>Paiement complet reçu</td><td>Transitoire — passe automatiquement en Confirmed</td></tr>
+      <tr><td><span class="badge badge-amber">Deposit Paid</span></td><td>Acompte reçu</td><td>Transitoire  passe automatiquement en Confirmed</td></tr>
+      <tr><td><span class="badge badge-green">Paid</span></td><td>Paiement complet reçu</td><td>Transitoire  passe automatiquement en Confirmed</td></tr>
       <tr><td><span class="badge badge-green">Confirmed</span></td><td>Réservation confirmée et active</td><td>Coordonner avec l'opérateur. Marquer Completed après le voyage.</td></tr>
       <tr><td><span class="badge badge-blue">Completed</span></td><td>Voyage terminé</td><td>Inviter le client à laisser un avis.</td></tr>
       <tr><td><span class="badge badge-red">Cancelled</span></td><td>Annulée</td><td>Les sièges sont automatiquement libérés sur le départ.</td></tr>
@@ -783,7 +783,7 @@
       <tr><td>Payment Plan</td><td><span class="req">Oui</span></td><td>Full Payment (100 %) ou Deposit (acompte selon le % configuré)</td></tr>
       <tr><td>Language</td><td><span class="req">Oui</span></td><td>Langue de communication avec le client (EN / FR / ES)</td></tr>
       <tr><td>Lead First/Last Name</td><td><span class="req">Oui</span></td><td>Nom du voyageur principal (responsable de la réservation)</td></tr>
-      <tr><td>Lead Email</td><td><span class="req">Oui</span></td><td>E-mail de contact — les confirmations seront envoyées à cette adresse</td></tr>
+      <tr><td>Lead Email</td><td><span class="req">Oui</span></td><td>E-mail de contact  les confirmations seront envoyées à cette adresse</td></tr>
       <tr><td>Lead Phone</td><td><span class="opt">Non</span></td><td>Téléphone du voyageur principal</td></tr>
       <tr><td>Adults / Children / Infants</td><td><span class="req">Oui</span></td><td>Composition du groupe. Les enfants ont un tarif réduit ; les bébés (−2 ans) sont gratuits.</td></tr>
     </tbody>
@@ -811,13 +811,13 @@
   </div>
 
   <div class="box box-warn">
-    <div class="box-label">Attention — Annulation</div>
+    <div class="box-label">Attention  Annulation</div>
     <p>L'annulation est <strong>irréversible</strong>. Si le client a payé un acompte, le remboursement devra être géré manuellement via Stripe Dashboard. La plateforme ne rembourse pas automatiquement.</p>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     CHAPITRE 6 — PAIEMENTS
+     CHAPITRE 6  PAIEMENTS
 ═══════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="chapter-header">
@@ -839,7 +839,7 @@
       <tr><td>Provider</td><td>Processeur de paiement utilisé (Stripe)</td></tr>
       <tr><td>Amount</td><td>Montant encaissé en USD</td></tr>
       <tr><td>Status</td><td><span class="badge badge-green">succeeded</span> · <span class="badge badge-red">failed</span> · <span class="badge badge-amber">initiated</span> · <span class="badge badge-gray">cancelled</span></td></tr>
-      <tr><td>Provider Reference</td><td>Identifiant Stripe (pi_xxx) — copiable pour vérification dans le Dashboard Stripe</td></tr>
+      <tr><td>Provider Reference</td><td>Identifiant Stripe (pi_xxx)  copiable pour vérification dans le Dashboard Stripe</td></tr>
       <tr><td>Paid At</td><td>Date et heure de l'encaissement</td></tr>
     </tbody>
   </table>
@@ -875,7 +875,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     CHAPITRE 7 — AVIS CLIENTS
+     CHAPITRE 7  AVIS CLIENTS
 ═══════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="chapter-header">
@@ -917,7 +917,7 @@
       <tr><td>Rating</td><td><span class="req">Oui</span></td><td>Note de 1 à 5 étoiles</td></tr>
       <tr><td>Location</td><td><span class="opt">Non</span></td><td>Contexte du voyage (ex. : «&nbsp;Serengeti, 2025&nbsp;»)</td></tr>
       <tr><td>Travel Date</td><td><span class="opt">Non</span></td><td>Date approximative du voyage</td></tr>
-      <tr><td>Visible on tour page</td><td>—</td><td>Cochez pour approuver immédiatement</td></tr>
+      <tr><td>Visible on tour page</td><td></td><td>Cochez pour approuver immédiatement</td></tr>
       <tr><td>Review text</td><td><span class="opt">Non</span></td><td>Texte de l'avis (max 2 000 caractères)</td></tr>
     </tbody>
   </table>
@@ -929,7 +929,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     CHAPITRE 8 — FAQ
+     CHAPITRE 8  FAQ
 ═══════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="chapter-header">
@@ -946,8 +946,8 @@
   <table>
     <thead><tr><th>Champ</th><th>Description</th></tr></thead>
     <tbody>
-      <tr><td>Question (EN)</td><td>Question en anglais — obligatoire</td></tr>
-      <tr><td>Answer (EN)</td><td>Réponse en anglais — obligatoire</td></tr>
+      <tr><td>Question (EN)</td><td>Question en anglais  obligatoire</td></tr>
+      <tr><td>Answer (EN)</td><td>Réponse en anglais  obligatoire</td></tr>
       <tr><td>Question / Answer (FR, ES)</td><td>Traductions optionnelles</td></tr>
       <tr><td>Position</td><td>Ordre d'affichage (0 = premier). Peut aussi être ajusté par glisser-déposer dans la liste.</td></tr>
       <tr><td>Active</td><td>Coché = visible sur le site. Décoché = masqué.</td></tr>
@@ -959,7 +959,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     CHAPITRE 9 — UTILISATEURS
+     CHAPITRE 9  UTILISATEURS
 ═══════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="chapter-header">
@@ -1019,7 +1019,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     CHAPITRE 10 — PARAMÈTRES
+     CHAPITRE 10  PARAMÈTRES
 ═══════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="chapter-header">
@@ -1062,7 +1062,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     CHAPITRE 11 — FLUX CLIENT
+     CHAPITRE 11  FLUX CLIENT
 ═══════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="chapter-header">
@@ -1098,21 +1098,21 @@
     <div class="step">
       <div class="step-num">4</div>
       <div class="step-content">
-        <h4>Sélection des dates — Étape 2</h4>
+        <h4>Sélection des dates  Étape 2</h4>
         <p>Confirmation du départ sélectionné et des options (add-ons disponibles).</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">5</div>
       <div class="step-content">
-        <h4>Informations voyageurs — Étape 3</h4>
+        <h4>Informations voyageurs  Étape 3</h4>
         <p>Saisie des coordonnées du voyageur principal (prénom, nom, e-mail, téléphone) et des détails de chaque voyageur (passeport, date de naissance, nationalité).</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">6</div>
       <div class="step-content">
-        <h4>Paiement — Étape 4</h4>
+        <h4>Paiement  Étape 4</h4>
         <p>Page de paiement Stripe sécurisée. Le client saisit ses coordonnées bancaires. Le paiement est traité en temps réel.</p>
       </div>
     </div>
@@ -1132,13 +1132,13 @@
       <tr><td>Paiement dépôt reçu</td><td>«&nbsp;Votre acompte a été reçu&nbsp;» + détails réservation</td><td>Nouvelle réservation</td></tr>
       <tr><td>Paiement complet reçu</td><td>«&nbsp;Votre réservation est confirmée&nbsp;» + résumé</td><td>Nouvelle réservation</td></tr>
       <tr><td>Solde payé</td><td>«&nbsp;Votre solde a été reçu&nbsp;»</td><td>Paiement reçu</td></tr>
-      <tr><td>Annulation</td><td>E-mail de notification d'annulation</td><td>—</td></tr>
+      <tr><td>Annulation</td><td>E-mail de notification d'annulation</td><td></td></tr>
     </tbody>
   </table>
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     CHAPITRE 12 — BONNES PRATIQUES
+     CHAPITRE 12  BONNES PRATIQUES
 ═══════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="chapter-header">
@@ -1152,7 +1152,7 @@
     <li>Toujours <strong>créer la destination et l'opérateur</strong> avant de créer un tour.</li>
     <li>Laisser un tour en <strong>Draft</strong> pendant sa rédaction, passer en <strong>In Review</strong> quand il est prêt, et <strong>Published</strong> uniquement après vérification finale.</li>
     <li>Ajouter <strong>au moins 5 photos</strong> de qualité par tour pour maximiser les conversions.</li>
-    <li>Garder les descriptions concises pour la version mobile — l'extrait (excerpt) est particulièrement important sur les fiches liste.</li>
+    <li>Garder les descriptions concises pour la version mobile  l'extrait (excerpt) est particulièrement important sur les fiches liste.</li>
     <li>Mettre à jour le champ <strong>Seats Left</strong> manuellement si des réservations hors-plateforme ont été prises.</li>
     <li>Les prix étant en centimes, pensez à vérifier deux fois avant de sauvegarder (229000 = 2 290 $, pas 22 900 $).</li>
   </ul>
@@ -1160,7 +1160,7 @@
   <h2>12.2 Gestion des réservations</h2>
   <ul>
     <li>Consultez le tableau de bord chaque matin pour voir les nouvelles réservations et avis en attente.</li>
-    <li>Répondez aux réservations <strong>Pending</strong> rapidement — elles expirent si non confirmées.</li>
+    <li>Répondez aux réservations <strong>Pending</strong> rapidement  elles expirent si non confirmées.</li>
     <li>Utilisez le champ <strong>Internal Notes</strong> (lors de la création manuelle) pour noter les demandes spéciales du client.</li>
     <li>Après un voyage, passez la réservation en <strong>Completed</strong> pour nettoyer la vue active et inviter le client à laisser un avis.</li>
   </ul>
@@ -1168,7 +1168,7 @@
   <h2>12.3 Modération des avis</h2>
   <ul>
     <li>Approuvez les avis dans les <strong>48 heures</strong> suivant leur soumission.</li>
-    <li>Ne supprimez pas les avis négatifs légitimes — ils renforcent la crédibilité de la plateforme.</li>
+    <li>Ne supprimez pas les avis négatifs légitimes  ils renforcent la crédibilité de la plateforme.</li>
     <li>Masquez (<em>Hide</em>) les avis contenant des propos inappropriés, des liens, ou des informations personnelles.</li>
   </ul>
 
@@ -1188,7 +1188,7 @@
     <tbody>
       <tr><td>Un tour n'apparaît pas sur le site</td><td>Vérifier que le statut est <strong>Published</strong> et que l'opérateur est <strong>Approved</strong></td></tr>
       <tr><td>Un client ne reçoit pas d'e-mail</td><td>Vérifier que <code>lead_email</code> est bien renseigné dans la réservation · Vérifier les spams</td></tr>
-      <tr><td>Un paiement est en statut «&nbsp;initiated&nbsp;»</td><td>Le paiement n'a pas été complété — le client a abandonné le processus. Contacter le client.</td></tr>
+      <tr><td>Un paiement est en statut «&nbsp;initiated&nbsp;»</td><td>Le paiement n'a pas été complété  le client a abandonné le processus. Contacter le client.</td></tr>
       <tr><td>Un avis modifie mal la note du tour</td><td>La note est recalculée automatiquement. Vérifier qu'il n'y a pas d'avis dupliqués ou non approuvés parasites.</td></tr>
       <tr><td>Une image ne s'affiche pas</td><td>Vérifier que la photo a bien été uploadée dans la galerie du tour et que le format est accepté (JPG/PNG/WebP)</td></tr>
     </tbody>

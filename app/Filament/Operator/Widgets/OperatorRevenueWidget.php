@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
 
 class OperatorRevenueWidget extends ChartWidget
 {
-    protected ?string $heading = 'Revenue — Last 6 Months';
+    protected ?string $heading = 'Revenue  Last 6 Months';
     protected static ?int $sort = 1;
     protected int|string|array $columnSpan = 'full';
     protected ?string $maxHeight = '260px';
