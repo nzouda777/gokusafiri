@@ -25,7 +25,10 @@
                         <table width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
                                 <td>
-                                    <span style="font-size:20px;font-weight:700;color:#ffffff;letter-spacing:-0.3px;">GokuSafiri</span>
+                                    <img src="{{ config('app.url') }}/images/logo-white.png"
+                                         alt="GokuSafiri"
+                                         width="140"
+                                         style="height:auto;display:block;border:0;outline:none;text-decoration:none;">
                                 </td>
                                 <td align="right">
                                     <span style="font-size:12px;color:#a8c5b0;">Your African Safari Experts</span>

@@ -89,7 +89,7 @@ export default function FAQ({ faqs }: Props) {
                                 </p>
                                 <div className="space-y-3">
                                     <a
-                                        href="mailto:hello@gokusafiri.com"
+                                        href="mailto:support@gokusafiri.com"
                                         className="flex items-center justify-between w-full px-4 py-3 rounded-[12px] bg-[#6e8c79] text-white text-[14px] font-medium hover:bg-[#5a7865] transition-colors"
                                     >
                                         {t('faq.email_team')}
@@ -151,7 +151,7 @@ export default function FAQ({ faqs }: Props) {
                             {t('faq.cta_explore')}
                         </Link>
                         <a
-                            href="mailto:hello@gokusafiri.com"
+                            href="mailto:support@gokusafiri.com"
                             className="px-[28px] py-[14px] rounded-full border border-white/30 text-white text-[15px] font-medium hover:bg-white/10 transition-colors"
                         >
                             {t('faq.talk_expert')}

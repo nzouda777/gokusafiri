@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Admin\Pages\Dashboard;
 use App\Filament\Admin\Pages\SettingsPage;
 use App\Filament\Admin\Resources\BookingResource;
+use App\Filament\Admin\Resources\ComingSoonSubscriberResource;
 use App\Filament\Admin\Resources\DestinationResource;
 use App\Filament\Admin\Resources\FaqResource;
 use App\Filament\Admin\Resources\OperatorResource;
@@ -64,6 +65,7 @@ class AdminPanelProvider extends PanelProvider
                 UserResource::class,
                 OperatorResource::class,
                 RoleResource::class,
+                ComingSoonSubscriberResource::class,
             ])
             ->pages([
                 Dashboard::class,
@@ -83,6 +85,7 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make('Bookings')->icon('heroicon-o-calendar-days'),
                 NavigationGroup::make('Catalog')->icon('heroicon-o-map'),
                 NavigationGroup::make('Users')->icon('heroicon-o-users'),
+                NavigationGroup::make('Marketing')->icon('heroicon-o-megaphone'),
             ])
             ->sidebarCollapsibleOnDesktop()
             ->middleware([

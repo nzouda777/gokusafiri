@@ -121,7 +121,7 @@ export default function About() {
             </section>
 
             {/* Team */}
-            <section className="bg-[#fbf8f2] py-16 md:py-24">
+            <section className="bg-[#fbf8f2] py-16 md:py-24 hidden">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
                     <div className="text-center mb-12">
                         <p className="font-bold text-[#f0a05e] text-[12px] tracking-[2.16px] uppercase mb-3">

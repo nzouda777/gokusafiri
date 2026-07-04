@@ -56,6 +56,16 @@ class SettingsPage extends Page
                     ->label('Active Languages')
                     ->options(['en' => 'English', 'fr' => 'French', 'es' => 'Spanish']),
             ])->columns(2),
+
+            Schemas\Components\Section::make('Launch')
+                ->description('While enabled, all public pages redirect to the Coming Soon page.')
+                ->schema([
+                    Forms\Components\Toggle::make('coming_soon_enabled')
+                        ->label('Coming Soon mode')
+                        ->helperText('Turn off to make the full website publicly visible.')
+                        ->onColor('danger')
+                        ->offColor('success'),
+                ])->columns(1),
         ])->statePath('data');
     }
 
@@ -85,8 +95,17 @@ class SettingsPage extends Page
     {
         $data = $this->form->getState();
         foreach ($data as $key => $value) {
-            $settings->$key = $value;
+            if ($value !== null) {
+                $settings->$key = $value;
+            }
         }
+
+        // When settings rows don't exist in the DB yet, Spatie marks every
+        // property as "default-value-loaded" and refuses to save them.
+        // Resetting that tracking allows the underlying upsert to create
+        // the rows on first save, just like on subsequent saves.
+        $settings->settingsConfig()->resetDefaultValueLoadedProperties();
+
         $settings->save();
 
         Notification::make()->title('Settings saved')->success()->send();

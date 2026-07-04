@@ -12,9 +12,9 @@ export default function Contact() {
         {
             icon: Mail,
             labelKey: 'contact.ch1_label',
-            value: 'hello@gokusafiri.com',
+            value: 'support@gokusafiri.com',
             descKey: 'contact.ch1_desc',
-            href: 'mailto:hello@gokusafiri.com',
+            href: 'mailto:support@gokusafiri.com',
             ctaKey: 'contact.ch1_cta',
         },
         {

@@ -124,13 +124,13 @@ export default function Help() {
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a
-                            href="mailto:hello@gokusafiri.com"
+                            href="mailto:support@gokusafiri.com"
                             className="flex items-center gap-3 px-6 py-4 rounded-[14px] bg-white/10 hover:bg-white/20 transition-colors text-white"
                         >
                             <Mail size={20} className="text-[#f0a05e]" />
                             <div className="text-left">
                                 <p className="text-[13px] text-white/50">{t('help.email_label')}</p>
-                                <p className="text-[15px] font-medium">hello@gokusafiri.com</p>
+                                <p className="text-[15px] font-medium">support@gokusafiri.com</p>
                             </div>
                         </a>
                         <a

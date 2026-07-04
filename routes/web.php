@@ -4,6 +4,7 @@ use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\BookingDatesController;
 use App\Http\Controllers\Booking\BookingPaymentController;
 use App\Http\Controllers\Booking\BookingTravelersController;
+use App\Http\Controllers\ComingSoonController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\Payment\FakePayController;
 use App\Http\Controllers\Payment\WebhookController;
@@ -193,3 +194,11 @@ Route::post('/fake-pay/{payment}', [FakePayController::class, 'process'])->name(
 Route::post('/webhooks/payment/{provider}', [WebhookController::class, 'handle'])
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
     ->name('webhooks.payment');
+
+/*
+|--------------------------------------------------------------------------
+| Coming Soon
+|--------------------------------------------------------------------------
+*/
+Route::get('/coming-soon', [ComingSoonController::class, 'show'])->name('coming-soon');
+Route::post('/coming-soon/subscribe', [ComingSoonController::class, 'subscribe'])->name('coming-soon.subscribe');

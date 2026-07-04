@@ -462,7 +462,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                                 {t('faq.help')}
                             </p>
                             <a
-                                href="mailto:hello@gokusafiri.com"
+                                href="mailto:support@gokusafiri.com"
                                 className="inline-flex items-center gap-[8px] px-[24px] py-[13px] rounded-full border-[1.5px] border-[#c5d3c8] text-[#2E4A39] text-[14px] font-medium hover:border-[#6e8c79] hover:bg-white transition-colors"
                             >
                                 {t('faq.talk_expert')}
@@ -509,7 +509,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                             {t('cta.book')}
                         </Link>
                         <a
-                            href="mailto:hello@gokusafiri.com"
+                            href="mailto:support@gokusafiri.com"
                             className="px-[27px] py-[15px] rounded-full border border-white/30 text-white text-[16px] font-medium hover:bg-white/10 transition-colors"
                         >
                             {t('cta.talk_expert')}

@@ -35,6 +35,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),
+                'subscribed' => $request->session()->get('subscribed'),
             ],
             'stripe_key' => config('services.stripe.key'),
         ]);
