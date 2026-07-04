@@ -113,7 +113,7 @@ export default function ComingSoon({ launch_date }: Props) {
                     <main className="flex-1 flex flex-col items-center justify-center px-6 sm:px-10 text-center py-16">
 
                         {/* Eyebrow */}
-                        <p className="mb-5 sm:mb-7 text-[11px] sm:text-[13px] font-hanken tracking-[3px] uppercase text-[#f0a05e]">
+                        <p className="mb-5 sm:mb-7 text-[16px] sm:text-[22px] font-hanken tracking-[3px] uppercase text-[#f0a05e]">
                             Coming soon
                         </p>
 
