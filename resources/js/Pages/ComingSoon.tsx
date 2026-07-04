@@ -114,7 +114,7 @@ export default function ComingSoon({ launch_date }: Props) {
 
                         {/* Eyebrow */}
                         <p className="mb-5 sm:mb-7 text-[11px] sm:text-[13px] font-hanken tracking-[3px] uppercase text-[#f0a05e]">
-                            Something wild is coming
+                            Coming soon
                         </p>
 
                         {/* Headline */}
