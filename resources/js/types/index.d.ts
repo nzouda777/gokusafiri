@@ -16,6 +16,7 @@ export interface TourReview {
 
 export interface Tour {
     id: number;
+    tax_fee: number;
     slug: string;
     title: string;
     excerpt: string;
@@ -154,10 +155,17 @@ export interface PaginatedData<T> {
     to: number;
 }
 
+export interface AppSettings {
+    tax_fee_percent: number;
+    tier_discount_percent: number;
+    deposit_percent: number;
+}
+
 export interface PageProps {
     [key: string]: unknown;
     auth: { user: User | null };
     locale: string;
     flash?: { success?: string; error?: string };
     stripe_key?: string;
+    settings: AppSettings;
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tour;
+use App\Settings\GeneralSettings;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -74,7 +75,7 @@ class TourShowController extends Controller
                     'country' => $tour->destination->country ?? '',
                     'slug' => $tour->destination->slug,
                 ] : null,
-                'deposit_percent' => $tour->deposit_percent ?? 20,
+                'deposit_percent' => $tour->deposit_percent ?? app(GeneralSettings::class)->deposit_percent,
                 'difficulty' => $tour->difficulty,
                 'min_age' => $tour->min_age,
                 'languages' => $tour->languages ?? [],

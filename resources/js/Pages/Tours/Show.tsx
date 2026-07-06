@@ -58,7 +58,7 @@ function Avatar({ name, src, size = 40 }: { name: string; src?: string; size?: n
 }
 
 export default function TourShow({ tour }: Props) {
-    const { auth, locale } = usePage<PageProps>().props;
+    const { auth, locale, settings } = usePage<PageProps>().props;
     const { t } = useLaravelReactI18n();
     const dateLocale = { en: 'en-US', fr: 'fr-FR', es: 'es-ES' }[locale] ?? 'en-US';
     const [activeTab, setActiveTab]               = useState('overview');
@@ -76,13 +76,17 @@ export default function TourShow({ tour }: Props) {
         reviews:   useRef<HTMLDivElement>(null),
     };
 
-    const pricePerPerson = selectedSchedule?.price_override ?? tour.base_price;
+    const basePrice      = selectedSchedule?.price_override ?? tour.base_price;
+    const tourDiscPct    = tour.discount_percent ?? 0;
+    const pricePerPerson = Math.round(basePrice * (1 - tourDiscPct / 100));
     const subtotal       = pricePerPerson * travelers;
-    const memberDiscount = auth.user ? Math.round(subtotal * 0.05) : 0;
-    const taxes          = Math.round((subtotal - memberDiscount) * 0.008);
+    const tierDiscPct    = settings.tier_discount_percent;
+    const memberDiscount = auth.user ? Math.round(subtotal * tierDiscPct / 100) : 0;
+    const taxPct         = settings.tax_fee_percent;
+    const taxes          = Math.round((subtotal - memberDiscount) * taxPct / 100);
     const total          = subtotal - memberDiscount + taxes;
     const fullSaving     = Math.round(total * 0.02);
-    const depositPct     = tour.deposit_percent ?? 20;
+    const depositPct     = tour.deposit_percent ?? settings.deposit_percent;
     const depositAmount  = Math.round(total * depositPct / 100);
 
     const cancellationDate = selectedSchedule

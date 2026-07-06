@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Booking;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\TourAddon;
+use App\Settings\GeneralSettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -52,6 +53,8 @@ class BookingDatesController extends Controller
                     'slug'             => $tour->slug,
                     'base_price'       => $tour->base_price,
                     'child_price'      => $tour->child_price,
+                    'discount_percent' => $tour->discount_percent ?? 0,
+                    'deposit_percent'  => $tour->deposit_percent ?? app(GeneralSettings::class)->deposit_percent,
                     'currency'         => $tour->currency,
                     'duration_days'    => $tour->duration_days,
                     'max_group_size'   => $tour->max_group_size,
@@ -121,19 +124,26 @@ class BookingDatesController extends Controller
     {
         $booking->load(['tour', 'schedule', 'addons.tourAddon']);
 
+        $settings   = app(GeneralSettings::class);
         $schedule   = $booking->schedule;
         $tour       = $schedule?->tour ?? $booking->tour;
-        $adultPrice = $schedule?->price_override ?? $tour->base_price;
-        $childPrice = $tour->child_price ?? $adultPrice; // fallback to adult price if not configured
+        $basePrice  = $schedule?->price_override ?? $tour->base_price;
+
+        // Apply per-tour promotional discount to unit prices
+        $tourDiscPct = $tour->discount_percent ?? 0;
+        $adultPrice  = (int) round($basePrice * (1 - $tourDiscPct / 100));
+        $childPrice  = (int) round(($tour->child_price ?? $basePrice) * (1 - $tourDiscPct / 100));
 
         // Adults pay full price, children pay child_price, infants are free
         $subtotal    = ($adultPrice * $booking->adults) + ($childPrice * $booking->children);
         $addonsTotal = $booking->addons->sum(fn ($ba) => $ba->unit_price * $ba->quantity);
 
-        $memberDiscount = $booking->user_id ? (int) round($subtotal * 0.05) : 0;
-        $taxesFees      = (int) round(($subtotal + $addonsTotal - $memberDiscount) * 0.008);
-        $total          = $subtotal + $addonsTotal - $memberDiscount + $taxesFees;
-        $deposit        = (int) round($total * (($tour->deposit_percent ?? 20) / 100));
+        $memberDiscount = $booking->user_id
+            ? (int) round(($subtotal + $addonsTotal) * $settings->tier_discount_percent / 100)
+            : 0;
+        $taxesFees = (int) round(($subtotal + $addonsTotal - $memberDiscount) * $settings->tax_fee_percent / 100);
+        $total     = $subtotal + $addonsTotal - $memberDiscount + $taxesFees;
+        $deposit   = (int) round($total * (($tour->deposit_percent ?? $settings->deposit_percent) / 100));
         $balanceDue     = $schedule ? $schedule->starts_at->subDays(30) : null;
 
         $booking->update([

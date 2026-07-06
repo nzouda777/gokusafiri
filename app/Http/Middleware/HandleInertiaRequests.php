@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Settings\GeneralSettings;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -38,6 +39,11 @@ class HandleInertiaRequests extends Middleware
                 'subscribed' => $request->session()->get('subscribed'),
             ],
             'stripe_key' => config('services.stripe.key'),
+            'settings'   => fn () => [
+                'tax_fee_percent'       => app(GeneralSettings::class)->tax_fee_percent,
+                'tier_discount_percent' => app(GeneralSettings::class)->tier_discount_percent,
+                'deposit_percent'       => app(GeneralSettings::class)->deposit_percent,
+            ],
         ]);
     }
 }

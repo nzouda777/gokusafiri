@@ -22,7 +22,7 @@ function fmt(cents: number) {
 }
 
 export default function BookingDates({ booking }: Props) {
-    const { locale } = usePage<PageProps>().props;
+    const { locale, auth, settings } = usePage<PageProps>().props;
     const { t } = useLaravelReactI18n();
     const { tour } = booking;
 
@@ -38,14 +38,18 @@ export default function BookingDates({ booking }: Props) {
 
     const selectedSchedule = tour.schedules?.find(s => s.id === Number(data.schedule_id)) ?? null;
 
-    // Live price calculation  adults at schedule/base price, children at child_price, infants free
-    const adultPrice     = selectedSchedule?.price_override ?? tour.base_price;
-    const childPrice     = tour.child_price ?? adultPrice;
+    // Live price calculation — mirrors BookingPriceCalculator order
+    const baseAdultPrice = selectedSchedule?.price_override ?? tour.base_price;
+    const tourDiscPct    = tour.discount_percent ?? 0;
+    const adultPrice     = Math.round(baseAdultPrice * (1 - tourDiscPct / 100));
+    const childPrice     = Math.round((tour.child_price ?? baseAdultPrice) * (1 - tourDiscPct / 100));
     const subtotal       = adultPrice * data.adults + childPrice * data.children;
     const selectedAddons = tour.addons?.filter(a => data.addons.includes(a.id)) ?? [];
     const addonsTotal    = selectedAddons.reduce((s, a) => s + a.price * (data.adults + data.children), 0);
-    const memberDiscount = Math.round(subtotal * 0.05);
-    const taxes          = Math.round((subtotal + addonsTotal - memberDiscount) * 0.008);
+    const tierDiscPct    = settings.tier_discount_percent;
+    const memberDiscount = auth.user ? Math.round((subtotal + addonsTotal) * tierDiscPct / 100) : 0;
+    const taxPct         = settings.tax_fee_percent;
+    const taxes          = Math.round((subtotal + addonsTotal - memberDiscount) * taxPct / 100);
 
     function toggleAddon(id: number) {
         setData('addons', data.addons.includes(id)
