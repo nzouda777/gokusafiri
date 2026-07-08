@@ -23,9 +23,9 @@ export default function CheckoutLayout({ children, step }: { children: React.Rea
                     {/* Logo */}
                     <Link href={`/${locale}`} className="flex items-center gap-[8px]">
                         <img
-                            src="/images/logo.png"
+                            src="/images/main-logo.png"
                             alt="GokuSafiri"
-                            className="h-[34px] w-auto"
+                            className="h-[34px] md:h-[64px] w-auto"
                             onError={(e) => { (e.target as HTMLImageElement).style.display = 'block'; }}
                         />
                         {/* <span className="font-display not-italic text-[20px] text-[#2E4A39] font-semibold">

@@ -48,7 +48,7 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
 
     return (
         <a
-            href={`/${locale}/tours/${tour.slug}`}
+            href={`/${locale}/${tour.type === 'package' ? 'packages' : 'tours'}/${tour.slug}`}
             className="group block bg-white border border-[rgba(0,0,0,0.1)] rounded-[22px] overflow-hidden hover:shadow-lg transition-shadow duration-300"
         >
             {/* Image */}

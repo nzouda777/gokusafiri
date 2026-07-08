@@ -21,7 +21,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(BookingTransitionService::class);
 
-        $this->app->singleton(BookingPriceCalculator::class, function ($app) {
+        // Not a singleton: settings may change at runtime via the backoffice,
+        // so each resolution reads the current values from GeneralSettings.
+        $this->app->bind(BookingPriceCalculator::class, function ($app) {
             $settings = $app->make(GeneralSettings::class);
 
             return new BookingPriceCalculator(

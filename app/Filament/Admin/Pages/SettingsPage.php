@@ -94,8 +94,15 @@ class SettingsPage extends Page
     public function save(GeneralSettings $settings): void
     {
         $data = $this->form->getState();
+
+        // Integer settings must be saved even when 0 (falsy). Filament numeric
+        // inputs may return null when the field is cleared — treat that as 0.
+        $intKeys = ['tax_fee_percent', 'deposit_percent', 'tier_discount_percent', 'platform_commission_percent'];
+
         foreach ($data as $key => $value) {
-            if ($value !== null) {
+            if (in_array($key, $intKeys, true)) {
+                $settings->$key = (int) ($value ?? 0);
+            } elseif ($value !== null) {
                 $settings->$key = $value;
             }
         }

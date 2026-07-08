@@ -242,7 +242,7 @@ export default function BookingDates({ booking }: Props) {
                         <div className="flex items-center justify-between pt-[8px]">
                             <button
                                 type="button"
-                                onClick={() => router.visit(tour.slug ? `/${locale}/tours/${tour.slug}` : `/${locale}/tours`)}
+                                onClick={() => router.visit(tour.slug ? `/${locale}/${tour.type === 'package' ? 'packages' : 'tours'}/${tour.slug}` : `/${locale}/tours`)}
                                 className="flex items-center gap-[6px] text-[13px] font-medium text-[#4f5c53] hover:text-[#2E4A39] transition-colors"
                             >
                                 {t('dates.back')}

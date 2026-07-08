@@ -74,10 +74,10 @@ export default function AccountSaved({ savedTours }: Props) {
                                         <p className="font-bold text-[#1F2937]">{fmt(tour.base_price)}</p>
                                     </div>
                                     <div className="flex gap-2">
-                                        <Link href={`/${locale}/tours/${tour.slug}`} className="px-4 py-2 rounded-full border border-gray-200 text-xs font-medium text-[#1F2937] hover:border-[#2C4A3B] transition-colors">
+                                        <Link href={`/${locale}/${tour.type === 'package' ? 'packages' : 'tours'}/${tour.slug}`} className="px-4 py-2 rounded-full border border-gray-200 text-xs font-medium text-[#1F2937] hover:border-[#2C4A3B] transition-colors">
                                             View details
                                         </Link>
-                                        <Link href={`/${locale}/tours/${tour.slug}`} className="px-4 py-2 rounded-full bg-[#2C4A3B] text-white text-xs font-semibold hover:bg-[#3a5c4a] transition-colors">
+                                        <Link href={`/${locale}/${tour.type === 'package' ? 'packages' : 'tours'}/${tour.slug}`} className="px-4 py-2 rounded-full bg-[#2C4A3B] text-white text-xs font-semibold hover:bg-[#3a5c4a] transition-colors">
                                             Modify
                                         </Link>
                                     </div>

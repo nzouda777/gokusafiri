@@ -38,6 +38,10 @@ $appRoutes = function (bool $named) {
     $r = Route::get('/tours/{slug}', [\App\Http\Controllers\TourShowController::class, 'show']);
     if ($named) $r->name('tours.show');
 
+    // Package detail
+    $r = Route::get('/packages/{slug}', [\App\Http\Controllers\TourShowController::class, 'show']);
+    if ($named) $r->name('packages.show');
+
     // Tour reviews
     $r = Route::post('/tours/{slug}/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])
         ->middleware('auth');

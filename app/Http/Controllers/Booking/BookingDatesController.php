@@ -51,6 +51,7 @@ class BookingDatesController extends Controller
                     'id'               => $tour->id,
                     'title'            => $tour->title,
                     'slug'             => $tour->slug,
+                    'type'             => $tour->type,
                     'base_price'       => $tour->base_price,
                     'child_price'      => $tour->child_price,
                     'discount_percent' => $tour->discount_percent ?? 0,

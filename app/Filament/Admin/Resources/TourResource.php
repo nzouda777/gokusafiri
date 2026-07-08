@@ -51,19 +51,19 @@ class TourResource extends Resource
                         Forms\Components\TextInput::make('title.en')
                             ->label('Title (EN)')->required()->maxLength(200),
                         Forms\Components\Textarea::make('excerpt.en')
-                            ->label('Short Excerpt (EN)')->required()->rows(2)->maxLength(500),
+                            ->label('Short Excerpt (EN)')->required()->rows(2)->maxLength(15000),
                     ]),
                     Schemas\Components\Tabs\Tab::make('Français')->schema([
                         Forms\Components\TextInput::make('title.fr')
                             ->label('Titre (FR)')->required()->maxLength(200),
                         Forms\Components\Textarea::make('excerpt.fr')
-                            ->label('Extrait (FR)')->required()->rows(2)->maxLength(500),
+                            ->label('Extrait (FR)')->required()->rows(2)->maxLength(15000),
                     ]),
                     Schemas\Components\Tabs\Tab::make('Español')->schema([
                         Forms\Components\TextInput::make('title.es')
                             ->label('Título (ES)')->required()->maxLength(200),
                         Forms\Components\Textarea::make('excerpt.es')
-                            ->label('Extracto (ES)')->required()->rows(2)->maxLength(500),
+                            ->label('Extracto (ES)')->required()->rows(2)->maxLength(15000),
                     ]),
                 ])->columnSpanFull(),
 
