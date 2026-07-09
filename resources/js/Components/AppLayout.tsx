@@ -14,7 +14,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         { label: t('nav.home'),     href: p,             exact: true },
         // { label: t('nav.tours'),    href: `${p}/tours` },
         { label: t('nav.packages'), href: `${p}/packages` },
-        { label: t('nav.about'),    href: '#about' },
+        { label: t('nav.about'),    href: `${p}/about` },
     ];
 
     return (
@@ -28,7 +28,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                         <img
                             src="/images/main-logo.png"
                             alt="Gokusafiri"
-                            className=" md:h-20 h-12 w-auto"
+                            className=" md:h-14 h-12 w-auto"
                             // onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                         />
                         {/* <span className="font-display not-italic text-[20px] text-[#16241b] hidden sm:block">
@@ -150,9 +150,9 @@ function NavItem({ label, href, exact = false }: { label: string; href: string; 
 }
 
 const LOCALES = [
-    { code: 'en', label: 'English', flag: '🇬🇧' },
-    { code: 'fr', label: 'Français', flag: '🇫🇷' },
-    { code: 'es', label: 'Español', flag: '🇪🇸' },
+    { code: 'en', label: 'English', flag: '' },
+    { code: 'fr', label: 'Français', flag: '' },
+    { code: 'es', label: 'Español', flag: '' },
 ] as const;
 
 function LanguageSwitcher() {

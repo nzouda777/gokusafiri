@@ -103,7 +103,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             </section>
 
             {/* Spacer for search bar overlap on desktop */}
-            <div className="hidden md:block h-[44px]" />
+            <div className="hidden md:block bg-[#fbf8f2] h-[44px]" />
 
             {/* ── TRUST BAR ─────────────────────────────────────────────── */}
             <section className="bg-[#fbf8f2] border-b border-[#e4ddd0]">
