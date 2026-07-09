@@ -12,7 +12,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     const p = `/${locale}`;
     const navLinks = [
         { label: t('nav.home'),     href: p,             exact: true },
-        { label: t('nav.tours'),    href: `${p}/tours` },
+        // { label: t('nav.tours'),    href: `${p}/tours` },
         { label: t('nav.packages'), href: `${p}/packages` },
         { label: t('nav.about'),    href: '#about' },
     ];
