@@ -121,7 +121,7 @@ export default function Contact() {
             </section>
 
             {/* Offices */}
-            <section className="bg-[#fbf8f2] py-16 md:py-24">
+            <section className="bg-[#fbf8f2] py-16 md:py-24 hidden">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
                     <div className="mb-10">
                         <p className="font-bold text-[#f0a05e] text-[12px] tracking-[2.16px] uppercase mb-3">{t('contact.offices_eyebrow')}</p>
