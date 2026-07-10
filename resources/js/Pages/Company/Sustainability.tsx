@@ -166,7 +166,7 @@ export default function Sustainability() {
                         Every safari we offer meets our full sustainability standard. Start exploring.
                     </p>
                     <Link
-                        href={`${p}/tours`}
+                        href={`${p}/packages`}
                         className="inline-flex px-[28px] py-[14px] rounded-full bg-[#6e8c79] text-white text-[15px] font-medium hover:bg-[#5a7865] transition-colors"
                     >
                         Explore safaris

@@ -1,6 +1,6 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import AppLayout from '../../Components/AppLayout';
-import { ChevronDown, ChevronUp, Mail, MessageCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, Mail, MessageCircle, Phone } from 'lucide-react';
 import { useState } from 'react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import type { PageProps } from '../../types';
@@ -143,6 +143,16 @@ export default function Help() {
                             <div className="text-left">
                                 <p className="text-[13px] text-white/50">{t('help.whatsapp_label')}</p>
                                 <p className="text-[15px] font-medium">+254 700 000 000</p>
+                            </div>
+                        </a>
+                        <a
+                            href="tel:+33100000000"
+                            className="flex items-center gap-3 px-6 py-4 rounded-[14px] bg-white/10 hover:bg-white/20 transition-colors text-white"
+                        >
+                            <Phone size={20} className="text-[#f0a05e]" />
+                            <div className="text-left">
+                                <p className="text-[13px] text-white/50">{t('help.call_label')}</p>
+                                <p className="text-[15px] font-medium">+33 1 00 00 00 00</p>
                             </div>
                         </a>
                     </div>

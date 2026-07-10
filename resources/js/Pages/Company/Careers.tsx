@@ -127,7 +127,7 @@ export default function Careers() {
                                         </div>
                                     </div>
                                     <a
-                                        href="mailto:careers@gokusafiri.com"
+                                        href="mailto:support@gokusafiri.com"
                                         className="shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#6e8c79] text-white text-[14px] font-medium hover:bg-[#5a7865] transition-colors"
                                     >
                                         Apply <ArrowRight size={14} />
@@ -158,10 +158,10 @@ export default function Careers() {
                         We're always interested in exceptional people. Send us a note and tell us what you'd bring to Gokusafiri.
                     </p>
                     <a
-                        href="mailto:careers@gokusafiri.com"
+                        href="mailto:support@gokusafiri.com"
                         className="inline-flex items-center gap-2 px-[28px] py-[14px] rounded-full border-2 border-[#6e8c79] text-[#16241b] text-[15px] font-medium hover:bg-[#eef3ec] transition-colors"
                     >
-                        careers@gokusafiri.com <ArrowRight size={16} />
+                        support@gokusafiri.com <ArrowRight size={16} />
                     </a>
                 </div>
             </section>

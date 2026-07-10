@@ -160,7 +160,7 @@ export default function About() {
                     </p>
                     <div className="flex flex-wrap items-center justify-center gap-4">
                         <Link
-                            href={`${p}/tours`}
+                            href={`${p}/packages`}
                             className="px-[28px] py-[14px] rounded-full bg-[#6e8c79] text-white text-[15px] font-medium hover:bg-[#5a7865] transition-colors"
                         >
                             {t('about.cta_explore')}

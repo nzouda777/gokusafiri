@@ -11,9 +11,11 @@ use Inertia\Response;
 
 class LoginController extends Controller
 {
-    public function show(): Response
+    public function show(Request $request): Response
     {
-        return Inertia::render('Auth/Login');
+        return Inertia::render('Auth/Login', [
+            'status' => $request->session()->get('status'),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse

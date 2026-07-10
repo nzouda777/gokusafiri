@@ -81,7 +81,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
 
                         <div className="flex flex-wrap items-center gap-[12px] pt-[12px]">
                             <Link
-                                href="/tours"
+                                href="/packages"
                                 className="px-[24px] py-[13px] sm:px-[34px] sm:py-[17px] rounded-full bg-[#6e8c79] text-white text-[15px] sm:text-[16px] font-medium leading-[24px] hover:bg-[#5a7865] transition-colors"
                             >
                                 {t('hero.cta_explore')}
@@ -239,7 +239,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                                     return (
                                         <a
                                             key={dest.slug}
-                                            href={`/tours?destination=${dest.slug}`}
+                                            href={`/packages?destination=${dest.slug}`}
                                             className={`${col} ${row} relative rounded-[14px] overflow-hidden group`}
                                         >
                                             <img
@@ -264,7 +264,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                                 {destinations.map((dest) => (
                                     <a
                                         key={dest.slug}
-                                        href={`/tours?destination=${dest.slug}`}
+                                        href={`/packages?destination=${dest.slug}`}
                                         className="relative rounded-[14px] overflow-hidden group aspect-[4/3]"
                                     >
                                         <img
@@ -461,13 +461,13 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                             <p className="text-[15px] leading-[23px] text-[#8a968d] mb-[28px]">
                                 {t('faq.help')}
                             </p>
-                            <a
-                                href="mailto:support@gokusafiri.com"
+                            <Link
+                                href="/contact"
                                 className="inline-flex items-center gap-[8px] px-[24px] py-[13px] rounded-full border-[1.5px] border-[#c5d3c8] text-[#2E4A39] text-[14px] font-medium hover:border-[#6e8c79] hover:bg-white transition-colors"
                             >
                                 {t('faq.talk_expert')}
                                 <ArrowRight size={15} />
-                            </a>
+                            </Link>
                         </div>
 
                         {/* Right: accordion */}
@@ -503,17 +503,17 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                     </p>
                     <div className="flex flex-col sm:flex-row gap-[12px] justify-center md:justify-start">
                         <Link
-                            href="/tours"
+                            href="/packages"
                             className="px-[34px] py-[17px] rounded-full bg-white text-[#16241b] text-[16px] font-semibold hover:bg-[#f0ede8] transition-colors"
                         >
                             {t('cta.book')}
                         </Link>
-                        <a
-                            href="mailto:support@gokusafiri.com"
+                        <Link
+                            href="/contact"
                             className="px-[27px] py-[15px] rounded-full border border-white/30 text-white text-[16px] font-medium hover:bg-white/10 transition-colors"
                         >
                             {t('cta.talk_expert')}
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </section>

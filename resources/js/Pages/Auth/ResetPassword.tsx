@@ -1,20 +1,26 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 
 interface Props {
-    status?: string;
+    token: string;
+    email?: string;
 }
 
-export default function ForgotPassword({ status }: Props) {
-    const { data, setData, post, processing } = useForm({ email: '' });
+export default function ResetPassword({ token, email }: Props) {
+    const { data, setData, post, processing, errors } = useForm({
+        token,
+        email: email ?? '',
+        password: '',
+        password_confirmation: '',
+    });
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        post('/forgot-password');
+        post('/reset-password');
     }
 
     return (
         <div className="min-h-screen flex">
-            <Head title="Reset your password" />
+            <Head title="Choose a new password" />
 
             {/* Left panel */}
             <div className="hidden lg:flex w-[52%] relative flex-col justify-between p-10 bg-[#2C4A3B]">
@@ -53,14 +59,8 @@ export default function ForgotPassword({ status }: Props) {
             {/* Right panel */}
             <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-16 bg-white">
                 <div className="max-w-md w-full mx-auto">
-                    <h1 className="font-serif text-3xl font-bold text-[#1F2937] mb-2">Reset your password</h1>
-                    <p className="text-sm text-gray-500 mb-8">Enter your email and we'll send a reset link within 2 minutes.</p>
-
-                    {status && (
-                        <div className="mb-6 p-4 rounded-xl bg-green-50 text-sm text-green-700 border border-green-200">
-                            {status}
-                        </div>
-                    )}
+                    <h1 className="font-serif text-3xl font-bold text-[#1F2937] mb-2">Choose a new password</h1>
+                    <p className="text-sm text-gray-500 mb-8">Enter a new password for your account below.</p>
 
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
@@ -72,13 +72,36 @@ export default function ForgotPassword({ status }: Props) {
                                 placeholder="Enter your email address"
                                 className="w-full px-4 py-3 rounded-[10px] border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:border-[#2C4A3B]"
                             />
+                            {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">New password</label>
+                            <input
+                                type="password"
+                                value={data.password}
+                                onChange={e => setData('password', e.target.value)}
+                                placeholder="Enter your new password"
+                                className="w-full px-4 py-3 rounded-[10px] border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:border-[#2C4A3B]"
+                            />
+                            {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password}</p>}
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Confirm password</label>
+                            <input
+                                type="password"
+                                value={data.password_confirmation}
+                                onChange={e => setData('password_confirmation', e.target.value)}
+                                placeholder="Repeat your new password"
+                                className="w-full px-4 py-3 rounded-[10px] border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:border-[#2C4A3B]"
+                            />
+                            {errors.password_confirmation && <p className="text-xs text-red-500 mt-1">{errors.password_confirmation}</p>}
                         </div>
                         <button
                             type="submit"
                             disabled={processing}
                             className="w-full py-3.5 rounded-full bg-[#2C4A3B] text-white font-semibold hover:bg-[#3a5c4a] transition-colors disabled:opacity-60"
                         >
-                            {processing ? 'Sending…' : 'Send reset link'}
+                            {processing ? 'Resetting…' : 'Reset password'}
                         </button>
                     </form>
 

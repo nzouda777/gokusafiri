@@ -1,6 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function Login() {
+export default function Login({ status }: { status?: string }) {
     const { data, setData, post, processing, errors } = useForm({
         email: '',
         password: '',
@@ -19,7 +19,7 @@ export default function Login() {
             {/* Left panel: safari image + quote */}
             <div className="hidden lg:flex w-[52%] relative flex-col justify-between p-10 bg-[#2C4A3B]">
                 <img
-                    src="/images/auth-safari.jpg"
+                    src="/images/hero-safari.jpg"
                     alt="African safari"
                     className="absolute inset-0 w-full h-full object-cover"
                     onError={(e) => { (e.target as HTMLImageElement).style.opacity='0'; }}
@@ -27,7 +27,9 @@ export default function Login() {
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/70" />
 
                 <div className="relative z-10">
-                    <img src="/images/logo-white.svg" alt="GöKusafiri" className="h-10 w-auto" onError={(e) => { (e.target as HTMLImageElement).style.display='none'; }} />
+                    <Link href="/" className="inline-block">
+                        <img src="/images/main-white.png" alt="Gokusafiri" className="h-14 w-auto" />
+                    </Link>
                 </div>
 
                 <div className="relative z-10">
@@ -38,7 +40,7 @@ export default function Login() {
                         <div className="flex -space-x-2">
                             {[1,2,3].map(i => (
                                 <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-400 overflow-hidden">
-                                    <img src={`/images/avatar-${i}.jpg`} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display='none'; }} />
+                                    <img src={`/images/trust-avatar-${i}.jpg`} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display='none'; }} />
                                 </div>
                             ))}
                         </div>
@@ -78,6 +80,12 @@ export default function Login() {
 
                     <h1 className="font-serif text-3xl font-bold text-[#1F2937] mb-2">Welcome back</h1>
                     <p className="text-sm text-gray-500 mb-8">Sign in to access your trips and saved safaris.</p>
+
+                    {status && (
+                        <div className="mb-6 p-4 rounded-xl bg-green-50 text-sm text-green-700 border border-green-200">
+                            {status}
+                        </div>
+                    )}
 
                     {/* Google SSO */}
                     <a
@@ -152,7 +160,7 @@ export default function Login() {
                     <div className="mt-6 p-4 rounded-xl border border-gray-200 text-center">
                         <p className="text-sm text-gray-500 mb-3">Booking without an account?</p>
                         <Link
-                            href="/tours"
+                            href="/packages"
                             className="block w-full py-2.5 rounded-full border border-gray-300 text-sm font-semibold text-[#1F2937] hover:bg-gray-50 transition-colors"
                         >
                             Continue as guest

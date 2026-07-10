@@ -25,7 +25,7 @@ export default function AccountSaved({ savedTours }: Props) {
                 <div className="text-center py-20 text-gray-400">
                     <Heart size={32} className="mx-auto mb-3 opacity-30" />
                     <p className="text-lg">No saved safaris yet.</p>
-                    <Link href="/tours" className="mt-3 inline-block text-sm text-[#2C4A3B] underline">Explore safaris →</Link>
+                    <Link href="/packages" className="mt-3 inline-block text-sm text-[#2C4A3B] underline">Explore safaris →</Link>
                 </div>
             ) : (
                 <div className="space-y-4">

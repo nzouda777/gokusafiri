@@ -39,6 +39,12 @@ class HandleInertiaRequests extends Middleware
                 'subscribed' => $request->session()->get('subscribed'),
             ],
             'stripe_key' => config('services.stripe.key'),
+            'experiences' => fn () => \App\Models\Tour::published()
+                ->packages()
+                ->whereNotNull('style')
+                ->distinct()
+                ->orderBy('style')
+                ->pluck('style'),
             'settings'   => fn () => [
                 'tax_fee_percent'       => app(GeneralSettings::class)->tax_fee_percent,
                 'tier_discount_percent' => app(GeneralSettings::class)->tier_discount_percent,

@@ -24,10 +24,12 @@ export default function Register() {
 
             {/* Left panel */}
             <div className="hidden lg:flex w-[52%] relative flex-col justify-between p-10 bg-[#2C4A3B]">
-                <img src="/images/auth-safari.jpg" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.opacity='0'; }} />
+                <img src="/images/hero-safari.jpg" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.opacity='0'; }} />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/70" />
                 <div className="relative z-10">
-                    <img src="/images/logo-white.svg" alt="GöKusafiri" className="h-10 w-auto" onError={(e) => { (e.target as HTMLImageElement).style.display='none'; }} />
+                    <Link href="/" className="inline-block">
+                        <img src="/images/main-white.png" alt="Gokusafiri" className="h-14 w-auto" />
+                    </Link>
                 </div>
                 <div className="relative z-10">
                     <blockquote className="font-serif text-2xl font-bold text-white leading-relaxed mb-6">
@@ -37,7 +39,7 @@ export default function Register() {
                         <div className="flex -space-x-2">
                             {[1,2,3].map(i => (
                                 <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-400 overflow-hidden">
-                                    <img src={`/images/avatar-${i}.jpg`} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display='none'; }} />
+                                    <img src={`/images/trust-avatar-${i}.jpg`} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display='none'; }} />
                                 </div>
                             ))}
                         </div>
@@ -138,8 +140,8 @@ export default function Register() {
                             <input type="checkbox" checked={data.terms} onChange={e => setData('terms', e.target.checked)} className="mt-0.5 w-4 h-4 accent-[#2C4A3B] rounded" />
                             <span className="text-sm text-gray-600">
                                 I agree to Gokusafiri's{' '}
-                                <a href="#" className="text-[#1F2937] underline">Terms</a>{' '}and{' '}
-                                <a href="#" className="text-[#1F2937] underline">Privacy Policy</a>
+                                <Link href="/terms" className="text-[#1F2937] underline">Terms</Link>{' '}and{' '}
+                                <Link href="/privacy" className="text-[#1F2937] underline">Privacy Policy</Link>
                             </span>
                         </label>
 

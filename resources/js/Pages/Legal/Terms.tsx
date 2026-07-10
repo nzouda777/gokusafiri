@@ -93,7 +93,7 @@ export default function Terms() {
                         <Section title={t('terms.s11_title')}>
                             <p>
                                 {t('terms.s11_body')}{' '}
-                                <a href="mailto:legal@gokusafiri.com" className="text-[#6e8c79] hover:underline">legal@gokusafiri.com</a>
+                                <a href="mailto:support@gokusafiri.com" className="text-[#6e8c79] hover:underline">support@gokusafiri.com</a>
                             </p>
                         </Section>
 

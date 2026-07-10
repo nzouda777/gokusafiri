@@ -112,7 +112,7 @@ export default function FAQ({ faqs }: Props) {
                                         { label: t('faq.link_cancel'), href: `${p}/cancellation-policy` },
                                         // { label: t('faq.link_insurance'), href: `${p}/travel-insurance` },
                                         { label: t('faq.link_help'), href: `${p}/help` },
-                                        { label: t('faq.link_safaris'), href: `${p}/tours` },
+                                        { label: t('faq.link_safaris'), href: `${p}/packages` },
                                     ].map(({ label, href }) => (
                                         <li key={label}>
                                             <Link href={href} className="text-[14px] text-[#6e8c79] hover:text-[#2e4a39] transition-colors">
@@ -145,17 +145,17 @@ export default function FAQ({ faqs }: Props) {
                     </p>
                     <div className="flex flex-wrap items-center justify-center gap-4">
                         <Link
-                            href={`${p}/tours`}
+                            href={`${p}/packages`}
                             className="px-[28px] py-[14px] rounded-full bg-[#6e8c79] text-white text-[15px] font-medium hover:bg-[#5a7865] transition-colors"
                         >
                             {t('faq.cta_explore')}
                         </Link>
-                        <a
-                            href="mailto:support@gokusafiri.com"
+                        <Link
+                            href={`${p}/contact`}
                             className="px-[28px] py-[14px] rounded-full border border-white/30 text-white text-[15px] font-medium hover:bg-white/10 transition-colors"
                         >
                             {t('faq.talk_expert')}
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </section>

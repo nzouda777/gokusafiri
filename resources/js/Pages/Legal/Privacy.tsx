@@ -113,7 +113,7 @@ export default function Privacy() {
                             <address className="not-italic mt-2 text-[15px] text-[#4f5c53]">
                                 Gokusafiri Ltd<br />
                                 Karen Road, Karen, Nairobi, Kenya<br />
-                                <a href="mailto:privacy@gokusafiri.com" className="text-[#6e8c79] hover:underline">privacy@gokusafiri.com</a>
+                                <a href="mailto:support@gokusafiri.com" className="text-[#6e8c79] hover:underline">support@gokusafiri.com</a>
                             </address>
                         </Section>
 

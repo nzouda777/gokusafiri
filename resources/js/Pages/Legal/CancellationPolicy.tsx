@@ -45,9 +45,9 @@ export default function CancellationPolicy() {
                         <LegalSection title={t('cancel_policy.s1_title')}>
                             <p>{t('cancel_policy.s1_p1')}</p>
                             <p>
-                                {t('cancel_policy.s1_p2').split('cancel@gokusafiri.com')[0]}
-                                <a href="mailto:cancel@gokusafiri.com" className="text-[#6e8c79] hover:underline">cancel@gokusafiri.com</a>
-                                {t('cancel_policy.s1_p2').split('cancel@gokusafiri.com')[1]}
+                                {t('cancel_policy.s1_p2').split('support@gokusafiri.com')[0]}
+                                <a href="mailto:support@gokusafiri.com" className="text-[#6e8c79] hover:underline">support@gokusafiri.com</a>
+                                {t('cancel_policy.s1_p2').split('support@gokusafiri.com')[1]}
                             </p>
                         </LegalSection>
 

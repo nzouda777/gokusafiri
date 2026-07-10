@@ -167,5 +167,6 @@ export interface PageProps {
     locale: string;
     flash?: { success?: string; error?: string };
     stripe_key?: string;
+    experiences?: string[];
     settings: AppSettings;
 }

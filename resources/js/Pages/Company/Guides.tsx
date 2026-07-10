@@ -133,7 +133,7 @@ export default function Guides() {
                         Every Gokusafiri tour is matched with the right guide for your destination and travel style.
                     </p>
                     <Link
-                        href={`${p}/tours`}
+                        href={`${p}/packages`}
                         className="inline-flex px-[28px] py-[14px] rounded-full bg-[#6e8c79] text-white text-[15px] font-medium hover:bg-[#5a7865] transition-colors"
                     >
                         Browse safaris

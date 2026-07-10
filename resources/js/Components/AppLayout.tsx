@@ -15,13 +15,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         // { label: t('nav.tours'),    href: `${p}/tours` },
         { label: t('nav.packages'), href: `${p}/packages` },
         { label: t('nav.about'),    href: `${p}/about` },
+        { label: t('nav.faq'),      href: `${p}/faq` },
     ];
 
     return (
         <div className="min-h-screen flex flex-col bg-white">
             {/* ── Header ── */}
             <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#e4ddd0]/60">
-                <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6 h-[71px] flex items-center justify-between">
+                <div className="relative max-w-[1440px] mx-auto px-[100px] max-lg:px-6 h-[71px] flex items-center justify-between">
 
                     {/* Logo */}
                     <Link href={p} className="flex items-center gap-2.5 shrink-0">
@@ -37,7 +38,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     </Link>
 
                     {/* Desktop nav */}
-                    <nav className="hidden md:flex items-center gap-[35px]">
+                    <nav className="hidden md:flex items-center gap-[35px] absolute left-1/2 -translate-x-1/2">
                         {navLinks.map((link) => (
                             <NavItem key={link.label} {...link} />
                         ))}
@@ -75,7 +76,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                         <LanguageSwitcher />
 
                         <Link
-                            href={`${p}/tours`}
+                            href={`${p}/packages`}
                             className="hidden sm:inline-flex items-center px-[18px] py-[12px] rounded-full bg-[#6e8c79] text-white text-[14px] font-medium hover:bg-[#5a7865] transition-colors"
                         >
                             {/* {t('nav.plan_trip')} */}
@@ -115,7 +116,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                                     <Link href="/register" className="block px-3 py-2.5 text-[14px] font-semibold text-[#6e8c79]" onClick={() => setMobileOpen(false)}>{t('nav.create_account')}</Link>
                                 </>
                             )}
-                            <Link href={`${p}/tours`} className="block w-full text-center py-3 rounded-full bg-[#6e8c79] text-white text-[14px] font-medium" onClick={() => setMobileOpen(false)}>
+                            <Link href={`${p}/packages`} className="block w-full text-center py-3 rounded-full bg-[#6e8c79] text-white text-[14px] font-medium" onClick={() => setMobileOpen(false)}>
                                 {t('nav.plan_trip')}
                             </Link>
                         </div>
@@ -242,15 +243,34 @@ const SOCIAL_LINKS = [
 ];
 
 function Footer() {
-    const { locale } = usePage<PageProps>().props;
+    const { locale, experiences } = usePage<PageProps>().props;
     const { t } = useLaravelReactI18n();
     const p = `/${locale}`;
+
+    const styleLabels: Record<string, string> = {
+        safari:       t('index.style_safari'),
+        beach:        t('index.style_beach'),
+        mountain:     t('index.style_mountain'),
+        culture:      t('index.style_culture'),
+        gorilla:      t('index.style_gorilla'),
+        honeymoon:    t('index.style_honeymoon'),
+        adventure:    t('index.style_adventure'),
+        migration:    t('index.style_migration'),
+        birdwatching: t('index.style_birdwatching'),
+        wildlife:     t('index.style_wildlife'),
+        luxury:       t('index.style_luxury'),
+    };
+    const exploreLinks = (experiences ?? []).map((style) => ({
+        label: styleLabels[style] ?? style.charAt(0).toUpperCase() + style.slice(1),
+        href: `${p}/packages?style=${style}`,
+    }));
+
     return (
         <footer className="bg-[#16241b] text-white">
             <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
                     <div className="md:col-span-2">
-                        <div className="flex items-center gap-2.5 mb-5">
+                        <Link href={p} className="inline-flex items-center gap-2.5 mb-5">
                             <img
                                 src="/images/main-white.png"
                                 alt="Gokusafiri"
@@ -258,13 +278,15 @@ function Footer() {
                                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'block'; }}
                             />
                             {/* <span className="font-display not-italic text-[20px]">Gokusafiri</span> */}
-                        </div>
+                        </Link>
                         <p className="text-[14px] text-white/60 leading-relaxed mb-6">{t('footer.tagline')}</p>
                         <div className="flex items-center gap-3 flex-wrap">
                             {SOCIAL_LINKS.map(({ name, href, icon }) => (
                                 <a
                                     key={name}
                                     href={href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     aria-label={name}
                                     className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
                                 >
@@ -273,12 +295,11 @@ function Footer() {
                             ))}
                         </div>
                     </div>
-                    <FooterCol title={t('footer.explore')} links={[
-                        { label: t('footer.safaris'),   href: `${p}/tours` },
-                        { label: t('footer.beaches'),   href: `${p}/tours?style=beach` },
-                        { label: t('footer.mountains'), href: `${p}/tours?style=mountain` },
-                        { label: t('footer.custom'),    href: `${p}/tours?style=custom` },
-                    ]} />
+                    <FooterCol title={t('footer.explore')} links={
+                        exploreLinks.length > 0 ? exploreLinks : [
+                            { label: t('footer.safaris'), href: `${p}/packages` },
+                        ]
+                    } />
                     <FooterCol title={t('footer.company')} links={[
                         { label: t('footer.about'),          href: `${p}/about` },
                         { label: t('footer.guides'),         href: `${p}/guides` },
