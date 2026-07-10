@@ -18,20 +18,21 @@ import type { Locale } from 'date-fns';
 
 const DATE_LOCALES: Record<string, Locale> = { en: enUS, fr: frLocale, es: esLocale };
 
-// ─── Static data ──────────────────────────────────────────────────────────────
+// ─── Experience metadata (labels + emojis per backend style value) ───────────
 
-const DESTINATIONS = [
-    { name: 'Masai Mara',           country: 'Kenya',        slug: 'masai-mara' },
-    { name: 'Victoria Falls',       country: 'Zambia',       slug: 'victoria-falls' },
-    { name: 'Cape Town',            country: 'South Africa', slug: 'cape-town' },
-    { name: 'Sahara & Marrakech',   country: 'Morocco',      slug: 'sahara-marrakech' },
-    { name: 'Bwindi Forest',        country: 'Uganda',       slug: 'bwindi-forest' },
-    { name: 'Serengeti',            country: 'Tanzania',     slug: 'serengeti' },
-    { name: 'Zanzibar',             country: 'Tanzania',     slug: 'zanzibar' },
-    { name: 'Kilimanjaro',          country: 'Tanzania',     slug: 'kilimanjaro' },
-    { name: 'Okavango Delta',       country: 'Botswana',     slug: 'okavango-delta' },
-    { name: 'Kruger National Park', country: 'South Africa', slug: 'kruger' },
-];
+const EXPERIENCE_META: Record<string, { labelKey: string; emoji: string }> = {
+    safari:       { labelKey: 'search.exp_safari',         emoji: '🦁' },
+    beach:        { labelKey: 'search.exp_beach',          emoji: '🏖️' },
+    mountain:     { labelKey: 'search.exp_mountain',       emoji: '🏔️' },
+    culture:      { labelKey: 'search.exp_culture',        emoji: '🎭' },
+    gorilla:      { labelKey: 'search.exp_gorilla',        emoji: '🦍' },
+    honeymoon:    { labelKey: 'search.exp_honeymoon',      emoji: '💑' },
+    adventure:    { labelKey: 'index.style_adventure',     emoji: '🧗' },
+    migration:    { labelKey: 'index.style_migration',     emoji: '🦓' },
+    birdwatching: { labelKey: 'index.style_birdwatching',  emoji: '🦜' },
+    wildlife:     { labelKey: 'index.style_wildlife',      emoji: '🐘' },
+    luxury:       { labelKey: 'index.style_luxury',        emoji: '✨' },
+};
 
 type ActiveField = 'destination' | 'dates' | 'travelers' | 'experience' | null;
 
@@ -104,9 +105,10 @@ interface CalendarProps {
     dayLabels: string[];
     t: (key: string) => string;
     singleMonth?: boolean;
+    availableDates?: Set<string>;
 }
 
-function CalendarPanel({ startDate, endDate, onSelect, onClose, dateLocale, dayLabels, t, singleMonth = false }: CalendarProps) {
+function CalendarPanel({ startDate, endDate, onSelect, onClose, dateLocale, dayLabels, t, singleMonth = false, availableDates }: CalendarProps) {
     const today = startOfDay(new Date());
     const [viewMonth, setViewMonth] = useState(today);
     const [hovered, setHovered] = useState<Date | null>(null);
@@ -189,6 +191,7 @@ function CalendarPanel({ startDate, endDate, onSelect, onClose, dateLocale, dayL
                                     const isEnd   = endDate ? isSameDay(day, endDate) : (selecting && hovered ? isSameDay(day, hovered) : false);
                                     const inRng   = inRange(day);
                                     const todayMk = isToday(day);
+                                    const hasDeparture = !past && availableDates?.has(format(day, 'yyyy-MM-dd'));
                                     return (
                                         <button
                                             key={day.toISOString()}
@@ -216,6 +219,11 @@ function CalendarPanel({ startDate, endDate, onSelect, onClose, dateLocale, dayL
                                             ].filter(Boolean).join(' ')}
                                         >
                                             {format(day, 'd')}
+                                            {hasDeparture && (
+                                                <span className={`absolute bottom-[2px] left-1/2 -translate-x-1/2 size-[4px] rounded-full ${
+                                                    isStart || isEnd ? 'bg-white' : 'bg-[#f0a05e]'
+                                                }`} />
+                                            )}
                                         </button>
                                     );
                                 })}
@@ -225,7 +233,13 @@ function CalendarPanel({ startDate, endDate, onSelect, onClose, dateLocale, dayL
                 })}
             </div>
             {/* Footer */}
-            <div className="flex items-center justify-between px-5 py-3 border-t border-[#f0ede8]">
+            <div className="flex items-center justify-between gap-3 px-5 py-3 border-t border-[#f0ede8]">
+                {availableDates && availableDates.size > 0 && (
+                    <span className="flex items-center gap-1.5 text-[12px] text-[#8a968d]">
+                        <span className="size-[5px] rounded-full bg-[#f0a05e] shrink-0" />
+                        {t('cal.available_departures')}
+                    </span>
+                )}
                 <button
                     onClick={() => onSelect(null, null)}
                     className="text-[13px] text-[#8a968d] hover:text-[#1a211c] transition-colors"
@@ -317,9 +331,22 @@ function TravelersPanel({ value, onChange, onClose, t }: TravelersPanelProps) {
 // ─── Main SearchBar ───────────────────────────────────────────────────────────
 
 export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
-    const { locale } = usePage<PageProps>().props;
+    const { locale, searchData } = usePage<PageProps>().props;
     const { t } = useLaravelReactI18n();
     const barRef = useRef<HTMLDivElement>(null);
+
+    // Backend returns ISO country codes (TZ, ZA, …) — display localized names
+    const countryName = useCallback((code: string) => {
+        if (!code) return '';
+        try {
+            return new Intl.DisplayNames([locale], { type: 'region' }).of(code.toUpperCase()) ?? code;
+        } catch {
+            return code;
+        }
+    }, [locale]);
+
+    const DESTINATIONS = (searchData?.destinations ?? []).map(d => ({ ...d, country: countryName(d.country) }));
+    const availableDates = new Set(searchData?.availableDates ?? []);
 
     const dateLocale = DATE_LOCALES[locale] ?? enUS;
 
@@ -337,14 +364,14 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
         t('cal.day_fr'), t('cal.day_sa'), t('cal.day_su'),
     ];
 
-    const EXPERIENCES = [
-        { value: 'safari',    labelKey: 'search.exp_safari',    emoji: '🦁' },
-        { value: 'beach',     labelKey: 'search.exp_beach',     emoji: '🏖️' },
-        { value: 'mountain',  labelKey: 'search.exp_mountain',  emoji: '🏔️' },
-        { value: 'culture',   labelKey: 'search.exp_culture',   emoji: '🎭' },
-        { value: 'gorilla',   labelKey: 'search.exp_gorilla',   emoji: '🦍' },
-        { value: 'honeymoon', labelKey: 'search.exp_honeymoon', emoji: '💑' },
-    ];
+    const EXPERIENCES = (searchData?.experiences ?? []).map(value => {
+        const meta = EXPERIENCE_META[value];
+        return {
+            value,
+            label: meta ? t(meta.labelKey) : value.charAt(0).toUpperCase() + value.slice(1),
+            emoji: meta?.emoji ?? '🌍',
+        };
+    });
 
     const [active, setActive] = useState<ActiveField>(null);
 
@@ -390,9 +417,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
         travelers.infants  ? `${travelers.infants} ${travelers.infants  > 1 ? t('search.infants').toLowerCase()  : t('search.infants').toLowerCase().replace(/s$/, '')}` : '',
     ].filter(Boolean).join(', ');
 
-    const expLabel = EXPERIENCES.find(e => e.value === experience)?.labelKey
-        ? t(EXPERIENCES.find(e => e.value === experience)!.labelKey)
-        : '';
+    const expLabel = EXPERIENCES.find(e => e.value === experience)?.label ?? '';
 
     // ── Destination list ─────────────────────────────────────────────────────
     const filtered = DESTINATIONS.filter(d =>
@@ -411,7 +436,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
         if (tot > 0)    params.travelers  = String(tot);
         if (experience) params.experience = experience;
         setActive(null);
-        router.get(`/${locale}/tours`, params);
+        router.get(`/${locale}/search`, params);
     }
 
     // ── Field style ───────────────────────────────────────────────────────────
@@ -539,6 +564,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                         dayLabels={DAY_LABELS}
                         t={t}
                         singleMonth={isMobile}
+                        availableDates={availableDates}
                     />
                 </Popover>
             )}
@@ -579,7 +605,7 @@ export default function SearchBar({ initialValues, sticky: _sticky }: Props) {
                                 }`}
                             >
                                 <span className="text-base shrink-0">{ex.emoji}</span>
-                                {t(ex.labelKey)}
+                                {ex.label}
                             </button>
                         ))}
                     </div>

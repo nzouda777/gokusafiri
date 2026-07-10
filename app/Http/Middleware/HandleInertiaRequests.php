@@ -45,6 +45,32 @@ class HandleInertiaRequests extends Middleware
                 ->distinct()
                 ->orderBy('style')
                 ->pluck('style'),
+            'searchData' => fn () => [
+                'destinations' => \App\Models\Destination::query()
+                    ->whereHas('tours', fn ($q) => $q->where('status', 'published'))
+                    ->get()
+                    ->map(fn ($d) => [
+                        'name' => $d->name,
+                        'country' => $d->country ?? '',
+                        'slug' => $d->slug,
+                    ])
+                    ->sortBy('name')
+                    ->values(),
+                'experiences' => \App\Models\Tour::published()
+                    ->whereNotNull('style')
+                    ->distinct()
+                    ->orderBy('style')
+                    ->pluck('style'),
+                'availableDates' => \App\Models\TourSchedule::query()
+                    ->whereDate('starts_at', '>=', now()->toDateString())
+                    ->where('seats_left', '>', 0)
+                    ->whereHas('tour', fn ($q) => $q->where('status', 'published'))
+                    ->orderBy('starts_at')
+                    ->pluck('starts_at')
+                    ->map(fn ($d) => $d->toDateString())
+                    ->unique()
+                    ->values(),
+            ],
             'settings'   => fn () => [
                 'tax_fee_percent'       => app(GeneralSettings::class)->tax_fee_percent,
                 'tier_discount_percent' => app(GeneralSettings::class)->tier_discount_percent,

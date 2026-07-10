@@ -233,6 +233,7 @@
     "checkout.step4": "Confirmation",
 
     "cal.clear_dates": "Effacer les dates",
+    "cal.available_departures": "Départs disponibles",
     "cal.apply": "Appliquer",
     "cal.pick_end": "Choisir la date de fin",
     "cal.day_mo": "Lu",

@@ -168,5 +168,10 @@ export interface PageProps {
     flash?: { success?: string; error?: string };
     stripe_key?: string;
     experiences?: string[];
+    searchData?: {
+        destinations: { name: string; country: string; slug: string }[];
+        experiences: string[];
+        availableDates: string[];
+    };
     settings: AppSettings;
 }

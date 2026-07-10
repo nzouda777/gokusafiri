@@ -11,12 +11,18 @@ class SearchController extends Controller
 {
     public function index(Request $request): Response
     {
-        // Redirect to tours index with search params
-        $filters = $request->only(['destination', 'dates', 'travelers', 'experience', 'q']);
+        $filters = $request->only(['destination', 'date_from', 'date_to', 'travelers', 'experience', 'q']);
 
         $query = Tour::published()->with(['destination', 'media']);
 
-        if ($q = $filters['q'] ?? $filters['destination'] ?? null) {
+        if ($dest = $filters['destination'] ?? null) {
+            $query->whereHas('destination', fn ($d) => $d
+                ->where('slug', $dest)
+                ->orWhere('name', 'like', "%{$dest}%")
+            );
+        }
+
+        if ($q = $filters['q'] ?? null) {
             $query->where(fn ($q2) => $q2
                 ->whereJsonContains('title->en', $q)
                 ->orWhereHas('destination', fn ($d) => $d->where('name', 'like', "%{$q}%"))
@@ -25,6 +31,19 @@ class SearchController extends Controller
 
         if ($exp = $filters['experience'] ?? null) {
             $query->where('style', $exp);
+        }
+
+        // Availability: a departure within the requested window with enough seats
+        $dateFrom  = $filters['date_from'] ?? null;
+        $dateTo    = $filters['date_to'] ?? null;
+        $travelers = max(1, (int) ($filters['travelers'] ?? 1));
+
+        if ($dateFrom || $dateTo || ($filters['travelers'] ?? null)) {
+            $query->whereHas('schedules', fn ($s) => $s
+                ->whereDate('starts_at', '>=', $dateFrom ?: now()->toDateString())
+                ->when($dateTo, fn ($s2) => $s2->whereDate('starts_at', '<=', $dateTo))
+                ->where('seats_left', '>=', $travelers)
+            );
         }
 
         $tours = $query->orderByDesc('rating_cache')->paginate(12)->withQueryString();
