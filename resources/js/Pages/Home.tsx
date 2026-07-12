@@ -297,7 +297,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                             <p className="font-bold text-[#f0a05e] text-[12px] leading-[18px] tracking-[2.16px] uppercase">
                                 {t('why.eyebrow')}
                             </p>
-                            <h2 className="font-display not-italic text-[30px] leading-[38px] md:text-[48px] md:leading-[65px] tracking-[-0.62px] text-[#16241b]">
+                            <h2 className="font-display not-italic text-[30px] leading-[38px] md:text-[48px] md:leading-[65px] tracking-[-0.62px] text-[#16241b] w-7/12 md:w-10/12">
                                 {t('why.title')}
                             </h2>
                         </div>

@@ -13,7 +13,7 @@ class SearchController extends Controller
     {
         $filters = $request->only(['destination', 'date_from', 'date_to', 'travelers', 'experience', 'q']);
 
-        $query = Tour::published()->with(['destination', 'media']);
+        $query = Tour::whereType('package')->published()->with(['destination', 'media']);
 
         if ($dest = $filters['destination'] ?? null) {
             $query->whereHas('destination', fn ($d) => $d

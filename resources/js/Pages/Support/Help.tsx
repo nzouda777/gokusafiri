@@ -134,7 +134,7 @@ export default function Help() {
                             </div>
                         </a>
                         <a
-                            href="https://wa.me/254700000000"
+                            href="https://wa.me/7065811963"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-3 px-6 py-4 rounded-[14px] bg-white/10 hover:bg-white/20 transition-colors text-white"
@@ -142,7 +142,7 @@ export default function Help() {
                             <MessageCircle size={20} className="text-[#f0a05e]" />
                             <div className="text-left">
                                 <p className="text-[13px] text-white/50">{t('help.whatsapp_label')}</p>
-                                <p className="text-[15px] font-medium">+254 700 000 000</p>
+                                <p className="text-[15px] font-medium">+1 706-581-1963</p>
                             </div>
                         </a>
                         <a
@@ -152,7 +152,7 @@ export default function Help() {
                             <Phone size={20} className="text-[#f0a05e]" />
                             <div className="text-left">
                                 <p className="text-[13px] text-white/50">{t('help.call_label')}</p>
-                                <p className="text-[15px] font-medium">+33 1 00 00 00 00</p>
+                                <p className="text-[15px] font-medium">+1 17065400534</p>
                             </div>
                         </a>
                     </div>

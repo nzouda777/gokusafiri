@@ -20,17 +20,17 @@ export default function Contact() {
         {
             icon: MessageCircle,
             labelKey: 'contact.ch2_label',
-            value: '+254 700 000 000',
+            value: '+1 706-581-1963',
             descKey: 'contact.ch2_desc',
-            href: 'https://wa.me/254700000000',
+            href: 'https://wa.me/17065811963',
             ctaKey: 'contact.ch2_cta',
         },
         {
             icon: Phone,
             labelKey: 'contact.ch3_label',
-            value: '+33 1 00 00 00 00',
+            value: '+1 706-540-0534',
             descKey: 'contact.ch3_desc',
-            href: 'tel:+33100000000',
+            href: 'tel:+17065400534',
             ctaKey: 'contact.ch3_cta',
         },
     ];
@@ -41,7 +41,7 @@ export default function Contact() {
             city: 'Nairobi',
             subtitleKey: 'contact.office1_subtitle',
             address: 'Karen Road, Karen, Nairobi 00502, Kenya',
-            phone: '+254 700 000 000',
+            phone: '+1 706-581-1963',
             flag: '🇰🇪',
         },
         {
@@ -57,7 +57,7 @@ export default function Contact() {
             city: 'Paris',
             subtitleKey: 'contact.office3_subtitle',
             address: '12 Rue de Rivoli, 75001 Paris, France',
-            phone: '+33 1 00 00 00 00',
+            phone: '+1 17065400534',
             flag: '🇫🇷',
         },
     ];
