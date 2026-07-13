@@ -16,7 +16,7 @@ class Booking extends Model
     use HasFactory, HasStates, SoftDeletes;
 
     protected $fillable = [
-        'reference', 'user_id', 'tour_id', 'tour_schedule_id',
+        'reference', 'user_id', 'tour_id', 'tour_schedule_id', 'departure_time',
         'lead_first_name', 'lead_last_name', 'lead_email', 'lead_phone',
         'adults', 'children', 'infants',
         'subtotal', 'member_discount', 'taxes_fees', 'total', 'currency',
@@ -55,7 +55,7 @@ class Booking extends Model
     public static function generateReference(): string
     {
         do {
-            $ref = 'GKS-' . strtoupper(substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 5));
+            $ref = 'GKS-'.strtoupper(substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 5));
         } while (self::where('reference', $ref)->exists());
 
         return $ref;

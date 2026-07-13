@@ -38,6 +38,7 @@ class TourShowController extends Controller
 
         $schedules = $tour->schedules()
             ->where('starts_at', '>', now())
+            ->where('is_custom', false)
             ->orderBy('starts_at')
             ->get()
             ->map(fn ($s) => [
@@ -62,6 +63,7 @@ class TourShowController extends Controller
                 'base_price' => $tour->base_price,
                 'currency' => $tour->currency,
                 'duration_days' => $tour->duration_days,
+                'flexible_dates' => (bool) $tour->flexible_dates,
                 'max_group_size' => $tour->max_group_size,
                 'style' => $tour->style,
                 'rating_cache' => $tour->rating_cache,
@@ -88,9 +90,9 @@ class TourShowController extends Controller
                 'hero_url' => $gallery->first()['hero_url'] ?? '',
                 'card_url' => $gallery->first()['card_url'] ?? '',
                 'addons' => $tour->addons->map(fn ($a) => [
-                    'id'          => $a->id,
-                    'name'        => $a->getTranslation('label', app()->getLocale(), false),
-                    'price'       => $a->price_per_person,
+                    'id' => $a->id,
+                    'name' => $a->getTranslation('label', app()->getLocale(), false),
+                    'price' => $a->price_per_person,
                     'description' => $a->getTranslation('description', app()->getLocale(), false),
                 ]),
                 'highlights' => $tour->arr('highlights'),
@@ -99,13 +101,13 @@ class TourShowController extends Controller
                 'user_has_reviewed' => $userHasReviewed,
                 'seats_left' => $seatsLeft,
                 'reviews' => $tour->reviews->map(fn ($r) => [
-                    'id'             => $r->id,
-                    'rating'         => $r->rating,
-                    'body'           => $r->body,
-                    'author_name'    => $r->author_name ?? $r->user?->name ?? 'Anonymous',
-                    'author_avatar'  => $r->author_avatar,
+                    'id' => $r->id,
+                    'rating' => $r->rating,
+                    'body' => $r->body,
+                    'author_name' => $r->author_name ?? $r->user?->name ?? 'Anonymous',
+                    'author_avatar' => $r->author_avatar,
                     'location_label' => $r->location_label,
-                    'year'           => $r->traveled_at?->year ?? $r->created_at->year,
+                    'year' => $r->traveled_at?->year ?? $r->created_at->year,
                 ]),
             ],
         ]);

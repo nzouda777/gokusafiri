@@ -8,12 +8,17 @@ use App\Models\TourSchedule;
 use App\States\Booking\Cancelled;
 use App\States\Booking\Completed;
 use App\States\Booking\Confirmed;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Infolists;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\DB;
@@ -21,10 +26,15 @@ use Illuminate\Support\Facades\DB;
 class BookingResource extends Resource
 {
     protected static ?string $model = Booking::class;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-calendar-days';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Bookings';
+
     protected static ?int $navigationSort = 1;
+
     protected static ?string $label = 'Booking';
+
     protected static ?string $pluralLabel = 'Bookings';
 
     public static function form(Schema $schema): Schema
@@ -33,17 +43,16 @@ class BookingResource extends Resource
             Schemas\Components\Section::make('Trip Selection')->schema([
                 Forms\Components\Select::make('tour_schedule_id')
                     ->label('Tour / Departure')
-                    ->options(fn () =>
-                        TourSchedule::with('tour')
-                            ->where('starts_at', '>=', now())
-                            ->orderBy('starts_at')
-                            ->get()
-                            ->mapWithKeys(fn (TourSchedule $s) => [
-                                $s->id => $s->tour->getTranslation('title', 'en')
-                                    . '  ' . $s->starts_at->format('d M Y')
-                                    . ' ($' . number_format($s->effectivePrice() / 100, 0) . '/pp'
-                                    . ', ' . $s->seats_left . ' seats)',
-                            ])
+                    ->options(fn () => TourSchedule::with('tour')
+                        ->where('starts_at', '>=', now())
+                        ->orderBy('starts_at')
+                        ->get()
+                        ->mapWithKeys(fn (TourSchedule $s) => [
+                            $s->id => $s->tour->getTranslation('title', 'en')
+                                .'  '.$s->starts_at->format('d M Y')
+                                .' ($'.number_format($s->effectivePrice() / 100, 0).'/pp'
+                                .', '.$s->seats_left.' seats)',
+                        ])
                     )
                     ->searchable()
                     ->required()
@@ -103,26 +112,31 @@ class BookingResource extends Resource
                 Infolists\Components\TextEntry::make('status')
                     ->badge()
                     ->formatStateUsing(fn ($state) => match ((string) $state) {
-                        'pending'      => 'Pending',
+                        'pending' => 'Pending',
                         'deposit_paid' => 'Deposit Paid',
-                        'paid'         => 'Paid',
-                        'confirmed'    => 'Confirmed',
-                        'completed'    => 'Completed',
-                        'cancelled'    => 'Cancelled',
-                        'refunded'     => 'Refunded',
-                        'expired'      => 'Expired',
-                        default        => (string) $state,
+                        'paid' => 'Paid',
+                        'confirmed' => 'Confirmed',
+                        'completed' => 'Completed',
+                        'cancelled' => 'Cancelled',
+                        'refunded' => 'Refunded',
+                        'expired' => 'Expired',
+                        default => (string) $state,
                     })
                     ->color(fn ($state) => match ((string) $state) {
                         'confirmed', 'completed', 'paid' => 'success',
-                        'pending', 'deposit_paid'        => 'warning',
-                        default                         => 'danger',
+                        'pending', 'deposit_paid' => 'warning',
+                        default => 'danger',
                     }),
                 Infolists\Components\TextEntry::make('schedule.tour.title')
                     ->label('Tour')
                     ->formatStateUsing(fn ($state, $record) => $record->schedule?->tour?->getTranslation('title', 'en')),
-                Infolists\Components\TextEntry::make('schedule.starts_at')->label('Departure')->date(),
+                Infolists\Components\TextEntry::make('schedule.starts_at')
+                    ->label('Departure')->date()
+                    ->helperText(fn (Booking $record) => $record->schedule?->is_custom ? 'Custom date picked by the client' : null),
                 Infolists\Components\TextEntry::make('schedule.ends_at')->label('Return')->date(),
+                Infolists\Components\TextEntry::make('departure_time')
+                    ->label('Preferred time')
+                    ->placeholder('No preference'),
                 Infolists\Components\TextEntry::make('payment_plan')->label('Payment Plan')->badge(),
                 Infolists\Components\TextEntry::make('locale')->label('Language')->badge(),
                 Infolists\Components\TextEntry::make('created_at')->label('Created At')->dateTime(),
@@ -143,20 +157,20 @@ class BookingResource extends Resource
             Schemas\Components\Section::make('Pricing')->schema([
                 Infolists\Components\TextEntry::make('subtotal')
                     ->label('Subtotal')
-                    ->formatStateUsing(fn ($state) => '$' . number_format($state / 100, 2)),
+                    ->formatStateUsing(fn ($state) => '$'.number_format($state / 100, 2)),
                 Infolists\Components\TextEntry::make('member_discount')
                     ->label('Member Discount')
-                    ->formatStateUsing(fn ($state) => '-$' . number_format($state / 100, 2)),
+                    ->formatStateUsing(fn ($state) => '-$'.number_format($state / 100, 2)),
                 Infolists\Components\TextEntry::make('taxes_fees')
                     ->label('Taxes & Fees')
-                    ->formatStateUsing(fn ($state) => '$' . number_format($state / 100, 2)),
+                    ->formatStateUsing(fn ($state) => '$'.number_format($state / 100, 2)),
                 Infolists\Components\TextEntry::make('total')
                     ->label('Total')
-                    ->formatStateUsing(fn ($state) => '$' . number_format($state / 100, 2))
-                    ->weight(\Filament\Support\Enums\FontWeight::Bold),
+                    ->formatStateUsing(fn ($state) => '$'.number_format($state / 100, 2))
+                    ->weight(FontWeight::Bold),
                 Infolists\Components\TextEntry::make('deposit_amount')
                     ->label('Deposit Amount')
-                    ->formatStateUsing(fn ($state) => '$' . number_format($state / 100, 2)),
+                    ->formatStateUsing(fn ($state) => '$'.number_format($state / 100, 2)),
                 Infolists\Components\TextEntry::make('balance_due_at')->label('Balance Due')->date(),
             ])->columns(3),
 
@@ -179,14 +193,14 @@ class BookingResource extends Resource
                         Infolists\Components\TextEntry::make('provider')->label('Provider'),
                         Infolists\Components\TextEntry::make('amount')
                             ->label('Amount')
-                            ->formatStateUsing(fn ($state) => '$' . number_format($state / 100, 2)),
+                            ->formatStateUsing(fn ($state) => '$'.number_format($state / 100, 2)),
                         Infolists\Components\TextEntry::make('status')
                             ->badge()
                             ->color(fn ($state) => match ($state) {
                                 'succeeded' => 'success',
-                                'failed'    => 'danger',
-                                'refunded'  => 'warning',
-                                default     => 'gray',
+                                'failed' => 'danger',
+                                'refunded' => 'warning',
+                                default => 'gray',
                             }),
                         Infolists\Components\TextEntry::make('provider_reference')->copyable(),
                         Infolists\Components\TextEntry::make('paid_at')->dateTime(),
@@ -217,25 +231,25 @@ class BookingResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn ($state) => match ((string) $state) {
-                        'pending'      => 'Pending',
+                        'pending' => 'Pending',
                         'deposit_paid' => 'Deposit Paid',
-                        'paid'         => 'Paid',
-                        'confirmed'    => 'Confirmed',
-                        'completed'    => 'Completed',
-                        'cancelled'    => 'Cancelled',
-                        'refunded'     => 'Refunded',
-                        'expired'      => 'Expired',
-                        default        => (string) $state,
+                        'paid' => 'Paid',
+                        'confirmed' => 'Confirmed',
+                        'completed' => 'Completed',
+                        'cancelled' => 'Cancelled',
+                        'refunded' => 'Refunded',
+                        'expired' => 'Expired',
+                        default => (string) $state,
                     })
                     ->color(fn ($state) => match ((string) $state) {
-                        'confirmed', 'completed', 'paid'   => 'success',
-                        'pending', 'deposit_paid'           => 'warning',
+                        'confirmed', 'completed', 'paid' => 'success',
+                        'pending', 'deposit_paid' => 'warning',
                         'cancelled', 'expired', 'refunded' => 'danger',
                         default => 'gray',
                     }),
                 Tables\Columns\TextColumn::make('total')
                     ->label('Total')
-                    ->formatStateUsing(fn ($state) => '$' . number_format($state / 100, 2))
+                    ->formatStateUsing(fn ($state) => '$'.number_format($state / 100, 2))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('payment_plan')->badge()->label('Plan'),
                 Tables\Columns\TextColumn::make('created_at')
@@ -244,14 +258,14 @@ class BookingResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
-                        'pending'      => 'Pending',
+                        'pending' => 'Pending',
                         'deposit_paid' => 'Deposit Paid',
-                        'paid'         => 'Paid',
-                        'confirmed'    => 'Confirmed',
-                        'completed'    => 'Completed',
-                        'cancelled'    => 'Cancelled',
-                        'refunded'     => 'Refunded',
-                        'expired'      => 'Expired',
+                        'paid' => 'Paid',
+                        'confirmed' => 'Confirmed',
+                        'completed' => 'Completed',
+                        'cancelled' => 'Cancelled',
+                        'refunded' => 'Refunded',
+                        'expired' => 'Expired',
                     ]),
                 Tables\Filters\SelectFilter::make('payment_plan')
                     ->label('Payment Plan')
@@ -267,8 +281,8 @@ class BookingResource extends Resource
                         ->when($data['until'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '<=', $v))),
             ])
             ->actions([
-                \Filament\Actions\ViewAction::make(),
-                \Filament\Actions\Action::make('confirm')
+                ViewAction::make(),
+                Action::make('confirm')
                     ->label('Confirm')->icon('heroicon-o-check-circle')->color('success')
                     ->visible(fn (Booking $record) => in_array((string) $record->status, ['pending', 'deposit_paid', 'paid']))
                     ->requiresConfirmation()
@@ -278,7 +292,7 @@ class BookingResource extends Resource
                         $record->save();
                         Notification::make()->title('Booking confirmed')->success()->send();
                     }),
-                \Filament\Actions\Action::make('complete')
+                Action::make('complete')
                     ->label('Mark Completed')->icon('heroicon-o-check-badge')->color('info')
                     ->visible(fn (Booking $record) => (string) $record->status === 'confirmed')
                     ->requiresConfirmation()
@@ -287,7 +301,7 @@ class BookingResource extends Resource
                         $record->save();
                         Notification::make()->title('Booking completed')->success()->send();
                     }),
-                \Filament\Actions\Action::make('cancel')
+                Action::make('cancel')
                     ->label('Cancel')->icon('heroicon-o-x-circle')->color('danger')
                     ->visible(fn (Booking $record) => in_array((string) $record->status, ['pending', 'deposit_paid', 'confirmed']))
                     ->requiresConfirmation()
@@ -306,8 +320,8 @@ class BookingResource extends Resource
                     }),
             ])
             ->bulkActions([
-                \Filament\Actions\BulkActionGroup::make([
-                    \Filament\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
@@ -316,9 +330,9 @@ class BookingResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListBookings::route('/'),
+            'index' => Pages\ListBookings::route('/'),
             'create' => Pages\CreateBooking::route('/create'),
-            'view'   => Pages\ViewBooking::route('/{record}'),
+            'view' => Pages\ViewBooking::route('/{record}'),
         ];
     }
 }

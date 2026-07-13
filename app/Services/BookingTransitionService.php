@@ -15,9 +15,15 @@ use Illuminate\Support\Facades\Mail;
 
 class BookingTransitionService
 {
+    public function __construct(
+        private readonly ReferralService $referrals,
+    ) {}
+
     public function onPaymentSucceeded(Payment $payment): void
     {
         $booking = $payment->booking;
+
+        $this->referrals->creditForPayment($payment);
 
         if ($payment->type === 'deposit') {
             if ($booking->status instanceof Pending) {

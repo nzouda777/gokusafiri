@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\ReferralService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -31,8 +32,12 @@ class SocialAuthController extends Controller
             ]
         );
 
+        if ($user->wasRecentlyCreated) {
+            app(ReferralService::class)->attachReferrerFromCookie($user);
+        }
+
         // Update avatar from Google
-        if ($googleUser->getAvatar() && !$user->getFirstMedia('avatar')) {
+        if ($googleUser->getAvatar() && ! $user->getFirstMedia('avatar')) {
             $user->addMediaFromUrl($googleUser->getAvatar())
                 ->toMediaCollection('avatar');
         }

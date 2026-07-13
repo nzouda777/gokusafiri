@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,7 +25,7 @@ class Tour extends Model implements HasMedia
     protected $fillable = [
         'operator_id', 'destination_id', 'type', 'title', 'slug', 'excerpt', 'description',
         'itinerary', 'included', 'excluded', 'inclusions', 'highlights',
-        'base_price', 'child_price', 'currency', 'duration_days', 'max_group_size', 'style',
+        'base_price', 'child_price', 'currency', 'duration_days', 'flexible_dates', 'max_group_size', 'style',
         'lat', 'lng', 'cancellation_days', 'badge', 'discount_percent', 'status',
         'rating_cache', 'reviews_count_cache',
         'deposit_percent', 'difficulty', 'min_age', 'languages', 'practical_info',
@@ -39,6 +40,7 @@ class Tour extends Model implements HasMedia
         'base_price' => 'integer',
         'child_price' => 'integer',
         'duration_days' => 'integer',
+        'flexible_dates' => 'boolean',
         'max_group_size' => 'integer',
         'cancellation_days' => 'integer',
         'deposit_percent' => 'integer',
@@ -72,6 +74,24 @@ class Tour extends Model implements HasMedia
     public function bookings(): HasManyThrough
     {
         return $this->hasManyThrough(Booking::class, TourSchedule::class);
+    }
+
+    /**
+     * Private departure on a client-chosen date. Reused if one already
+     * exists for that date so downstream pricing/mails stay unchanged.
+     */
+    public function customScheduleFor(string $date): TourSchedule
+    {
+        $start = Carbon::parse($date)->startOfDay();
+
+        return $this->schedules()->firstOrCreate(
+            ['starts_at' => $start->toDateString(), 'is_custom' => true],
+            [
+                'ends_at' => $start->copy()->addDays(max(0, $this->duration_days - 1))->toDateString(),
+                'capacity' => $this->max_group_size ?? 20,
+                'seats_left' => $this->max_group_size ?? 20,
+            ],
+        );
     }
 
     public function addons(): HasMany
@@ -108,8 +128,13 @@ class Tour extends Model implements HasMedia
     public function arr(string $field): array
     {
         $v = $this->$field;
-        if (is_array($v)) return $v;
-        if (is_string($v) && $v !== '') return json_decode($v, true) ?? [];
+        if (is_array($v)) {
+            return $v;
+        }
+        if (is_string($v) && $v !== '') {
+            return json_decode($v, true) ?? [];
+        }
+
         return [];
     }
 
@@ -118,9 +143,9 @@ class Tour extends Model implements HasMedia
         return $this->base_price;
     }
 
-    public function cancellationDeadline(\DateTimeInterface $departureDate): \Carbon\Carbon
+    public function cancellationDeadline(\DateTimeInterface $departureDate): Carbon
     {
-        return \Carbon\Carbon::parse($departureDate)->subDays($this->cancellation_days);
+        return Carbon::parse($departureDate)->subDays($this->cancellation_days);
     }
 
     public function isCancellationFree(\DateTimeInterface $departureDate): bool

@@ -6,11 +6,13 @@ use App\Filament\Admin\Pages\Dashboard;
 use App\Filament\Admin\Pages\SettingsPage;
 use App\Filament\Admin\Resources\BookingResource;
 use App\Filament\Admin\Resources\ComingSoonSubscriberResource;
+use App\Filament\Admin\Resources\ContactMessageResource;
 use App\Filament\Admin\Resources\DestinationResource;
 use App\Filament\Admin\Resources\FaqResource;
 use App\Filament\Admin\Resources\OperatorResource;
 use App\Filament\Admin\Resources\PackageResource;
 use App\Filament\Admin\Resources\PaymentResource;
+use App\Filament\Admin\Resources\ReferralCommissionResource;
 use App\Filament\Admin\Resources\ReviewResource;
 use App\Filament\Admin\Resources\RoleResource;
 use App\Filament\Admin\Resources\TourResource as AdminTourResource;
@@ -66,6 +68,8 @@ class AdminPanelProvider extends PanelProvider
                 OperatorResource::class,
                 RoleResource::class,
                 ComingSoonSubscriberResource::class,
+                ContactMessageResource::class,
+                ReferralCommissionResource::class,
             ])
             ->pages([
                 Dashboard::class,

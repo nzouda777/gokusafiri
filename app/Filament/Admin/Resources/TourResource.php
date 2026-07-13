@@ -5,12 +5,20 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\TourResource\Pages;
 use App\Filament\Admin\Resources\TourResource\RelationManagers\ReviewsRelationManager;
 use App\Models\Tour;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Infolists;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,10 +26,15 @@ use Illuminate\Database\Eloquent\Builder;
 class TourResource extends Resource
 {
     protected static ?string $model = Tour::class;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-map';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Catalog';
+
     protected static ?int $navigationSort = 1;
+
     protected static ?string $label = 'Tour';
+
     protected static ?string $pluralLabel = 'Tours';
 
     public static function getEloquentQuery(): Builder
@@ -72,16 +85,16 @@ class TourResource extends Resource
                     ->required()->default($defaultType)->live(),
                 Forms\Components\Select::make('style')
                     ->options([
-                        'safari'       => 'Safari',
-                        'mountain'     => 'Mountain',
-                        'beach'        => 'Beach',
-                        'culture'      => 'Culture',
-                        'gorilla'      => 'Gorilla Trekking',
-                        'adventure'    => 'Adventure',
-                        'migration'    => 'Migration',
+                        'safari' => 'Safari',
+                        'mountain' => 'Mountain',
+                        'beach' => 'Beach',
+                        'culture' => 'Culture',
+                        'gorilla' => 'Gorilla Trekking',
+                        'adventure' => 'Adventure',
+                        'migration' => 'Migration',
                         'birdwatching' => 'Birdwatching',
-                        'wildlife'     => 'Wildlife',
-                        'luxury'       => 'Luxury',
+                        'wildlife' => 'Wildlife',
+                        'luxury' => 'Luxury',
                     ])
                     ->required(),
                 Forms\Components\Select::make('destination_id')
@@ -115,6 +128,10 @@ class TourResource extends Resource
                     ->label('Currency')->default('USD')->maxLength(3)->required(),
                 Forms\Components\TextInput::make('duration_days')
                     ->label('Duration (days)')->numeric()->required()->minValue(1)->maxValue(365),
+                Forms\Components\Toggle::make('flexible_dates')
+                    ->label('Flexible dates')
+                    ->default(true)
+                    ->helperText('Allow clients to pick their own departure date (private departure).'),
                 Forms\Components\TextInput::make('max_group_size')
                     ->label('Max Group Size')->numeric()->required()->minValue(1)->maxValue(200),
                 Forms\Components\TextInput::make('cancellation_days')
@@ -132,10 +149,10 @@ class TourResource extends Resource
             Schemas\Components\Section::make('Tour Details')->schema([
                 Forms\Components\Select::make('difficulty')
                     ->options([
-                        'easy'        => 'Easy  suitable for all fitness levels',
-                        'moderate'    => 'Moderate  some walking / light activity',
+                        'easy' => 'Easy  suitable for all fitness levels',
+                        'moderate' => 'Moderate  some walking / light activity',
                         'challenging' => 'Challenging  good fitness required',
-                        'extreme'     => 'Extreme  high fitness / experience required',
+                        'extreme' => 'Extreme  high fitness / experience required',
                     ])
                     ->nullable()->placeholder(' Not specified '),
                 Forms\Components\TextInput::make('min_age')
@@ -343,7 +360,7 @@ class TourResource extends Resource
                     ])->columnSpanFull(),
                 ])
                 ->collapsed()
-                ->hidden(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('type') !== 'package'),
+                ->hidden(fn (Get $get) => $get('type') !== 'package'),
 
             Schemas\Components\Section::make('GPS Coordinates')->schema([
                 Forms\Components\TextInput::make('lat')
@@ -361,14 +378,14 @@ class TourResource extends Resource
                                 Forms\Components\Select::make('icon')
                                     ->label('Icon')
                                     ->options([
-                                        'user'      => '👤 Guide / Person',
-                                        'tent'      => '⛺ Accommodation',
-                                        'utensils'  => '🍽 Meals',
-                                        'balloon'   => '🎈 Balloon / Activity',
-                                        'binoculars'=> '🔭 Game drives',
-                                        'camera'    => '📷 Photography',
-                                        'shield'    => '🛡 Safety',
-                                        'star'      => '⭐ Premium',
+                                        'user' => '👤 Guide / Person',
+                                        'tent' => '⛺ Accommodation',
+                                        'utensils' => '🍽 Meals',
+                                        'balloon' => '🎈 Balloon / Activity',
+                                        'binoculars' => '🔭 Game drives',
+                                        'camera' => '📷 Photography',
+                                        'shield' => '🛡 Safety',
+                                        'star' => '⭐ Premium',
                                     ])
                                     ->required(),
                                 Forms\Components\TextInput::make('title')
@@ -389,14 +406,14 @@ class TourResource extends Resource
                                 Forms\Components\Select::make('icon')
                                     ->label('Icon')
                                     ->options([
-                                        'user'      => '👤 Guide / Person',
-                                        'tent'      => '⛺ Accommodation',
-                                        'utensils'  => '🍽 Meals',
-                                        'balloon'   => '🎈 Balloon / Activity',
-                                        'binoculars'=> '🔭 Game drives',
-                                        'camera'    => '📷 Photography',
-                                        'shield'    => '🛡 Safety',
-                                        'star'      => '⭐ Premium',
+                                        'user' => '👤 Guide / Person',
+                                        'tent' => '⛺ Accommodation',
+                                        'utensils' => '🍽 Meals',
+                                        'balloon' => '🎈 Balloon / Activity',
+                                        'binoculars' => '🔭 Game drives',
+                                        'camera' => '📷 Photography',
+                                        'shield' => '🛡 Safety',
+                                        'star' => '⭐ Premium',
                                     ])
                                     ->required(),
                                 Forms\Components\TextInput::make('title')->label('Titre')->required()->maxLength(80),
@@ -414,14 +431,14 @@ class TourResource extends Resource
                                 Forms\Components\Select::make('icon')
                                     ->label('Icon')
                                     ->options([
-                                        'user'      => '👤 Guide / Person',
-                                        'tent'      => '⛺ Accommodation',
-                                        'utensils'  => '🍽 Meals',
-                                        'balloon'   => '🎈 Balloon / Activity',
-                                        'binoculars'=> '🔭 Game drives',
-                                        'camera'    => '📷 Photography',
-                                        'shield'    => '🛡 Safety',
-                                        'star'      => '⭐ Premium',
+                                        'user' => '👤 Guide / Person',
+                                        'tent' => '⛺ Accommodation',
+                                        'utensils' => '🍽 Meals',
+                                        'balloon' => '🎈 Balloon / Activity',
+                                        'binoculars' => '🔭 Game drives',
+                                        'camera' => '📷 Photography',
+                                        'shield' => '🛡 Safety',
+                                        'star' => '⭐ Premium',
                                     ])
                                     ->required(),
                                 Forms\Components\TextInput::make('title')->label('Título')->required()->maxLength(80),
@@ -525,13 +542,13 @@ class TourResource extends Resource
                     ->color(fn ($state) => match ($state) {
                         'published' => 'success',
                         'in_review' => 'warning',
-                        default     => 'gray',
+                        default => 'gray',
                     }),
                 Infolists\Components\TextEntry::make('duration_days')->label('Duration (days)'),
                 Infolists\Components\TextEntry::make('max_group_size')->label('Max Group'),
                 Infolists\Components\TextEntry::make('base_price')
                     ->label('Base Price')
-                    ->formatStateUsing(fn ($state) => '$' . number_format($state / 100, 2)),
+                    ->formatStateUsing(fn ($state) => '$'.number_format($state / 100, 2)),
                 Infolists\Components\TextEntry::make('cancellation_days')->label('Free Cancel (days)'),
                 Infolists\Components\TextEntry::make('discount_percent')->label('Discount %'),
                 Infolists\Components\TextEntry::make('badge')->badge()->color('warning'),
@@ -552,11 +569,9 @@ class TourResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->label('Title')
                     ->getStateUsing(fn (Tour $record) => $record->getTranslation('title', 'en'))
-                    ->searchable(query: fn ($query, string $search) =>
-                        $query->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(title, '$.en')) LIKE ?", ["%{$search}%"]))
-                    ->sortable(query: fn ($query, string $direction) =>
-                        $query->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(title, '$.en')) {$direction}"))
-                    ->limit(38)->weight(\Filament\Support\Enums\FontWeight::Medium),
+                    ->searchable(query: fn ($query, string $search) => $query->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(title, '$.en')) LIKE ?", ["%{$search}%"]))
+                    ->sortable(query: fn ($query, string $direction) => $query->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(title, '$.en')) {$direction}"))
+                    ->limit(38)->weight(FontWeight::Medium),
                 Tables\Columns\TextColumn::make('operator.name')->label('Operator')->sortable(),
                 Tables\Columns\TextColumn::make('destination_name')
                     ->label('Destination')
@@ -568,11 +583,11 @@ class TourResource extends Resource
                     ->color(fn ($state) => match ($state) {
                         'published' => 'success',
                         'in_review' => 'warning',
-                        default     => 'gray',
+                        default => 'gray',
                     }),
                 Tables\Columns\TextColumn::make('base_price')
                     ->label('Price')
-                    ->formatStateUsing(fn ($state) => '$' . number_format($state / 100, 0))
+                    ->formatStateUsing(fn ($state) => '$'.number_format($state / 100, 0))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('schedules_count')
                     ->counts('schedules')->label('Departures')
@@ -592,19 +607,19 @@ class TourResource extends Resource
                     ->searchable()->preload(),
             ])
             ->actions([
-                \Filament\Actions\ViewAction::make(),
-                \Filament\Actions\EditAction::make(),
-                \Filament\Actions\Action::make('publish')
+                ViewAction::make(),
+                EditAction::make(),
+                Action::make('publish')
                     ->label('Publish')->icon('heroicon-o-check-circle')->color('success')
                     ->visible(fn (Tour $record) => $record->status === 'in_review')
                     ->requiresConfirmation()
                     ->action(function (Tour $record) {
                         $record->update(['status' => 'published']);
                         Notification::make()
-                            ->title('"' . $record->getTranslation('title', 'en') . '" published')
+                            ->title('"'.$record->getTranslation('title', 'en').'" published')
                             ->success()->send();
                     }),
-                \Filament\Actions\Action::make('reject')
+                Action::make('reject')
                     ->label('Reject')->icon('heroicon-o-x-circle')->color('danger')
                     ->visible(fn (Tour $record) => $record->status === 'in_review')
                     ->form([
@@ -614,11 +629,11 @@ class TourResource extends Resource
                     ->action(function (Tour $record, array $data) {
                         $record->update(['status' => 'draft']);
                         Notification::make()
-                            ->title('Tour rejected: ' . $record->getTranslation('title', 'en'))
-                            ->body('Reason: ' . $data['reason'])
+                            ->title('Tour rejected: '.$record->getTranslation('title', 'en'))
+                            ->body('Reason: '.$data['reason'])
                             ->warning()->send();
                     }),
-                \Filament\Actions\Action::make('unpublish')
+                Action::make('unpublish')
                     ->label('Unpublish')->icon('heroicon-o-eye-slash')->color('warning')
                     ->visible(fn (Tour $record) => $record->status === 'published')
                     ->requiresConfirmation()
@@ -628,12 +643,12 @@ class TourResource extends Resource
                     }),
             ])
             ->bulkActions([
-                \Filament\Actions\BulkActionGroup::make([
-                    \Filament\Actions\BulkAction::make('publish_all')
+                BulkActionGroup::make([
+                    BulkAction::make('publish_all')
                         ->label('Publish Selected')->icon('heroicon-o-check-circle')->color('success')
                         ->action(fn ($records) => $records->each->update(['status' => 'published']))
                         ->deselectRecordsAfterCompletion(),
-                    \Filament\Actions\DeleteBulkAction::make(),
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
@@ -654,9 +669,9 @@ class TourResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListTours::route('/'),
+            'index' => Pages\ListTours::route('/'),
             'create' => Pages\CreateTour::route('/create'),
-            'edit'   => Pages\EditTour::route('/{record}/edit'),
+            'edit' => Pages\EditTour::route('/{record}/edit'),
         ];
     }
 }
