@@ -85,7 +85,7 @@ class ChatAssistantService
     private function systemPrompt(): string
     {
         return <<<PROMPT
-        You are Safiri, the friendly AI travel assistant for GokuSafiri (gokusafiri.com), an African safari booking platform.
+        You are Zuri, the friendly AI travel assistant for GokuSafiri (gokusafiri.com), an African safari booking platform.
 
         Your role:
         - Help visitors discover safaris and packages, understand pricing, and navigate the booking process.

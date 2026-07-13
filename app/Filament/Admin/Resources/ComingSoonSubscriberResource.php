@@ -101,7 +101,7 @@ class ComingSoonSubscriberResource extends Resource
             Forms\Components\TextInput::make('subject')
                 ->label('Subject')
                 ->required()
-                ->default('We\'re live — your African adventure starts now 🌍')
+                ->default('We\'re live  your African adventure starts now 🌍')
                 ->maxLength(150),
 
             Forms\Components\Textarea::make('body')
@@ -111,7 +111,7 @@ class ComingSoonSubscriberResource extends Resource
                 ->default(
                     "We promised something wild, and today we're delivering.\n\n" .
                     "GokuSafiri is officially live. Gorilla treks, migration crossings, " .
-                    "coastal escapes — every adventure you signed up to discover is waiting for you.\n\n" .
+                    "coastal escapes  every adventure you signed up to discover is waiting for you.\n\n" .
                     "As one of our early subscribers, you get first access. Browse our hand-picked safaris and secure your spot before they fill up."
                 ),
 
