@@ -36,6 +36,22 @@ class TourShowController extends Controller
             'hero_url' => $m->getUrl('hero'),
         ])->values();
 
+        $schedules = $tour->schedules()
+            ->where('starts_at', '>', now())
+            ->where('is_custom', false)
+            ->orderBy('starts_at')
+            ->get()
+            ->map(fn ($s) => [
+                'id' => $s->id,
+                'start_date' => $s->starts_at->toDateString(),
+                'end_date' => $s->ends_at->toDateString(),
+                'capacity' => $s->capacity,
+                'seats_left' => max(0, $s->capacity - $s->bookings()->count()),
+                'price_override' => $s->price_override,
+            ]);
+
+        $seatsLeft = $schedules->min('seats_left');
+
         return Inertia::render('Tours/Show', [
             'tour' => [
                 'id' => $tour->id,
@@ -47,6 +63,7 @@ class TourShowController extends Controller
                 'base_price' => $tour->base_price,
                 'currency' => $tour->currency,
                 'duration_days' => $tour->duration_days,
+                'flexible_dates' => (bool) $tour->flexible_dates,
                 'max_group_size' => $tour->max_group_size,
                 'style' => $tour->style,
                 'rating_cache' => $tour->rating_cache,

@@ -2,7 +2,7 @@ import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import CheckoutLayout from '../../Components/CheckoutLayout';
 import BookingSummary from '../../Components/BookingSummary';
-import { ChevronLeft, ChevronRight, Minus, Plus } from 'lucide-react';
+import { AlertTriangle, CalendarDays, ChevronLeft, ChevronRight, Minus, Plus, Users } from 'lucide-react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import type { Tour, TourSchedule, PageProps } from '../../types';
 
@@ -13,6 +13,7 @@ interface Props {
         adults: number;
         children: number;
         infants: number;
+        schedule_id?: number;
         custom_date?: string | null;
         departure_time?: string | null;
         selected_addons?: number[];
@@ -32,7 +33,18 @@ export default function BookingDates({ booking }: Props) {
 
     const dateLocale = { en: 'en-US', fr: 'fr-FR', es: 'es-ES' }[locale] ?? 'en-US';
 
+    const flexibleAllowed = !!tour.flexible_dates;
+
+    // Flexible (pick-your-own-date) is the default experience; fall back to
+    // fixed departures when the tour doesn't allow it or one is already chosen.
+    const initialMode: 'fixed' | 'flexible' =
+        booking.custom_date && flexibleAllowed ? 'flexible'
+        : booking.schedule_id ? 'fixed'
+        : flexibleAllowed ? 'flexible'
+        : 'fixed';
+
     const { data, setData, post, processing, errors } = useForm({
+        schedule_id: booking.schedule_id ?? (initialMode === 'fixed' ? tour.schedules?.[0]?.id ?? ('' as number | '') : ('' as number | '')),
         custom_date: booking.custom_date ?? '',
         departure_time: booking.departure_time ?? '',
         adults:      booking.adults ?? 2,
@@ -41,7 +53,20 @@ export default function BookingDates({ booking }: Props) {
         addons:      (booking.selected_addons ?? []) as number[],
     });
 
-    // Synthetic schedule for the client-chosen departure, so the summary
+    const [mode, setMode] = useState<'fixed' | 'flexible'>(initialMode);
+
+    function switchMode(next: 'fixed' | 'flexible') {
+        setMode(next);
+        if (next === 'fixed') {
+            setData(d => ({ ...d, custom_date: '', schedule_id: d.schedule_id || (tour.schedules?.[0]?.id ?? '') }));
+        } else {
+            setData(d => ({ ...d, schedule_id: '' }));
+        }
+    }
+
+    const fixedSchedule = tour.schedules?.find(s => s.id === Number(data.schedule_id)) ?? null;
+
+    // Synthetic schedule for a custom (flexible) departure, so the summary
     // sidebar can render the date range
     const customSchedule: TourSchedule | null = data.custom_date
         ? ({
@@ -58,10 +83,10 @@ export default function BookingDates({ booking }: Props) {
           } as unknown as TourSchedule)
         : null;
 
-    const selectedSchedule = customSchedule;
+    const selectedSchedule = mode === 'flexible' ? customSchedule : fixedSchedule;
 
     // Live price calculation — mirrors BookingPriceCalculator order
-    const baseAdultPrice = tour.base_price;
+    const baseAdultPrice = (mode === 'fixed' ? fixedSchedule?.price_override : null) ?? tour.base_price;
     const tourDiscPct    = tour.discount_percent ?? 0;
     const adultPrice     = Math.round(baseAdultPrice * (1 - tourDiscPct / 100));
     const childPrice     = Math.round((tour.child_price ?? baseAdultPrice) * (1 - tourDiscPct / 100));
@@ -107,6 +132,36 @@ export default function BookingDates({ booking }: Props) {
 
                         {/* ── Choose your departure ──────────── */}
                         <Section title={t('dates.choose_departure')}>
+                            {flexibleAllowed && (
+                                <div className="flex gap-[8px] mb-[16px]">
+                                    <button
+                                        type="button"
+                                        onClick={() => switchMode('fixed')}
+                                        className={`flex items-center gap-[6px] px-[16px] py-[9px] rounded-full text-[13px] font-semibold border-[1.5px] transition-colors ${
+                                            mode === 'fixed'
+                                                ? 'border-[#2E4A39] bg-[#eef3ec] text-[#2E4A39]'
+                                                : 'border-[#e4ddd0] bg-white text-[#4f5c53] hover:border-[#c5d3c8]'
+                                        }`}
+                                    >
+                                        <Users size={14} />
+                                        {t('dates.mode_fixed')}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => switchMode('flexible')}
+                                        className={`flex items-center gap-[6px] px-[16px] py-[9px] rounded-full text-[13px] font-semibold border-[1.5px] transition-colors ${
+                                            mode === 'flexible'
+                                                ? 'border-[#2E4A39] bg-[#eef3ec] text-[#2E4A39]'
+                                                : 'border-[#e4ddd0] bg-white text-[#4f5c53] hover:border-[#c5d3c8]'
+                                        }`}
+                                    >
+                                        <CalendarDays size={14} />
+                                        {t('dates.mode_flexible')}
+                                    </button>
+                                </div>
+                            )}
+
+                            {mode === 'flexible' ? (
                                 <div>
                                     <p className="text-[12px] text-[#8a968d] mb-[14px]">{t('dates.flexible_hint')}</p>
                                     <DateCalendar
@@ -151,6 +206,76 @@ export default function BookingDates({ booking }: Props) {
                                         </div>
                                     </div>
                                 </div>
+                            ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-[10px]">
+                                {tour.schedules?.map(s => {
+                                    const start    = new Date(s.start_date);
+                                    const end      = new Date(s.end_date);
+                                    const selected = Number(data.schedule_id) === s.id;
+                                    const lowStock = s.seats_left > 0 && s.seats_left <= 5;
+                                    const soldOut  = s.seats_left === 0;
+
+                                    return (
+                                        <label
+                                            key={s.id}
+                                            className={`relative flex flex-col gap-[6px] p-[16px] rounded-[14px] border-[1.5px] cursor-pointer transition-all select-none ${
+                                                selected
+                                                    ? 'border-[#2E4A39] bg-[#eef3ec]'
+                                                    : soldOut
+                                                        ? 'border-[#e4ddd0] bg-[#f9f9f9] opacity-50 cursor-not-allowed'
+                                                        : 'border-[#e4ddd0] bg-white hover:border-[#c5d3c8]'
+                                            }`}
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="schedule_id"
+                                                value={s.id}
+                                                checked={selected}
+                                                disabled={soldOut}
+                                                onChange={() => setData('schedule_id', s.id)}
+                                                className="sr-only"
+                                            />
+
+                                            {/* Radio indicator */}
+                                            <div className={`absolute top-[14px] right-[14px] w-[20px] h-[20px] rounded-full border-[1.5px] flex items-center justify-center transition-colors ${
+                                                selected ? 'border-[#2E4A39] bg-[#2E4A39]' : 'border-[#c5d3c8] bg-white'
+                                            }`}>
+                                                {selected && (
+                                                    <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                                                        <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    </svg>
+                                                )}
+                                            </div>
+
+                                            {/* Date range */}
+                                            <p className="font-semibold text-[15px] text-[#16241b] pr-[28px]">
+                                                {start.toLocaleDateString(dateLocale, { month: 'short', day: 'numeric' })} – {end.toLocaleDateString(dateLocale, { month: 'short', day: 'numeric' })}
+                                            </p>
+
+                                            {/* Status */}
+                                            {soldOut ? (
+                                                <p className="text-[12px] text-[#8a968d]">{t('dates.sold_out')}</p>
+                                            ) : lowStock ? (
+                                                <p className="flex items-center gap-[4px] text-[12px] text-[#E07A3F] font-medium">
+                                                    <AlertTriangle size={11} />
+                                                    {t('dates.only_slots', { count: s.seats_left })}
+                                                </p>
+                                            ) : (
+                                                <p className="text-[12px] text-[#8a968d]">{t('dates.available')}</p>
+                                            )}
+
+                                            {/* Year */}
+                                            <p className="text-[12px] text-[#8a968d]">
+                                                {end.getFullYear()}
+                                            </p>
+                                        </label>
+                                    );
+                                })}
+                            </div>
+                            )}
+                            {mode === 'fixed' && errors.schedule_id && (
+                                <p className="text-[12px] text-red-500 mt-[8px]">{errors.schedule_id}</p>
+                            )}
                         </Section>
 
                         {/* ── Who's travelling? ─────────────── */}
@@ -247,7 +372,7 @@ export default function BookingDates({ booking }: Props) {
                             </button>
                             <button
                                 type="submit"
-                                disabled={processing || !data.custom_date}
+                                disabled={processing || (mode === 'fixed' ? !data.schedule_id : !data.custom_date)}
                                 className="flex items-center gap-[8px] px-[28px] py-[13px] rounded-full bg-[#2E4A39] text-white text-[14px] font-semibold hover:bg-[#1e3326] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 {processing ? t('dates.saving') : `${t('dates.continue')} →`}
