@@ -1,12 +1,36 @@
-import { Head, usePage } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import AppLayout from '../../Components/AppLayout';
-import { Mail, MessageCircle, Phone, MapPin, Clock } from 'lucide-react';
+import { Mail, MessageCircle, Phone, MapPin, Clock, Send, CheckCircle2 } from 'lucide-react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import type { PageProps } from '../../types';
 
+const TOPICS = ['general', 'booking', 'payment', 'partnership', 'other'] as const;
+
 export default function Contact() {
-    const { locale } = usePage<PageProps>().props;
+    const { locale, flash } = usePage<PageProps>().props;
     const { t } = useLaravelReactI18n();
+
+    const { data, setData, post, processing, errors, reset, wasSuccessful } = useForm({
+        name: '',
+        email: '',
+        phone: '',
+        topic: 'general',
+        subject: '',
+        message: '',
+        booking_reference: '',
+    });
+
+    const submit = (e: React.FormEvent) => {
+        e.preventDefault();
+        post(`/${locale}/contact`, {
+            preserveScroll: true,
+            onSuccess: () => reset(),
+        });
+    };
+
+    const inputClass =
+        'w-full rounded-[14px] border-2 border-[#e4ddd0] bg-white px-4 py-3 text-[14px] text-[#16241b] placeholder-[#8a968d] focus:border-[#6e8c79] focus:outline-none transition-colors';
+    const labelClass = 'block text-[12px] font-bold text-[#8a968d] uppercase tracking-wider mb-1.5';
 
     const CHANNELS = [
         {
@@ -103,6 +127,145 @@ export default function Contact() {
                                 </a>
                             </div>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Contact form */}
+            <section className="bg-[#fbf8f2] pb-16 md:pb-24">
+                <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
+                    <div className="bg-white rounded-[22px] p-8 md:p-12 max-w-[760px]">
+                        <div className="mb-8">
+                            <p className="font-bold text-[#f0a05e] text-[12px] tracking-[2.16px] uppercase mb-3">
+                                {t('contact.form_eyebrow')}
+                            </p>
+                            <h2 className="font-display not-italic text-[28px] md:text-[36px] tracking-[-0.62px] text-[#16241b] mb-2">
+                                {t('contact.form_title')}
+                            </h2>
+                            <p className="text-[14px] leading-[22px] text-[#4f5c53]">
+                                {t('contact.form_subtitle')}
+                            </p>
+                        </div>
+
+                        {wasSuccessful || flash?.success ? (
+                            <div className="flex items-center gap-4 p-6 rounded-[18px] bg-[#eef3ec] mb-6">
+                                <CheckCircle2 size={24} className="text-[#2e4a39] shrink-0" />
+                                <p className="text-[14px] text-[#2e4a39] font-medium">
+                                    {t('contact.form_success')}
+                                </p>
+                            </div>
+                        ) : null}
+
+                        <form onSubmit={submit} className="space-y-5">
+                            <div className="grid md:grid-cols-2 gap-5">
+                                <div>
+                                    <label htmlFor="contact-name" className={labelClass}>{t('contact.form_name')}</label>
+                                    <input
+                                        id="contact-name"
+                                        type="text"
+                                        value={data.name}
+                                        onChange={(e) => setData('name', e.target.value)}
+                                        placeholder={t('contact.form_name_ph')}
+                                        className={inputClass}
+                                        required
+                                    />
+                                    {errors.name && <p className="mt-1 text-[12px] text-red-600">{errors.name}</p>}
+                                </div>
+                                <div>
+                                    <label htmlFor="contact-email" className={labelClass}>{t('contact.form_email')}</label>
+                                    <input
+                                        id="contact-email"
+                                        type="email"
+                                        value={data.email}
+                                        onChange={(e) => setData('email', e.target.value)}
+                                        placeholder={t('contact.form_email_ph')}
+                                        className={inputClass}
+                                        required
+                                    />
+                                    {errors.email && <p className="mt-1 text-[12px] text-red-600">{errors.email}</p>}
+                                </div>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-5">
+                                <div>
+                                    <label htmlFor="contact-phone" className={labelClass}>{t('contact.form_phone')}</label>
+                                    <input
+                                        id="contact-phone"
+                                        type="tel"
+                                        value={data.phone}
+                                        onChange={(e) => setData('phone', e.target.value)}
+                                        placeholder="+1 …"
+                                        className={inputClass}
+                                    />
+                                    {errors.phone && <p className="mt-1 text-[12px] text-red-600">{errors.phone}</p>}
+                                </div>
+                                <div>
+                                    <label htmlFor="contact-topic" className={labelClass}>{t('contact.form_topic')}</label>
+                                    <select
+                                        id="contact-topic"
+                                        value={data.topic}
+                                        onChange={(e) => setData('topic', e.target.value)}
+                                        className={inputClass}
+                                    >
+                                        {TOPICS.map((topic) => (
+                                            <option key={topic} value={topic}>{t(`contact.form_topic_${topic}`)}</option>
+                                        ))}
+                                    </select>
+                                    {errors.topic && <p className="mt-1 text-[12px] text-red-600">{errors.topic}</p>}
+                                </div>
+                            </div>
+
+                            {data.topic === 'booking' || data.topic === 'payment' ? (
+                                <div>
+                                    <label htmlFor="contact-reference" className={labelClass}>{t('contact.form_reference')}</label>
+                                    <input
+                                        id="contact-reference"
+                                        type="text"
+                                        value={data.booking_reference}
+                                        onChange={(e) => setData('booking_reference', e.target.value)}
+                                        placeholder="GKS-XXXXX"
+                                        className={inputClass}
+                                    />
+                                    {errors.booking_reference && <p className="mt-1 text-[12px] text-red-600">{errors.booking_reference}</p>}
+                                </div>
+                            ) : null}
+
+                            <div>
+                                <label htmlFor="contact-subject" className={labelClass}>{t('contact.form_subject')}</label>
+                                <input
+                                    id="contact-subject"
+                                    type="text"
+                                    value={data.subject}
+                                    onChange={(e) => setData('subject', e.target.value)}
+                                    placeholder={t('contact.form_subject_ph')}
+                                    className={inputClass}
+                                />
+                                {errors.subject && <p className="mt-1 text-[12px] text-red-600">{errors.subject}</p>}
+                            </div>
+
+                            <div>
+                                <label htmlFor="contact-message" className={labelClass}>{t('contact.form_message')}</label>
+                                <textarea
+                                    id="contact-message"
+                                    value={data.message}
+                                    onChange={(e) => setData('message', e.target.value)}
+                                    placeholder={t('contact.form_message_ph')}
+                                    rows={6}
+                                    className={inputClass}
+                                    required
+                                />
+                                {errors.message && <p className="mt-1 text-[12px] text-red-600">{errors.message}</p>}
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={processing}
+                                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#2e4a39] text-white text-[14px] font-semibold hover:bg-[#16241b] transition-colors disabled:opacity-60"
+                            >
+                                <Send size={16} />
+                                {processing ? t('contact.form_sending') : t('contact.form_send')}
+                            </button>
+                        </form>
                     </div>
                 </div>
             </section>

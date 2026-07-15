@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { MapPin, Heart, User, Settings, HelpCircle, LogOut } from 'lucide-react';
+import { MapPin, Heart, User, Settings, HelpCircle, LogOut, Gift } from 'lucide-react';
 import AppLayout from './AppLayout';
 import type { PageProps } from '../types';
 
@@ -7,6 +7,7 @@ const NAV = [
     { label: 'My trips', href: '/account/trips', icon: MapPin },
     { label: 'Saved safaris', href: '/account/saved', icon: Heart },
     { label: 'Profile', href: '/account/profile', icon: User },
+    { label: 'Refer & earn', href: '/account/referrals', icon: Gift },
     { label: 'Settings', href: '/account/settings', icon: Settings },
     { label: 'Help & Support', href: '#', icon: HelpCircle },
 ];

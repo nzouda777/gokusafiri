@@ -26,6 +26,7 @@ export interface Tour {
     child_price: number | null;
     currency: string;
     duration_days: number;
+    flexible_dates?: boolean;
     max_group_size: number;
     style: string;
     rating_cache: number;

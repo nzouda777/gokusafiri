@@ -12,7 +12,7 @@ class TourSchedule extends Model
     use HasFactory;
 
     protected $fillable = [
-        'tour_id', 'starts_at', 'ends_at', 'capacity', 'seats_left', 'price_override',
+        'tour_id', 'starts_at', 'ends_at', 'capacity', 'seats_left', 'price_override', 'is_custom',
     ];
 
     protected $casts = [
@@ -21,6 +21,7 @@ class TourSchedule extends Model
         'capacity' => 'integer',
         'seats_left' => 'integer',
         'price_override' => 'integer',
+        'is_custom' => 'boolean',
     ];
 
     public function tour(): BelongsTo

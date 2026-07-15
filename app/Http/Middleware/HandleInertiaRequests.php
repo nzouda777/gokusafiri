@@ -2,6 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Destination;
+use App\Models\Tour;
+use App\Models\TourSchedule;
 use App\Settings\GeneralSettings;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -39,14 +42,14 @@ class HandleInertiaRequests extends Middleware
                 'subscribed' => $request->session()->get('subscribed'),
             ],
             'stripe_key' => config('services.stripe.key'),
-            'experiences' => fn () => \App\Models\Tour::published()
+            'experiences' => fn () => Tour::published()
                 ->packages()
                 ->whereNotNull('style')
                 ->distinct()
                 ->orderBy('style')
                 ->pluck('style'),
             'searchData' => fn () => [
-                'destinations' => \App\Models\Destination::query()
+                'destinations' => Destination::query()
                     ->whereHas('tours', fn ($q) => $q->where('status', 'published'))
                     ->get()
                     ->map(fn ($d) => [
@@ -56,13 +59,14 @@ class HandleInertiaRequests extends Middleware
                     ])
                     ->sortBy('name')
                     ->values(),
-                'experiences' => \App\Models\Tour::published()
+                'experiences' => Tour::published()
                     ->whereNotNull('style')
                     ->distinct()
                     ->orderBy('style')
                     ->pluck('style'),
-                'availableDates' => \App\Models\TourSchedule::query()
+                'availableDates' => TourSchedule::query()
                     ->whereDate('starts_at', '>=', now()->toDateString())
+                    ->where('is_custom', false)
                     ->where('seats_left', '>', 0)
                     ->whereHas('tour', fn ($q) => $q->where('status', 'published'))
                     ->orderBy('starts_at')
@@ -71,10 +75,10 @@ class HandleInertiaRequests extends Middleware
                     ->unique()
                     ->values(),
             ],
-            'settings'   => fn () => [
-                'tax_fee_percent'       => app(GeneralSettings::class)->tax_fee_percent,
+            'settings' => fn () => [
+                'tax_fee_percent' => app(GeneralSettings::class)->tax_fee_percent,
                 'tier_discount_percent' => app(GeneralSettings::class)->tier_discount_percent,
-                'deposit_percent'       => app(GeneralSettings::class)->deposit_percent,
+                'deposit_percent' => app(GeneralSettings::class)->deposit_percent,
             ],
         ]);
     }

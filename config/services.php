@@ -47,4 +47,22 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URL', '/auth/google/callback'),
     ],
 
+    'anthropic' => [
+        'api_key' => env('ANTHROPIC_API_KEY'),
+        'model' => env('ANTHROPIC_MODEL', 'claude-opus-4-8'),
+    ],
+
+    /*
+     * AI chat widget. Default provider is any OpenAI-compatible API —
+     * free-tier options ($0): Groq (default), Google Gemini, OpenRouter
+     * free models, or a self-hosted Ollama. Set CHAT_AI_PROVIDER=anthropic
+     * to use the Claude API instead.
+     */
+    'chat' => [
+        'provider' => env('CHAT_AI_PROVIDER', 'openai'),
+        'api_key' => env('CHAT_AI_KEY'),
+        'base_url' => env('CHAT_AI_BASE_URL', 'https://api.groq.com/openai/v1'),
+        'model' => env('CHAT_AI_MODEL', 'llama-3.3-70b-versatile'),
+    ],
+
 ];

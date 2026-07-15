@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,8 +20,8 @@ class User extends Authenticatable implements HasMedia
     protected $fillable = [
         'name', 'first_name', 'last_name', 'email', 'password',
         'google_id', 'avatar', 'locale', 'country', 'phone',
-        'tier', 'newsletter_opt_in',
-        'passport_number', 'passport_expiry', 'nationality','email_verified_at',
+        'tier', 'newsletter_opt_in', 'referral_code', 'referred_by',
+        'passport_number', 'passport_expiry', 'nationality', 'email_verified_at',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -54,6 +55,36 @@ class User extends Authenticatable implements HasMedia
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function referrer(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'referred_by');
+    }
+
+    public function referredUsers(): HasMany
+    {
+        return $this->hasMany(self::class, 'referred_by');
+    }
+
+    public function referralCommissions(): HasMany
+    {
+        return $this->hasMany(ReferralCommission::class, 'referrer_id');
+    }
+
+    public function getOrCreateReferralCode(): string
+    {
+        if ($this->referral_code) {
+            return $this->referral_code;
+        }
+
+        do {
+            $code = strtoupper(substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 8));
+        } while (self::where('referral_code', $code)->exists());
+
+        $this->update(['referral_code' => $code]);
+
+        return $code;
     }
 
     public function memberDiscountPercent(): int

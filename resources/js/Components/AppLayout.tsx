@@ -2,6 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { Menu, X, Heart, Globe, PlaneIcon } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
+import ChatWidget from './ChatWidget';
 import type { PageProps } from '../types';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -127,6 +128,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <main className="flex-1">{children}</main>
 
             <Footer />
+
+            <ChatWidget />
         </div>
     );
 }

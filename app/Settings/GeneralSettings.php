@@ -20,6 +20,8 @@ class GeneralSettings extends Settings
 
     public int $platform_commission_percent = 0;
 
+    public int $referral_commission_percent = 10;
+
     public bool $coming_soon_enabled = false;
 
     public static function group(): string

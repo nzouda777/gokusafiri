@@ -16,7 +16,9 @@ use Filament\Schemas\Schema;
 class SettingsPage extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
+
     protected static ?string $navigationLabel = 'Settings';
+
     protected static ?string $title = 'Platform Settings';
 
     public ?array $data = [];
@@ -42,6 +44,10 @@ class SettingsPage extends Page
                 Forms\Components\TextInput::make('platform_commission_percent')
                     ->label('Platform Commission (%)')
                     ->numeric()->minValue(0)->maxValue(100),
+                Forms\Components\TextInput::make('referral_commission_percent')
+                    ->label('Referral Commission (%)')
+                    ->helperText('Share of each payment credited to the referrer.')
+                    ->numeric()->minValue(0)->maxValue(50),
             ])->columns(2),
 
             Schemas\Components\Section::make('Technical')->schema([

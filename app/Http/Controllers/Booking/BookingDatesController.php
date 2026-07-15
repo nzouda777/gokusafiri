@@ -21,56 +21,65 @@ class BookingDatesController extends Controller
             ->with(['tour.destination', 'tour.media', 'tour.schedules', 'tour.addons', 'addons'])
             ->firstOrFail();
 
-        $tour  = $booking->tour;
+        $tour = $booking->tour;
         $media = $tour->getMedia('gallery');
 
         $schedules = $tour->schedules()
             ->where('starts_at', '>', now())
+            ->where('is_custom', false)
             ->orderBy('starts_at')
             ->get()
             ->map(fn ($s) => [
-                'id'             => $s->id,
-                'start_date'     => $s->starts_at->toDateString(),
-                'end_date'       => $s->ends_at->toDateString(),
-                'capacity'       => $s->capacity,
-                'seats_left'     => $s->seats_left,
+                'id' => $s->id,
+                'start_date' => $s->starts_at->toDateString(),
+                'end_date' => $s->ends_at->toDateString(),
+                'capacity' => $s->capacity,
+                'seats_left' => $s->seats_left,
                 'price_override' => $s->price_override,
             ]);
+
+        // A custom (flexible-date) departure previously picked for this booking
+        $customDate = $booking->schedule?->is_custom
+            ? $booking->schedule->starts_at->toDateString()
+            : null;
 
         $selectedAddonIds = $booking->addons()->pluck('tour_addon_id')->toArray();
 
         return Inertia::render('Booking/Dates', [
             'booking' => [
-                'reference'      => $booking->reference,
-                'schedule_id'    => $booking->tour_schedule_id,
-                'adults'         => $booking->adults,
-                'children'       => $booking->children,
-                'infants'        => $booking->infants,
+                'reference' => $booking->reference,
+                'schedule_id' => $customDate ? null : $booking->tour_schedule_id,
+                'custom_date' => $customDate,
+                'departure_time' => $booking->departure_time,
+                'adults' => $booking->adults,
+                'children' => $booking->children,
+                'infants' => $booking->infants,
                 'selected_addons' => $selectedAddonIds,
                 'tour' => [
-                    'id'               => $tour->id,
-                    'title'            => $tour->title,
-                    'slug'             => $tour->slug,
-                    'type'             => $tour->type,
-                    'base_price'       => $tour->base_price,
-                    'child_price'      => $tour->child_price,
+                    'id' => $tour->id,
+                    'title' => $tour->title,
+                    'slug' => $tour->slug,
+                    'type' => $tour->type,
+                    'base_price' => $tour->base_price,
+                    'child_price' => $tour->child_price,
                     'discount_percent' => $tour->discount_percent ?? 0,
-                    'deposit_percent'  => $tour->deposit_percent ?? app(GeneralSettings::class)->deposit_percent,
-                    'currency'         => $tour->currency,
-                    'duration_days'    => $tour->duration_days,
-                    'max_group_size'   => $tour->max_group_size,
+                    'deposit_percent' => $tour->deposit_percent ?? app(GeneralSettings::class)->deposit_percent,
+                    'currency' => $tour->currency,
+                    'duration_days' => $tour->duration_days,
+                    'flexible_dates' => (bool) $tour->flexible_dates,
+                    'max_group_size' => $tour->max_group_size,
                     'cancellation_days' => $tour->cancellation_days,
-                    'card_url'         => $media->first()?->getUrl('card') ?? '',
+                    'card_url' => $media->first()?->getUrl('card') ?? '',
                     'destination' => $tour->destination ? [
-                        'name'    => $tour->destination->name,
+                        'name' => $tour->destination->name,
                         'country' => $tour->destination->country ?? '',
                     ] : null,
                     'schedules' => $schedules,
-                    'addons'    => $tour->addons->map(fn ($a) => [
-                        'id'          => $a->id,
-                        'name'        => $a->getTranslation('label', app()->getLocale(), false),
-                        'price'       => $a->price_per_person,
-                        'per'         => 'person',
+                    'addons' => $tour->addons->map(fn ($a) => [
+                        'id' => $a->id,
+                        'name' => $a->getTranslation('label', app()->getLocale(), false),
+                        'price' => $a->price_per_person,
+                        'per' => 'person',
                         'description' => $a->getTranslation('description', app()->getLocale(), false),
                     ]),
                 ],
@@ -83,25 +92,39 @@ class BookingDatesController extends Controller
         $reference = $request->route('reference');
         $request->validate([
             'schedule_id' => [
-                'required',
+                'required_without:custom_date',
+                'nullable',
                 Rule::exists('tour_schedules', 'id')->where(
                     fn ($q) => $q->where('starts_at', '>', now())
                 ),
             ],
-            'adults'   => 'required|integer|min:1|max:20',
+            'custom_date' => 'required_without:schedule_id|nullable|date|after:tomorrow',
+            'departure_time' => ['nullable', 'regex:/^([01]\d|2[0-3]):[0-5]\d$/'],
+            'adults' => 'required|integer|min:1|max:20',
             'children' => 'required|integer|min:0|max:20',
-            'infants'  => 'required|integer|min:0|max:10',
-            'addons'   => 'array',
+            'infants' => 'required|integer|min:0|max:10',
+            'addons' => 'array',
             'addons.*' => 'exists:tour_addons,id',
         ]);
 
         $booking = Booking::where('reference', $reference)->with('tour')->firstOrFail();
 
+        $scheduleId = $request->schedule_id;
+
+        // Flexible date: the client picked their own departure — attach a
+        // private custom schedule for that date instead of a fixed departure.
+        if (! $scheduleId && $request->custom_date) {
+            abort_unless($booking->tour->flexible_dates, 422, 'This tour does not support flexible dates.');
+
+            $scheduleId = $booking->tour->customScheduleFor($request->custom_date)->id;
+        }
+
         $booking->update([
-            'tour_schedule_id' => $request->schedule_id,
-            'adults'           => $request->adults,
-            'children'         => $request->children,
-            'infants'          => $request->infants,
+            'tour_schedule_id' => $scheduleId,
+            'departure_time' => $request->departure_time,
+            'adults' => $request->adults,
+            'children' => $request->children,
+            'infants' => $request->infants,
         ]);
 
         // Sync addons
@@ -111,8 +134,8 @@ class BookingDatesController extends Controller
             $addon = TourAddon::findOrFail($addonId);
             $booking->addons()->create([
                 'tour_addon_id' => $addonId,
-                'quantity'      => $pax,
-                'unit_price'    => $addon->price_per_person,
+                'quantity' => $pax,
+                'unit_price' => $addon->price_per_person,
             ]);
         }
 
@@ -125,35 +148,35 @@ class BookingDatesController extends Controller
     {
         $booking->load(['tour', 'schedule', 'addons.tourAddon']);
 
-        $settings   = app(GeneralSettings::class);
-        $schedule   = $booking->schedule;
-        $tour       = $schedule?->tour ?? $booking->tour;
-        $basePrice  = $schedule?->price_override ?? $tour->base_price;
+        $settings = app(GeneralSettings::class);
+        $schedule = $booking->schedule;
+        $tour = $schedule?->tour ?? $booking->tour;
+        $basePrice = $schedule?->price_override ?? $tour->base_price;
 
         // Apply per-tour promotional discount to unit prices
         $tourDiscPct = $tour->discount_percent ?? 0;
-        $adultPrice  = (int) round($basePrice * (1 - $tourDiscPct / 100));
-        $childPrice  = (int) round(($tour->child_price ?? $basePrice) * (1 - $tourDiscPct / 100));
+        $adultPrice = (int) round($basePrice * (1 - $tourDiscPct / 100));
+        $childPrice = (int) round(($tour->child_price ?? $basePrice) * (1 - $tourDiscPct / 100));
 
         // Adults pay full price, children pay child_price, infants are free
-        $subtotal    = ($adultPrice * $booking->adults) + ($childPrice * $booking->children);
+        $subtotal = ($adultPrice * $booking->adults) + ($childPrice * $booking->children);
         $addonsTotal = $booking->addons->sum(fn ($ba) => $ba->unit_price * $ba->quantity);
 
         $memberDiscount = $booking->user_id
             ? (int) round(($subtotal + $addonsTotal) * $settings->tier_discount_percent / 100)
             : 0;
         $taxesFees = (int) round(($subtotal + $addonsTotal - $memberDiscount) * $settings->tax_fee_percent / 100);
-        $total     = $subtotal + $addonsTotal - $memberDiscount + $taxesFees;
-        $deposit   = (int) round($total * (($tour->deposit_percent ?? $settings->deposit_percent) / 100));
-        $balanceDue     = $schedule ? $schedule->starts_at->subDays(30) : null;
+        $total = $subtotal + $addonsTotal - $memberDiscount + $taxesFees;
+        $deposit = (int) round($total * (($tour->deposit_percent ?? $settings->deposit_percent) / 100));
+        $balanceDue = $schedule ? $schedule->starts_at->subDays(30) : null;
 
         $booking->update([
-            'subtotal'        => $subtotal,
-            'total'           => $total,
-            'deposit_amount'  => $deposit,
+            'subtotal' => $subtotal,
+            'total' => $total,
+            'deposit_amount' => $deposit,
             'member_discount' => $memberDiscount,
-            'taxes_fees'      => $taxesFees,
-            'balance_due_at'  => $balanceDue,
+            'taxes_fees' => $taxesFees,
+            'balance_due_at' => $balanceDue,
         ]);
     }
 }
