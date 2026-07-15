@@ -8,7 +8,6 @@ use App\Models\TourAddon;
 use App\Settings\GeneralSettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,7 +17,7 @@ class BookingDatesController extends Controller
     {
         $reference = $request->route('reference');
         $booking = Booking::where('reference', $reference)
-            ->with(['tour.destination', 'tour.media', 'tour.schedules', 'tour.addons', 'addons'])
+            ->with(['tour.destination', 'tour.media', 'tour.addons', 'addons'])
             ->firstOrFail();
 
         $tour = $booking->tour;

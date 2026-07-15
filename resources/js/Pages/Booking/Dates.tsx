@@ -4,7 +4,7 @@ import CheckoutLayout from '../../Components/CheckoutLayout';
 import BookingSummary from '../../Components/BookingSummary';
 import { AlertTriangle, CalendarDays, ChevronLeft, ChevronRight, Minus, Plus, Users } from 'lucide-react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
-import type { Tour, TourSchedule, TourAddon, PageProps } from '../../types';
+import type { Tour, TourSchedule, PageProps } from '../../types';
 
 interface Props {
     booking: {

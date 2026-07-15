@@ -2,13 +2,13 @@ import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import AppLayout from '../../Components/AppLayout';
 import {
     MapPin, Clock, Users, Star, Check, X,
-    CheckCircle2, AlertTriangle, Heart,
+    CheckCircle2, Heart,
     Utensils, Tent, User, Camera, Shield, Binoculars, Sparkles, Wind,
     ChevronLeft, ChevronRight, LayoutGrid, Globe, Activity,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
-import type { Tour, TourSchedule, TourHighlight, TourReview, PageProps, MediaItem } from '../../types';
+import type { Tour, TourHighlight, TourReview, PageProps, MediaItem } from '../../types';
 import { csrfToken } from '../../utils';
 
 interface Props { tour: Tour & { user_has_reviewed?: boolean } }
@@ -78,7 +78,7 @@ export default function TourShow({ tour }: Props) {
         reviews:   useRef<HTMLDivElement>(null),
     };
 
-    const basePrice      = selectedSchedule?.price_override ?? tour.base_price;
+    const basePrice      = tour.base_price;
     const tourDiscPct    = tour.discount_percent ?? 0;
     const pricePerPerson = Math.round(basePrice * (1 - tourDiscPct / 100));
     const subtotal       = pricePerPerson * travelers;
@@ -542,12 +542,6 @@ export default function TourShow({ tour }: Props) {
                                         </span>
                                         <span className="text-[13px] text-white/60">{t('show.per_person')}</span>
                                     </div>
-                                    {tour.seats_left != null && tour.seats_left > 0 && tour.seats_left <= 5 && (
-                                        <p className="flex items-center gap-[5px] text-[11px] text-[#f0a05e] mt-[8px]">
-                                            <AlertTriangle size={11} />
-                                            {t('show.seats_left', { count: tour.seats_left })}
-                                        </p>
-                                    )}
                                 </div>
 
                                 <div className="p-[20px] space-y-[14px]">

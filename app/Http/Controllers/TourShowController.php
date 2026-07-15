@@ -15,7 +15,7 @@ class TourShowController extends Controller
         $slug = $request->route('slug');
         $tour = Tour::published()
             ->where('slug', $slug)
-            ->with(['destination', 'media', 'schedules', 'addons', 'reviews' => fn ($q) => $q->where('is_approved', true)->with('user')->latest()])
+            ->with(['destination', 'media', 'addons', 'reviews' => fn ($q) => $q->where('is_approved', true)->with('user')->latest()])
             ->firstOrFail();
 
         $userId = $request->user()?->id;
@@ -96,10 +96,8 @@ class TourShowController extends Controller
                     'description' => $a->getTranslation('description', app()->getLocale(), false),
                 ]),
                 'highlights' => $tour->arr('highlights'),
-                'schedules' => $schedules,
                 'is_wishlisted' => $isWishlisted,
                 'user_has_reviewed' => $userHasReviewed,
-                'seats_left' => $seatsLeft,
                 'reviews' => $tour->reviews->map(fn ($r) => [
                     'id' => $r->id,
                     'rating' => $r->rating,
