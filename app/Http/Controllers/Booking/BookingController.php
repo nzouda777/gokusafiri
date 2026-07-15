@@ -18,19 +18,16 @@ class BookingController extends Controller
             'tour_id' => 'required|exists:tours,id',
             'travelers' => 'required|integer|min:1|max:20',
             'pay_full' => 'boolean',
-            'schedule_id' => 'nullable|exists:tour_schedules,id',
             'custom_date' => 'nullable|date|after:tomorrow',
         ]);
 
         $tour = Tour::findOrFail($request->tour_id);
 
-        // Departure picked on the tour page: a fixed group departure, or a
-        // client-chosen date (private departure) when the tour allows it.
-        $scheduleId = $request->schedule_id;
-
-        if (! $scheduleId && $request->custom_date && $tour->flexible_dates) {
-            $scheduleId = $tour->customScheduleFor($request->custom_date)->id;
-        }
+        // Departure date picked on the tour page, if any — the client can
+        // also choose it on the next step.
+        $scheduleId = $request->custom_date
+            ? $tour->customScheduleFor($request->custom_date)->id
+            : null;
 
         $booking = Booking::create([
             'tour_id' => $tour->id,

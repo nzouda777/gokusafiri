@@ -103,7 +103,7 @@ class SettingsPage extends Page
 
         // Integer settings must be saved even when 0 (falsy). Filament numeric
         // inputs may return null when the field is cleared — treat that as 0.
-        $intKeys = ['tax_fee_percent', 'deposit_percent', 'tier_discount_percent', 'platform_commission_percent'];
+        $intKeys = ['tax_fee_percent', 'deposit_percent', 'tier_discount_percent', 'platform_commission_percent', 'referral_commission_percent'];
 
         foreach ($data as $key => $value) {
             if (in_array($key, $intKeys, true)) {

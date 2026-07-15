@@ -8,7 +8,6 @@ use App\Models\TourAddon;
 use App\Settings\GeneralSettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,37 +17,20 @@ class BookingDatesController extends Controller
     {
         $reference = $request->route('reference');
         $booking = Booking::where('reference', $reference)
-            ->with(['tour.destination', 'tour.media', 'tour.schedules', 'tour.addons', 'addons'])
+            ->with(['tour.destination', 'tour.media', 'tour.addons', 'addons'])
             ->firstOrFail();
 
         $tour = $booking->tour;
         $media = $tour->getMedia('gallery');
 
-        $schedules = $tour->schedules()
-            ->where('starts_at', '>', now())
-            ->where('is_custom', false)
-            ->orderBy('starts_at')
-            ->get()
-            ->map(fn ($s) => [
-                'id' => $s->id,
-                'start_date' => $s->starts_at->toDateString(),
-                'end_date' => $s->ends_at->toDateString(),
-                'capacity' => $s->capacity,
-                'seats_left' => $s->seats_left,
-                'price_override' => $s->price_override,
-            ]);
-
-        // A custom (flexible-date) departure previously picked for this booking
-        $customDate = $booking->schedule?->is_custom
-            ? $booking->schedule->starts_at->toDateString()
-            : null;
+        // The departure date previously picked for this booking
+        $customDate = $booking->schedule?->starts_at->toDateString();
 
         $selectedAddonIds = $booking->addons()->pluck('tour_addon_id')->toArray();
 
         return Inertia::render('Booking/Dates', [
             'booking' => [
                 'reference' => $booking->reference,
-                'schedule_id' => $customDate ? null : $booking->tour_schedule_id,
                 'custom_date' => $customDate,
                 'departure_time' => $booking->departure_time,
                 'adults' => $booking->adults,
@@ -66,7 +48,6 @@ class BookingDatesController extends Controller
                     'deposit_percent' => $tour->deposit_percent ?? app(GeneralSettings::class)->deposit_percent,
                     'currency' => $tour->currency,
                     'duration_days' => $tour->duration_days,
-                    'flexible_dates' => (bool) $tour->flexible_dates,
                     'max_group_size' => $tour->max_group_size,
                     'cancellation_days' => $tour->cancellation_days,
                     'card_url' => $media->first()?->getUrl('card') ?? '',
@@ -74,7 +55,6 @@ class BookingDatesController extends Controller
                         'name' => $tour->destination->name,
                         'country' => $tour->destination->country ?? '',
                     ] : null,
-                    'schedules' => $schedules,
                     'addons' => $tour->addons->map(fn ($a) => [
                         'id' => $a->id,
                         'name' => $a->getTranslation('label', app()->getLocale(), false),
@@ -91,14 +71,7 @@ class BookingDatesController extends Controller
     {
         $reference = $request->route('reference');
         $request->validate([
-            'schedule_id' => [
-                'required_without:custom_date',
-                'nullable',
-                Rule::exists('tour_schedules', 'id')->where(
-                    fn ($q) => $q->where('starts_at', '>', now())
-                ),
-            ],
-            'custom_date' => 'required_without:schedule_id|nullable|date|after:tomorrow',
+            'custom_date' => 'required|date|after:tomorrow',
             'departure_time' => ['nullable', 'regex:/^([01]\d|2[0-3]):[0-5]\d$/'],
             'adults' => 'required|integer|min:1|max:20',
             'children' => 'required|integer|min:0|max:20',
@@ -109,15 +82,9 @@ class BookingDatesController extends Controller
 
         $booking = Booking::where('reference', $reference)->with('tour')->firstOrFail();
 
-        $scheduleId = $request->schedule_id;
-
-        // Flexible date: the client picked their own departure — attach a
-        // private custom schedule for that date instead of a fixed departure.
-        if (! $scheduleId && $request->custom_date) {
-            abort_unless($booking->tour->flexible_dates, 422, 'This tour does not support flexible dates.');
-
-            $scheduleId = $booking->tour->customScheduleFor($request->custom_date)->id;
-        }
+        // The client picks their own departure date — attach a private
+        // schedule for that date.
+        $scheduleId = $booking->tour->customScheduleFor($request->custom_date)->id;
 
         $booking->update([
             'tour_schedule_id' => $scheduleId,

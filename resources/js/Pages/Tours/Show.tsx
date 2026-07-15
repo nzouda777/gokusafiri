@@ -2,13 +2,13 @@ import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import AppLayout from '../../Components/AppLayout';
 import {
     MapPin, Clock, Users, Star, Check, X,
-    CheckCircle2, AlertTriangle, Heart,
+    CheckCircle2, Heart,
     Utensils, Tent, User, Camera, Shield, Binoculars, Sparkles, Wind,
     ChevronLeft, ChevronRight, LayoutGrid, Globe, Activity,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
-import type { Tour, TourSchedule, TourHighlight, TourReview, PageProps, MediaItem } from '../../types';
+import type { Tour, TourHighlight, TourReview, PageProps, MediaItem } from '../../types';
 import { csrfToken } from '../../utils';
 
 interface Props { tour: Tour & { user_has_reviewed?: boolean } }
@@ -62,8 +62,6 @@ export default function TourShow({ tour }: Props) {
     const { t } = useLaravelReactI18n();
     const dateLocale = { en: 'en-US', fr: 'fr-FR', es: 'es-ES' }[locale] ?? 'en-US';
     const [activeTab, setActiveTab]               = useState('overview');
-    const flexibleDates = !!tour.flexible_dates;
-    const [selectedSchedule, setSelectedSchedule] = useState<TourSchedule | null>(flexibleDates ? null : tour.schedules?.[0] ?? null);
     const [customDate, setCustomDate]             = useState('');
     const [travelers, setTravelers]               = useState(2);
     const [payFull, setPayFull]                   = useState(false);
@@ -78,7 +76,7 @@ export default function TourShow({ tour }: Props) {
         reviews:   useRef<HTMLDivElement>(null),
     };
 
-    const basePrice      = selectedSchedule?.price_override ?? tour.base_price;
+    const basePrice      = tour.base_price;
     const tourDiscPct    = tour.discount_percent ?? 0;
     const pricePerPerson = Math.round(basePrice * (1 - tourDiscPct / 100));
     const subtotal       = pricePerPerson * travelers;
@@ -91,7 +89,7 @@ export default function TourShow({ tour }: Props) {
     const depositPct     = tour.deposit_percent ?? settings.deposit_percent;
     const depositAmount  = Math.round(total * depositPct / 100);
 
-    const departureDate = selectedSchedule?.start_date ?? (customDate || null);
+    const departureDate = customDate || null;
     const cancellationDate = departureDate
         ? new Date(new Date(departureDate).getTime() - (tour.cancellation_days ?? 30) * 86400000)
               .toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })
@@ -134,8 +132,7 @@ export default function TourShow({ tour }: Props) {
             tour_id: tour.id,
             travelers,
             pay_full: payFull,
-            schedule_id: selectedSchedule?.id ?? undefined,
-            custom_date: !selectedSchedule && customDate ? customDate : undefined,
+            custom_date: customDate || undefined,
         });
     }
 
@@ -542,12 +539,6 @@ export default function TourShow({ tour }: Props) {
                                         </span>
                                         <span className="text-[13px] text-white/60">{t('show.per_person')}</span>
                                     </div>
-                                    {tour.seats_left != null && tour.seats_left > 0 && tour.seats_left <= 5 && (
-                                        <p className="flex items-center gap-[5px] text-[11px] text-[#f0a05e] mt-[8px]">
-                                            <AlertTriangle size={11} />
-                                            {t('show.seats_left', { count: tour.seats_left })}
-                                        </p>
-                                    )}
                                 </div>
 
                                 <div className="p-[20px] space-y-[14px]">
@@ -557,54 +548,21 @@ export default function TourShow({ tour }: Props) {
                                             {t('show.departure')}
                                         </label>
 
-                                        {flexibleDates && (
-                                            <input
-                                                type="date"
-                                                min={minCustomDate}
-                                                value={customDate}
-                                                onChange={e => {
-                                                    setCustomDate(e.target.value);
-                                                    setSelectedSchedule(null);
-                                                }}
-                                                className="w-full px-[12px] py-[11px] rounded-[10px] border border-[#e4ddd0] text-[13px] text-[#16241b] bg-[#fbf8f2] focus:outline-none focus:border-[#2E4A39]"
-                                            />
-                                        )}
+                                        <input
+                                            type="date"
+                                            min={minCustomDate}
+                                            value={customDate}
+                                            onChange={e => setCustomDate(e.target.value)}
+                                            className="w-full px-[12px] py-[11px] rounded-[10px] border border-[#e4ddd0] text-[13px] text-[#16241b] bg-[#fbf8f2] focus:outline-none focus:border-[#2E4A39]"
+                                        />
 
-                                        {flexibleDates && customDate && !selectedSchedule && (
+                                        {customDate && (
                                             <p className="text-[11px] text-[#6e8c79] mt-[6px]">
                                                 {t('show.custom_date_note', {
                                                     end: new Date(new Date(customDate + 'T00:00:00').getTime() + Math.max(0, (tour.duration_days ?? 1) - 1) * 86400000)
                                                         .toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' }),
                                                 })}
                                             </p>
-                                        )}
-
-                                        {(tour.schedules?.length ?? 0) > 0 && (
-                                            <>
-                                                {flexibleDates && (
-                                                    <p className="text-[11px] text-[#8a968d] mt-[10px] mb-[6px]">
-                                                        {t('show.or_group_departure')}
-                                                    </p>
-                                                )}
-                                                <select
-                                                    value={selectedSchedule?.id ?? ''}
-                                                    onChange={e => {
-                                                        const schedule = tour.schedules?.find(s => s.id === Number(e.target.value)) ?? null;
-                                                        setSelectedSchedule(schedule);
-                                                        if (schedule) setCustomDate('');
-                                                    }}
-                                                    className="w-full px-[12px] py-[11px] rounded-[10px] border border-[#e4ddd0] text-[13px] text-[#16241b] bg-[#fbf8f2] focus:outline-none focus:border-[#2E4A39]"
-                                                >
-                                                    <option value="">{t('show.select_date')}</option>
-                                                    {tour.schedules?.map(s => (
-                                                        <option key={s.id} value={s.id}>
-                                                            {new Date(s.start_date).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric' })} –{' '}
-                                                            {new Date(s.end_date).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })}
-                                                            {s.seats_left != null && s.seats_left <= 5 ? ` ${t('show.n_left', { count: s.seats_left })}` : ''}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </>
                                         )}
                                     </div>
 
