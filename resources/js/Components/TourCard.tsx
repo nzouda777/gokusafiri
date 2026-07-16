@@ -92,12 +92,12 @@ export default function TourCard({ tour, onWishlistToggle }: Props) {
                                 {tour.destination?.name}{tour.destination?.country ? `, ${tour.destination.country}` : ''} · {t('tour.days', { count: tour.duration_days ?? 0 })}
                             </span>
                         </div>
-                        <div className="flex items-center gap-[5px] shrink-0">
+                        {/* <div className="flex items-center gap-[5px] shrink-0">
                             <Star size={14} className="fill-[#f0a05e] text-[#f0a05e]" />
                             <span className="text-[14px] font-semibold text-[#f0a05e] tracking-[1px] leading-[21px]">
                                 {tour.rating_cache?.toFixed(1)}
                             </span>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Title */}

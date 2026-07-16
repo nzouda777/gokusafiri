@@ -50,10 +50,10 @@ export default function AccountSaved({ savedTours }: Props) {
                             <div className="flex-1 p-4">
                                 <div className="flex items-center gap-1 mb-1">
                                     <span className="text-xs text-gray-400">Booking #GKS-48213</span>
-                                    <div className="ml-auto flex items-center gap-1">
+                                    {/* <div className="ml-auto flex items-center gap-1">
                                         <Star size={11} className="fill-[#E07A3F] text-[#E07A3F]" />
                                         <span className="text-xs font-semibold text-[#1F2937]">{tour.rating_cache?.toFixed(1)}</span>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 <h3 className="font-serif font-bold text-[#1F2937] text-base mb-1">{tour.title}</h3>

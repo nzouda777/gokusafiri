@@ -184,10 +184,10 @@ function BookingCard({ booking, fmt }: { booking: Booking; fmt: (c: number) => s
             <div className="flex-1 p-4 flex flex-col">
                 <div className="mb-1">
                     <p className="text-xs text-gray-400 mb-0.5">Booking #{booking.reference}</p>
-                    <div className="flex items-center gap-1">
+                    {/* <div className="flex items-center gap-1">
                         <Star size={11} className="fill-[#E07A3F] text-[#E07A3F]" />
                         <span className="text-xs font-semibold text-[#1F2937]">{booking.tour?.rating_cache?.toFixed(1) ?? '–'}</span>
-                    </div>
+                    </div> */}
                 </div>
 
                 <h3 className="font-serif font-bold text-[#1F2937] text-base mb-1">{booking.tour?.title}</h3>
