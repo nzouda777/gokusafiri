@@ -98,13 +98,13 @@ class HomeController extends Controller
             [
                 'name' => 'Amara O.',
                 'location' => 'Serengeti',
-                'year' => 2025,
+                'year' => 2026,
                 'text' => 'The Migration crossing left us speechless. Our guide knew exactly where to be, every single day.',
             ],
             [
                 'name' => 'James R.',
                 'location' => 'Zanzibar',
-                'year' => 2025,
+                'year' => 2026,
                 'text' => 'Booked in minutes, paid a deposit, and everything from flights to lodges just worked. Flawless.',
             ],
             [

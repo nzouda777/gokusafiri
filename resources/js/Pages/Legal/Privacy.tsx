@@ -111,8 +111,8 @@ export default function Privacy() {
                         <Section title={t('privacy.s11_title')}>
                             <p>{t('privacy.s11_intro')}</p>
                             <address className="not-italic mt-2 text-[15px] text-[#4f5c53]">
-                                Gokusafiri Ltd<br />
-                                Karen Road, Karen, Nairobi, Kenya<br />
+                                Gokusafiri LLC<br />
+                                3060 Mercer University Dr, Ste 110, Atlanta, GA, 30341, USA<br />
                                 <a href="mailto:support@gokusafiri.com" className="text-[#6e8c79] hover:underline">support@gokusafiri.com</a>
                             </address>
                         </Section>

@@ -106,7 +106,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             <div className="hidden md:block bg-[#fbf8f2] h-[44px]" />
 
             {/* ── TRUST BAR ─────────────────────────────────────────────── */}
-            <section className="bg-[#fbf8f2] border-b border-[#e4ddd0]">
+            <section className="bg-[#fbf8f2] border-b border-[#e4ddd0] hidden">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6 py-[30px]">
                     <div className="flex flex-wrap items-center justify-center gap-x-[36px] gap-y-3">
 
@@ -324,7 +324,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                     </div>
 
                     {/* Stats  #eef3ec rounded card */}
-                    <div className="bg-[#eef3ec] rounded-[22px] p-[30px] md:p-[54px] grid md:grid-cols-3 grid-cols-1 gap-[30px]">
+                    <div className="bg-[#eef3ec] rounded-[22px] p-[30px] md:p-[54px] hidden md:grid-cols-3 grid-cols-1 gap-[30px]">
                         <div className="flex flex-col items-center gap-[1.5px]">
                             <p className="font-display not-italic text-[40px] md:text-[64px] leading-[1.125] text-center">
                                 {(() => {
@@ -353,7 +353,7 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
             </section>
 
             {/* ── TESTIMONIALS ─────────────────────────────────────────── */}
-            <section className="py-[60px] md:py-[100px] bg-[#2E4A39]">
+            <section className="py-[60px] md:py-[100px] bg-[#2E4A39] hidden">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
                     <div className="flex flex-col lg:flex-row gap-[48px] md:gap-[80px] xl:gap-[110px] items-start">
 

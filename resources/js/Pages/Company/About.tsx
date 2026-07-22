@@ -74,7 +74,7 @@ export default function About() {
                             />
                             <div className="absolute -bottom-5 -left-5 bg-white rounded-[16px] shadow-lg px-6 py-4 hidden md:block">
                                 <p className="text-[11px] text-[#8a968d] uppercase tracking-wider mb-1">{t('about.founded_label')}</p>
-                                <p className="font-display not-italic text-[40px] text-[#16241b] leading-none">2018</p>
+                                <p className="font-display not-italic text-[40px] text-[#16241b] leading-none">2026</p>
                             </div>
                         </div>
                     </div>
@@ -107,7 +107,7 @@ export default function About() {
             </section>
 
             {/* Stats */}
-            <section className="bg-[#16241b] py-16">
+            <section className="bg-[#16241b] py-16 hidden">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                         {STATS.map(({ value, labelKey }) => (

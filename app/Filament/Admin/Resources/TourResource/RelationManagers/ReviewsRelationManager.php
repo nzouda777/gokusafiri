@@ -23,7 +23,7 @@ class ReviewsRelationManager extends RelationManager
                 ->placeholder('Amara O.')
                 ->maxLength(100),
             Forms\Components\TextInput::make('location_label')
-                ->label('Location (e.g. Serengeti, 2025)')
+                ->label('Location (e.g. Serengeti, 2026)')
                 ->maxLength(100),
             Forms\Components\Select::make('rating')
                 ->options([1 => '1 ★', 2 => '2 ★★', 3 => '3 ★★★', 4 => '4 ★★★★', 5 => '5 ★★★★★'])

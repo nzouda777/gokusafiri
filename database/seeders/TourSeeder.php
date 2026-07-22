@@ -105,8 +105,8 @@ class TourSeeder extends Seeder
                     ['label' => ['en' => 'Travel Insurance',      'fr' => 'Assurance voyage'],    'price_per_person' => 8900, 'description' => ['en' => 'Medical, cancellation & evacuation.', 'fr' => 'Médicale, annulation & évacuation.']],
                 ],
                 'reviews' => [
-                    ['author_name' => 'Amara O.',  'rating' => 5, 'location_label' => 'Serengeti, 2025',   'traveled_at' => '2025-09-15', 'body' => '"The Migration crossing left us speechless. Our guide knew exactly where to be, every single day."'],
-                    ['author_name' => 'James R.',  'rating' => 5, 'location_label' => 'Zanzibar, 2025',    'traveled_at' => '2025-07-22', 'body' => '"Booked in minutes, paid a deposit, and everything from flights to lodges just worked. Flawless."'],
+                    ['author_name' => 'Amara O.',  'rating' => 5, 'location_label' => 'Serengeti, 2026',   'traveled_at' => '2026-09-15', 'body' => '"The Migration crossing left us speechless. Our guide knew exactly where to be, every single day."'],
+                    ['author_name' => 'James R.',  'rating' => 5, 'location_label' => 'Zanzibar, 2026',    'traveled_at' => '2026-07-22', 'body' => '"Booked in minutes, paid a deposit, and everything from flights to lodges just worked. Flawless."'],
                     ['author_name' => 'Lena M.',   'rating' => 5, 'location_label' => 'Kilimanjaro, 2024', 'traveled_at' => '2024-11-03', 'body' => '"Summiting Kilimanjaro with Gokusafiri was the trip of a lifetime. The crew made it feel safe."'],
                 ],
             ],
@@ -170,8 +170,8 @@ class TourSeeder extends Seeder
                     ['label' => ['en' => 'Travel Insurance',      'fr' => 'Assurance voyage'],    'price_per_person' => 8900],
                 ],
                 'reviews' => [
-                    ['author_name' => 'Sophie L.',  'rating' => 5, 'location_label' => 'Masai Mara, 2025', 'traveled_at' => '2025-08-10', 'body' => '"Seeing lions at sunrise from our private vehicle was unforgettable. Our guide David was extraordinary  patient, knowledgeable and passionate."'],
-                    ['author_name' => 'Marcus T.',  'rating' => 5, 'location_label' => 'Nairobi, 2025',    'traveled_at' => '2025-06-18', 'body' => '"The night drive experience was unlike anything I\'ve ever done. We tracked a leopard for over an hour. Simply magical."'],
+                    ['author_name' => 'Sophie L.',  'rating' => 5, 'location_label' => 'Masai Mara, 2026', 'traveled_at' => '2026-08-10', 'body' => '"Seeing lions at sunrise from our private vehicle was unforgettable. Our guide David was extraordinary  patient, knowledgeable and passionate."'],
+                    ['author_name' => 'Marcus T.',  'rating' => 5, 'location_label' => 'Nairobi, 2026',    'traveled_at' => '2026-06-18', 'body' => '"The night drive experience was unlike anything I\'ve ever done. We tracked a leopard for over an hour. Simply magical."'],
                     ['author_name' => 'Claire D.',  'rating' => 4, 'location_label' => 'London, 2024',     'traveled_at' => '2024-10-05', 'body' => '"Excellent organisation from start to finish. The camp was beautiful and food was superb. Would absolutely recommend."'],
                 ],
             ],
@@ -231,8 +231,8 @@ class TourSeeder extends Seeder
                     ['label' => ['en' => 'Airport Transfers',  'fr' => 'Transferts aéroport'],    'price_per_person' => 5000],
                 ],
                 'reviews' => [
-                    ['author_name' => 'Nina P.',   'rating' => 5, 'location_label' => 'Bwindi, 2025',     'traveled_at' => '2025-03-20', 'body' => '"Meeting the gorilla family was beyond words. Watching the silverback walk right past us was humbling. An experience I\'ll never forget."'],
-                    ['author_name' => 'Thomas K.', 'rating' => 5, 'location_label' => 'Uganda, 2025',     'traveled_at' => '2025-01-14', 'body' => '"Our tracker John was phenomenal  he found the gorillas in 90 minutes. The eco-lodge was beautiful. Worth every penny."'],
+                    ['author_name' => 'Nina P.',   'rating' => 5, 'location_label' => 'Bwindi, 2026',     'traveled_at' => '2026-03-20', 'body' => '"Meeting the gorilla family was beyond words. Watching the silverback walk right past us was humbling. An experience I\'ll never forget."'],
+                    ['author_name' => 'Thomas K.', 'rating' => 5, 'location_label' => 'Uganda, 2026',     'traveled_at' => '2026-01-14', 'body' => '"Our tracker John was phenomenal  he found the gorillas in 90 minutes. The eco-lodge was beautiful. Worth every penny."'],
                 ],
             ],
 
@@ -299,7 +299,7 @@ class TourSeeder extends Seeder
                     ['label' => ['en' => 'Airport Transfers',    'fr' => 'Transferts aéroport'],       'price_per_person' => 4000],
                 ],
                 'reviews' => [
-                    ['author_name' => 'Ben W.',    'rating' => 5, 'location_label' => 'Kilimanjaro, 2025', 'traveled_at' => '2025-02-18', 'body' => '"Reached the summit at sunrise  tears in my eyes. Our guide Charles was extraordinary, monitoring everyone for altitude sickness constantly."'],
+                    ['author_name' => 'Ben W.',    'rating' => 5, 'location_label' => 'Kilimanjaro, 2026', 'traveled_at' => '2026-02-18', 'body' => '"Reached the summit at sunrise  tears in my eyes. Our guide Charles was extraordinary, monitoring everyone for altitude sickness constantly."'],
                     ['author_name' => 'Priya S.',  'rating' => 5, 'location_label' => 'Tanzania, 2024',   'traveled_at' => '2024-08-22', 'body' => '"As a first-time high-altitude trekker I was nervous. The team made me feel completely supported. Made it to Uhuru Peak  incredible!"'],
                 ],
             ],

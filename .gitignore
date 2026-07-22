@@ -12,3 +12,12 @@
 /TOUR_RWANDA_2025_GUIDE.md
 /MAIL_SETUP.md
 /RESEND_SETUP.md
+/compose.yaml
+/composer.json
+/composer.lock
+/.gitignore
+/package.json
+/package-lock.json
+/vite.config.ts
+/ressources/css
+/public/hot

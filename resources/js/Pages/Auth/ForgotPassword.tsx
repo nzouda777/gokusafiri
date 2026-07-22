@@ -29,7 +29,8 @@ export default function ForgotPassword({ status }: Props) {
                     <blockquote className="font-serif text-2xl font-bold text-white leading-relaxed mb-6">
                         "Africa changes you. It doesn't just give you memories  it gives you a different way of seeing the world."
                     </blockquote>
-                    <div className="flex items-center gap-2 mb-8">
+                    <div className="hidden">
+                        <div className="flex items-center gap-2 mb-8">
                         <div className="flex -space-x-2">
                             {[1,2,3].map(i => (
                                 <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-400 overflow-hidden">
@@ -47,6 +48,8 @@ export default function ForgotPassword({ status }: Props) {
                             </div>
                         ))}
                     </div>
+                    </div>
+                    
                 </div>
             </div>
 

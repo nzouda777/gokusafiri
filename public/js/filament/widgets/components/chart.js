@@ -17,7 +17,7 @@ chart.js/dist/helpers.js:
   (*!
    * Chart.js v4.5.1
    * https://www.chartjs.org
-   * (c) 2025 Chart.js Contributors
+   * (c) 2026 Chart.js Contributors
    * Released under the MIT License
    *)
 

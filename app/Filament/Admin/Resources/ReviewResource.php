@@ -57,7 +57,7 @@ class ReviewResource extends Resource
                     ->default(5)
                     ->label('Rating'),
                 Forms\Components\TextInput::make('location_label')
-                    ->label('Location (e.g. Serengeti, 2025)')
+                    ->label('Location (e.g. Serengeti, 2026)')
                     ->maxLength(100),
                 Forms\Components\DatePicker::make('traveled_at')
                     ->label('Travel Date'),
