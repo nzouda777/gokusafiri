@@ -73,12 +73,12 @@ export default function ToursIndex({ tours, filters, totalCount, isPackages }: P
     ];
 
     const STYLES = [
-        { value: 'safari',    label: t('index.style_safari'),    emoji: '🦁' },
-        { value: 'beach',     label: t('index.style_beach'),     emoji: '🏖️' },
-        { value: 'mountain',  label: t('index.style_mountain'),  emoji: '🏔️' },
-        { value: 'culture',   label: t('index.style_culture'),   emoji: '🎭' },
-        { value: 'gorilla',   label: t('index.style_gorilla'),   emoji: '🦍' },
-        { value: 'honeymoon', label: t('index.style_honeymoon'), emoji: '💑' },
+        { value: 'safari',    label: t('index.style_safari'),    emoji: '' },
+        { value: 'beach',     label: t('index.style_beach'),     emoji: '' },
+        { value: 'mountain',  label: t('index.style_mountain'),  emoji: '' },
+        { value: 'culture',   label: t('index.style_culture'),   emoji: '' },
+        { value: 'gorilla',   label: t('index.style_gorilla'),   emoji: '' },
+        { value: 'honeymoon', label: t('index.style_honeymoon'), emoji: '' },
     ];
 
     const RATING_OPTIONS = [
@@ -188,7 +188,7 @@ export default function ToursIndex({ tours, filters, totalCount, isPackages }: P
                         </div>
 
                         {/* Quick filters */}
-                        <div className="flex items-center gap-[6px] flex-wrap sm:ml-auto">
+                        <div className="fl ex hidden items-center gap-[6px] flex-wrap sm:ml-auto">
                             {QUICK_FILTERS.map(f => {
                                 const isActive = localFilters.quick?.includes(f.value);
                                 return (
@@ -343,7 +343,7 @@ export default function ToursIndex({ tours, filters, totalCount, isPackages }: P
                                     </SidebarSection>
 
                                     {/* Region */}
-                                    <SidebarSection title={t('index.region')}>
+                                    {/* <SidebarSection title={t('index.region')}>
                                         {REGIONS.map(r => (
                                             <CheckRow
                                                 key={r.value}
@@ -352,7 +352,7 @@ export default function ToursIndex({ tours, filters, totalCount, isPackages }: P
                                                 onChange={() => toggleArray('region', r.value)}
                                             />
                                         ))}
-                                    </SidebarSection>
+                                    </SidebarSection> */}
 
                                     {/* Style */}
                                     <SidebarSection title={t('index.style')}>
@@ -367,7 +367,7 @@ export default function ToursIndex({ tours, filters, totalCount, isPackages }: P
                                     </SidebarSection>
 
                                     {/* Rating */}
-                                    <SidebarSection title={t('index.min_rating')}>
+                                    {/* <SidebarSection title={t('index.min_rating')}>
                                         {RATING_OPTIONS.map(r => (
                                             <label
                                                 key={r.value}
@@ -403,7 +403,7 @@ export default function ToursIndex({ tours, filters, totalCount, isPackages }: P
                                                 {t('index.clear_rating')}
                                             </button>
                                         )}
-                                    </SidebarSection>
+                                    </SidebarSection> */}
                                 </div>
 
                                 {/* Mobile apply button */}
