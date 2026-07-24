@@ -9,6 +9,7 @@ use App\Filament\Admin\Resources\ComingSoonSubscriberResource;
 use App\Filament\Admin\Resources\ContactMessageResource;
 use App\Filament\Admin\Resources\DestinationResource;
 use App\Filament\Admin\Resources\FaqResource;
+use App\Filament\Admin\Resources\GalleryResource;
 use App\Filament\Admin\Resources\OperatorResource;
 use App\Filament\Admin\Resources\PackageResource;
 use App\Filament\Admin\Resources\PaymentResource;
@@ -64,6 +65,7 @@ class AdminPanelProvider extends PanelProvider
                 DestinationResource::class,
                 ReviewResource::class,
                 FaqResource::class,
+                GalleryResource::class,
                 UserResource::class,
                 OperatorResource::class,
                 RoleResource::class,

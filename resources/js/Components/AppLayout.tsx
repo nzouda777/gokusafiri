@@ -17,6 +17,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         { label: t('nav.packages'), href: `${p}/packages` },
         { label: t('nav.about'),    href: `${p}/about` },
         { label: t('nav.faq'),      href: `${p}/faq` },
+        { label: t('nav.gallery'),  href: `${p}/gallery` },
     ];
 
     return (

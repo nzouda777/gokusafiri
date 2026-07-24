@@ -4,6 +4,7 @@
     "nav.packages": "Paquetes",
     "nav.about": "Nosotros",
     "nav.faq": "FAQ",
+    "nav.gallery": "Galería",
     "nav.sign_in": "Iniciar sesión",
     "nav.plan_trip": "Planear mi viaje",
     "nav.my_trips": "Mis viajes",
@@ -368,6 +369,14 @@
     "faq.a9": "El dólar estadounidense es la moneda más aceptada para propinas y pequeñas compras en la mayoría de los destinos de safari. Las monedas locales son útiles en pueblos y mercados. Tu guía te aconsejará sobre las necesidades específicas de moneda.",
     "faq.q10": "¿Con cuánta antelación debo reservar?",
     "faq.a10": "Recomendamos reservar con 3 a 6 meses de antelación para los viajes en temporada alta (julio–octubre y diciembre–enero). Los permisos de trekking de gorilas en particular se agotan con meses de anticipación. Las reservas de última hora a veces son posibles fuera de temporada.",
+
+    "gallery.eyebrow": "Momentos del terreno",
+    "gallery.title": "La Galería",
+    "gallery.subtitle": "Fotos y videos de nuestros guías y viajeros por los lugares más salvajes de África.",
+    "gallery.empty": "Todavía no se ha añadido ningún contenido. Vuelve pronto.",
+    "gallery.close": "Cerrar",
+    "gallery.prev": "Anterior",
+    "gallery.next": "Siguiente",
 
     "about.eyebrow": "Nuestra historia",
     "about.title": "Nacido de lo salvaje, creado para ti",

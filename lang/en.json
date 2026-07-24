@@ -4,6 +4,7 @@
     "nav.packages": "Packages",
     "nav.about": "About",
     "nav.faq": "FAQ",
+    "nav.gallery": "Gallery",
     "nav.sign_in": "Sign in",
     "nav.plan_trip": "Plan my trip",
     "nav.my_trips": "My trips",
@@ -368,6 +369,14 @@
     "faq.a9": "USD is the most widely accepted currency for tips and small purchases in most African safari destinations. Local currencies are useful in towns and markets. Your tour guide will advise on specific currency needs for your destination.",
     "faq.q10": "How far in advance should I book?",
     "faq.a10": "We recommend booking 3–6 months in advance for peak-season travel (July–October and December–January). Gorilla trekking permits in particular sell out months ahead. Last-minute bookings are sometimes possible for off-peak departures.",
+
+    "gallery.eyebrow": "Moments from the field",
+    "gallery.title": "The Gallery",
+    "gallery.subtitle": "Photos and videos from our guides and travelers across Africa's wildest places.",
+    "gallery.empty": "No media has been added yet. Check back soon.",
+    "gallery.close": "Close",
+    "gallery.prev": "Previous",
+    "gallery.next": "Next",
 
     "about.eyebrow": "Our story",
     "about.title": "Born from the wild, built for you",

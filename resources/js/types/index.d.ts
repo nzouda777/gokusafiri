@@ -73,6 +73,16 @@ export interface MediaItem {
     hero_url: string;
 }
 
+export interface GalleryMediaItem {
+    id: number;
+    type: 'image' | 'video';
+    url: string;
+    thumb_url: string | null;
+    caption?: string | null;
+    width?: number | null;
+    height?: number | null;
+}
+
 export interface ItineraryDay {
     day: number;
     title: string;

@@ -205,6 +205,11 @@ $appRoutes = function (bool $named) {
         $r->name('faq');
     }
 
+    $r = Route::get('/gallery', [PagesController::class, 'gallery']);
+    if ($named) {
+        $r->name('gallery');
+    }
+
     // Auth account
     Route::middleware('auth')->prefix('account')
         ->name($named ? 'account.' : '')

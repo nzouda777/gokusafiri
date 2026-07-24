@@ -4,6 +4,7 @@
     "nav.packages": "Forfaits",
     "nav.about": "À propos",
     "nav.faq": "FAQ",
+    "nav.gallery": "Galerie",
     "nav.sign_in": "Connexion",
     "nav.plan_trip": "Planifier mon voyage",
     "nav.my_trips": "Mes voyages",
@@ -368,6 +369,14 @@
     "faq.a9": "Le dollar américain est la devise la plus acceptée pour les pourboires et les petits achats dans la plupart des destinations safari. Les monnaies locales sont utiles dans les villes et les marchés. Votre guide vous conseillera sur les besoins spécifiques en devises.",
     "faq.q10": "Combien de temps à l'avance dois-je réserver ?",
     "faq.a10": "Nous recommandons de réserver 3 à 6 mois à l'avance pour les voyages en haute saison (juillet–octobre et décembre–janvier). Les permis de trekking des gorilles en particulier se vendent des mois à l'avance. Les réservations de dernière minute sont parfois possibles hors saison.",
+
+    "gallery.eyebrow": "Instants du terrain",
+    "gallery.title": "La Galerie",
+    "gallery.subtitle": "Photos et vidéos de nos guides et voyageurs à travers les plus beaux paysages sauvages d'Afrique.",
+    "gallery.empty": "Aucun média n'a encore été ajouté. Revenez bientôt.",
+    "gallery.close": "Fermer",
+    "gallery.prev": "Précédent",
+    "gallery.next": "Suivant",
 
     "about.eyebrow": "Notre histoire",
     "about.title": "Né de la nature, conçu pour vous",

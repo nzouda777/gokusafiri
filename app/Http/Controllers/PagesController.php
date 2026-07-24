@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Faq;
+use App\Models\GalleryItem;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -38,5 +39,47 @@ class PagesController extends Controller
             ->toArray();
 
         return Inertia::render('FAQ', ['faqs' => $faqs]);
+    }
+
+    public function gallery(): Response
+    {
+        $locale   = app()->getLocale();
+        $fallback = config('app.fallback_locale', 'en');
+
+        $items = GalleryItem::active()
+            ->get()
+            ->map(function (GalleryItem $item) use ($locale, $fallback) {
+                $media = $item->getFirstMedia('file');
+                if (! $media) {
+                    return null;
+                }
+
+                $isVideo = str_starts_with($media->mime_type, 'video/');
+
+                $width = null;
+                $height = null;
+                if (! $isVideo) {
+                    $size = @getimagesize($media->getPath());
+                    if ($size) {
+                        [$width, $height] = $size;
+                    }
+                }
+
+                return [
+                    'id'        => $item->id,
+                    'type'      => $isVideo ? 'video' : 'image',
+                    'url'       => $media->getUrl(),
+                    'thumb_url' => $isVideo ? null : $media->getUrl('thumb'),
+                    'caption'   => $item->getTranslation('caption', $locale, true)
+                                ?: $item->getTranslation('caption', $fallback, false),
+                    'width'     => $width,
+                    'height'    => $height,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->toArray();
+
+        return Inertia::render('Gallery', ['items' => $items]);
     }
 }
