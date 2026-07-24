@@ -3,6 +3,7 @@
 use App\Jobs\CancelUnpaidBalances;
 use App\Jobs\ReleaseExpiredBookings;
 use App\Jobs\SendBalanceReminders;
+use App\Jobs\SendDepartureReminders;
 use Illuminate\Support\Facades\Schedule;
 
 // ── Business logic ────────────────────────────────────────────────────────────
@@ -18,6 +19,10 @@ Schedule::job(SendBalanceReminders::class)
 
 Schedule::job(CancelUnpaidBalances::class)
     ->dailyAt('08:00')
+    ->withoutOverlapping();
+
+Schedule::job(SendDepartureReminders::class)
+    ->dailyAt('09:15')
     ->withoutOverlapping();
 
 // ── Queue processor (shared hosting) ─────────────────────────────────────────

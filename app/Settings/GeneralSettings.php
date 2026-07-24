@@ -24,6 +24,10 @@ class GeneralSettings extends Settings
 
     public bool $coming_soon_enabled = false;
 
+    public int $departure_reminder_days_1 = 7;
+
+    public int $departure_reminder_days_2 = 3;
+
     public static function group(): string
     {
         return 'general';

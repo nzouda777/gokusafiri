@@ -63,6 +63,17 @@ class SettingsPage extends Page
                     ->options(['en' => 'English', 'fr' => 'French', 'es' => 'Spanish']),
             ])->columns(2),
 
+            Schemas\Components\Section::make('Trip Reminders')
+                ->description('Automatic emails sent to clients before their departure date. Each fires once per booking.')
+                ->schema([
+                    Forms\Components\TextInput::make('departure_reminder_days_1')
+                        ->label('First reminder (days before departure)')
+                        ->numeric()->minValue(1)->maxValue(60)->required(),
+                    Forms\Components\TextInput::make('departure_reminder_days_2')
+                        ->label('Second reminder (days before departure)')
+                        ->numeric()->minValue(1)->maxValue(60)->required(),
+                ])->columns(2),
+
             Schemas\Components\Section::make('Launch')
                 ->description('While enabled, all public pages redirect to the Coming Soon page.')
                 ->schema([
@@ -103,7 +114,11 @@ class SettingsPage extends Page
 
         // Integer settings must be saved even when 0 (falsy). Filament numeric
         // inputs may return null when the field is cleared — treat that as 0.
-        $intKeys = ['tax_fee_percent', 'deposit_percent', 'tier_discount_percent', 'platform_commission_percent', 'referral_commission_percent'];
+        $intKeys = [
+            'tax_fee_percent', 'deposit_percent', 'tier_discount_percent',
+            'platform_commission_percent', 'referral_commission_percent',
+            'departure_reminder_days_1', 'departure_reminder_days_2',
+        ];
 
         foreach ($data as $key => $value) {
             if (in_array($key, $intKeys, true)) {
