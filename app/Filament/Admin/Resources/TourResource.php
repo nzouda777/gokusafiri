@@ -500,6 +500,20 @@ class TourResource extends Resource
                         Forms\Components\TextInput::make('price_override')
                             ->label('Price Override (cents)')->numeric()->nullable()
                             ->helperText('Leave empty to use base price'),
+
+                        Schemas\Components\Section::make('Trip Operations')
+                            ->description('Used to personalize the automated pre-departure and arrival emails for this specific departure.')
+                            ->schema([
+                                Forms\Components\TextInput::make('guide_name')->label('Guide name'),
+                                Forms\Components\TextInput::make('guide_phone')->label('Guide WhatsApp / phone'),
+                                Forms\Components\TextInput::make('driver_name')->label('Driver name'),
+                                Forms\Components\TextInput::make('hotel_name')->label('First-night hotel'),
+                                Forms\Components\TextInput::make('hotel_address')->label('Hotel address'),
+                                Forms\Components\TextInput::make('emergency_contact')->label('Emergency contact'),
+                            ])
+                            ->columns(3)
+                            ->columnSpanFull()
+                            ->collapsed(),
                     ])
                     ->columns(5)
                     ->addActionLabel('Add Departure Date')

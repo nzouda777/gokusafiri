@@ -1,9 +1,10 @@
 <?php
 
 use App\Jobs\CancelUnpaidBalances;
+use App\Jobs\DispatchEmailAutomations;
+use App\Jobs\DispatchScheduledEmailFlows;
 use App\Jobs\ReleaseExpiredBookings;
 use App\Jobs\SendBalanceReminders;
-use App\Jobs\SendDepartureReminders;
 use Illuminate\Support\Facades\Schedule;
 
 // ── Business logic ────────────────────────────────────────────────────────────
@@ -21,8 +22,12 @@ Schedule::job(CancelUnpaidBalances::class)
     ->dailyAt('08:00')
     ->withoutOverlapping();
 
-Schedule::job(SendDepartureReminders::class)
-    ->dailyAt('09:15')
+Schedule::job(DispatchScheduledEmailFlows::class)
+    ->everyFiveMinutes()
+    ->withoutOverlapping();
+
+Schedule::job(DispatchEmailAutomations::class)
+    ->everyFiveMinutes()
     ->withoutOverlapping();
 
 // ── Queue processor (shared hosting) ─────────────────────────────────────────

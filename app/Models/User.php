@@ -22,6 +22,7 @@ class User extends Authenticatable implements HasMedia
         'google_id', 'avatar', 'locale', 'country', 'phone',
         'tier', 'newsletter_opt_in', 'referral_code', 'referred_by',
         'passport_number', 'passport_expiry', 'nationality', 'email_verified_at',
+        'birth_date', 'newsletter_subscribed_at',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -34,7 +35,19 @@ class User extends Authenticatable implements HasMedia
             'passport_number' => 'encrypted',
             'passport_expiry' => 'date',
             'newsletter_opt_in' => 'boolean',
+            'birth_date' => 'date',
+            'newsletter_subscribed_at' => 'datetime',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        // Anchor date for the newsletter welcome-series automations.
+        static::saving(function (self $user) {
+            if ($user->newsletter_opt_in && ! $user->newsletter_subscribed_at) {
+                $user->newsletter_subscribed_at = now();
+            }
+        });
     }
 
     public function operators(): BelongsToMany

@@ -23,7 +23,6 @@ class Booking extends Model
         'payment_plan', 'deposit_amount', 'balance_due_at',
         'status', 'locale', 'expires_at', 'confirmed_at',
         'stripe_customer_id', 'stripe_payment_method_id', 'special_request',
-        'departure_reminder_1_sent_at', 'departure_reminder_2_sent_at',
     ];
 
     protected $casts = [
@@ -38,8 +37,6 @@ class Booking extends Model
         'balance_due_at' => 'datetime',
         'expires_at' => 'datetime',
         'confirmed_at' => 'datetime',
-        'departure_reminder_1_sent_at' => 'datetime',
-        'departure_reminder_2_sent_at' => 'datetime',
         'status' => BookingState::class,
     ];
 

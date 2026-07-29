@@ -13,6 +13,7 @@ class TourSchedule extends Model
 
     protected $fillable = [
         'tour_id', 'starts_at', 'ends_at', 'capacity', 'seats_left', 'price_override', 'is_custom',
+        'guide_name', 'guide_phone', 'driver_name', 'hotel_name', 'hotel_address', 'emergency_contact',
     ];
 
     protected $casts = [

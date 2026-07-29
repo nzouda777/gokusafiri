@@ -8,6 +8,8 @@ use App\Filament\Admin\Resources\BookingResource;
 use App\Filament\Admin\Resources\ComingSoonSubscriberResource;
 use App\Filament\Admin\Resources\ContactMessageResource;
 use App\Filament\Admin\Resources\DestinationResource;
+use App\Filament\Admin\Resources\EmailAutomationResource;
+use App\Filament\Admin\Resources\EmailFlowResource;
 use App\Filament\Admin\Resources\FaqResource;
 use App\Filament\Admin\Resources\GalleryResource;
 use App\Filament\Admin\Resources\OperatorResource;
@@ -72,6 +74,8 @@ class AdminPanelProvider extends PanelProvider
                 ComingSoonSubscriberResource::class,
                 ContactMessageResource::class,
                 ReferralCommissionResource::class,
+                EmailFlowResource::class,
+                EmailAutomationResource::class,
             ])
             ->pages([
                 Dashboard::class,
