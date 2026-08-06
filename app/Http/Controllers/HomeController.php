@@ -84,11 +84,11 @@ class HomeController extends Controller
     private function getDestinations(): array
     {
         return [
-            ['name' => 'Masai Mara',        'slug' => 'masai-mara',       'image' => '/images/destinations/masai-mara.jpg',     'count' => 24, 'country' => 'Kenya'],
-            ['name' => 'Victoria Falls',     'slug' => 'victoria-falls',   'image' => '/images/destinations/victoria-falls.jpg', 'count' => 11, 'country' => 'Zambia'],
-            ['name' => 'Cape Town',          'slug' => 'cape-town',        'image' => '/images/destinations/cape-town.jpg',      'count' => 18, 'country' => 'South Africa'],
-            ['name' => 'Sahara & Marrakech', 'slug' => 'sahara-marrakech', 'image' => '/images/destinations/marrakech.jpg',      'count' => 15, 'country' => 'Morocco'],
-            ['name' => 'Bwindi Forest',      'slug' => 'bwindi-forest',    'image' => '/images/destinations/bwindi.jpg',         'count' => 7,  'country' => 'Uganda'],
+            ['name' => 'Masai Mara',        'slug' => 'masai-mara',       'image' => '/images/destinations/masai-mara.jpg',     'count' => 24, 'country' => 'Kenya', 'available' => false],
+            ['name' => 'Victoria Falls',     'slug' => 'victoria-falls',   'image' => '/images/destinations/victoria-falls.jpg', 'count' => 11, 'country' => 'Zambia', 'available' => false],
+            ['name' => 'Cape Town',          'slug' => 'cape-town',        'image' => '/images/destinations/cape-town.jpg',      'count' => 18, 'country' => 'South Africa', 'available' => false],
+            ['name' => 'Sahara & Marrakech', 'slug' => 'sahara-marrakech', 'image' => '/images/destinations/marrakech.jpg',      'count' => 15, 'country' => 'Morocco', 'available' => false],
+            ['name' => 'Bwindi Forest',      'slug' => 'bwindi-forest',    'image' => '/images/destinations/bwindi.jpg',         'count' => 7,  'country' => 'Uganda', 'available' => false],
         ];
     }
 

@@ -13,6 +13,7 @@ interface DestinationItem {
     slug: string;
     count: number;
     country: string;
+    available: boolean;
 }
 
 interface Props {
@@ -22,7 +23,6 @@ interface Props {
     faqs: { q: string; a: string }[];
     stats: { travelers: string; countries: number; rating: number };
 }
-
 const STYLES = ['All', 'Safari', 'Beaches', 'Mountains', 'Culture', 'Gorilla trekking', 'Honeymoon'];
 
 const BENTO_SLOTS: { col: string; row: string }[] = [
@@ -249,7 +249,14 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                                             />
                                             <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(22,36,27,0.72)_0%,rgba(22,36,27,0)_60%)]" />
                                             <div className="absolute bottom-[15px] left-[18px] right-[18px] flex flex-col gap-[2px]">
-                                                <p className="font-display not-italic text-white text-[21px] leading-[31.5px]">{dest.name}</p>
+                                                <div className="font-display not-italic text-white text-[21px] leading-[31.5px] flex items-center">
+                                                    <div>{dest.name} </div>
+                                                    { dest.available == false ? ( 
+                                                    <div className="px-2 py-0.5 inline-flex rounded-full text-xs ml-2 border border-white">Coming soon</div>
+                                                     ) : ( 
+                                                         <span className='hidden'>lorem</span> 
+                                                     )}
+                                                     </div>
                                                 <p className="font-hanken font-semibold text-white text-[13px] leading-[19.5px] opacity-85">
                                                     {dest.country} · {t('explore.count_tours', { count: dest.count })}
                                                 </p>
@@ -274,7 +281,14 @@ export default function Home({ featured, destinations, testimonials, faqs, stats
                                         />
                                         <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(22,36,27,0.72)_0%,rgba(22,36,27,0)_60%)]" />
                                         <div className="absolute bottom-[15px] left-[18px] right-[18px] flex flex-col gap-[2px]">
-                                            <p className="font-display not-italic text-white text-[21px] leading-[31.5px]">{dest.name}</p>
+                                            <p className="font-display not-italic text-white text-[21px] leading-[31.5px] flex items-center">
+                                                <div>{dest.name}</div>
+                                                { dest.available == false ? (
+                                                    <div className="px-2 py-0.5 inline-flex rounded-full text-xs ml-2 border border-white">Coming soon</div>
+                                                     ) : ( 
+                                                        <span className='hidden'>lorem</span>
+                                                    )} 
+                                                </p>
                                             <p className="font-hanken font-semibold text-white text-[13px] leading-[19.5px] opacity-85">
                                                 {dest.country} · {t('explore.count_tours', { count: dest.count })}
                                             </p>
