@@ -7,9 +7,9 @@ const NAV = [
     { label: 'My trips', href: '/account/trips', icon: MapPin },
     { label: 'Saved safaris', href: '/account/saved', icon: Heart },
     { label: 'Profile', href: '/account/profile', icon: User },
-    { label: 'Refer & earn', href: '/account/referrals', icon: Gift },
-    { label: 'Settings', href: '/account/settings', icon: Settings },
-    { label: 'Help & Support', href: '#', icon: HelpCircle },
+    // { label: 'Refer & earn', href: '/account/referrals', icon: Gift },
+    // { label: 'Settings', href: '/account/settings', icon: Settings },
+    // { label: 'Help & Support', href: '#', icon: HelpCircle },
 ];
 
 export default function AccountLayout({ children, title }: { children: React.ReactNode; title: string }) {
