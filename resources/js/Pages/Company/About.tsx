@@ -1,20 +1,120 @@
 import { Head, Link, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 import AppLayout from '../../Components/AppLayout';
-import { Compass, Leaf, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, Compass, Leaf, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import type { PageProps } from '../../types';
 
-const TEAM = [
-    { key: 'team1', name: 'Amara Diallo', img: '/images/trust-avatar-1.jpg' },
-    { key: 'team2', name: 'James Mwangi', img: '/images/trust-avatar-2.jpg' },
-    { key: 'team3', name: 'Lena Osei', img: '/images/trust-avatar-3.jpg' },
-    { key: 'team4', name: 'Marc Dupont', img: null },
+interface TeamMember {
+    key: string;
+    name: string;
+    img: string | null;
+}
+
+// Portraits go in public/images/team/ under these filenames. While a file is
+// missing the card falls back to the founder's initials, so the section stays
+// presentable until the images are dropped in.
+const TEAM: TeamMember[] = [
+    { key: 'team1', name: 'Theophile Tayo',  img: '/images/team/theophile-tayo.jpeg' },
+    { key: 'team2', name: 'Elijiah Kazeneza', img: '/images/team/elijiah-kazeneza.jpeg' },
+    { key: 'team3', name: 'Ivan Saha',        img: '/images/team/ivan-saha.jpeg' },
 ];
+
+function initialsOf(name: string) {
+    return name.split(' ').filter(Boolean).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+}
+
+function Avatar({ member, size, textSize }: { member: TeamMember; size: string; textSize: string }) {
+    const [failed, setFailed] = useState(false);
+
+    return (
+        <div className={`${size} rounded-full bg-[#eef3ec] overflow-hidden shrink-0`}>
+            {member.img && !failed ? (
+                <img
+                    src={member.img}
+                    alt={member.name}
+                    onError={() => setFailed(true)}
+                    className="w-full h-full object-cover"
+                />
+            ) : (
+                <div className={`w-full h-full flex items-center justify-center font-bold text-[#6e8c79] ${textSize}`}>
+                    {initialsOf(member.name)}
+                </div>
+            )}
+        </div>
+    );
+}
+
+function MemberDialog({ member, onClose }: { member: TeamMember; onClose: () => void }) {
+    const { t } = useLaravelReactI18n();
+
+    // Close on Escape and lock page scroll while the dialog is open.
+    useEffect(() => {
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        document.addEventListener('keydown', onKeyDown);
+        const original = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.removeEventListener('keydown', onKeyDown);
+            document.body.style.overflow = original;
+        };
+    }, [onClose]);
+
+    const paragraphs = String(t(`about.${member.key}_bio`)).split('\n').filter((p) => p.trim() !== '');
+
+    return (
+        <div
+            className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-6"
+            onClick={onClose}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`member-${member.key}-name`}
+        >
+            <div
+                className="relative bg-white w-full sm:max-w-[680px] max-h-[92vh] sm:max-h-[85vh] rounded-t-[22px] sm:rounded-[22px] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label={String(t('about.team_close'))}
+                    className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#fbf8f2] hover:bg-[#eef3ec] flex items-center justify-center text-[#16241b] transition-colors"
+                >
+                    <X size={18} />
+                </button>
+
+                <div className="px-6 sm:px-10 pt-10 pb-8">
+                    <div className="flex items-center gap-4 mb-7">
+                        <Avatar member={member} size="w-16 h-16" textSize="text-[22px]" />
+                        <div>
+                            <h3
+                                id={`member-${member.key}-name`}
+                                className="font-display not-italic text-[24px] leading-[30px] text-[#16241b]"
+                            >
+                                {member.name}
+                            </h3>
+                            <p className="text-[13px] text-[#6e8c79] font-medium">{t(`about.${member.key}_role`)}</p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4 text-[15px] leading-[25px] text-[#4f5c53]">
+                        {paragraphs.map((paragraph, i) => (
+                            <p key={i}>{paragraph}</p>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default function About() {
     const { locale } = usePage<PageProps>().props;
     const { t } = useLaravelReactI18n();
     const p = `/${locale}`;
+    const [activeMember, setActiveMember] = useState<TeamMember | null>(null);
 
     const VALUES = [
         { icon: Compass, titleKey: 'about.val1_title', bodyKey: 'about.val1_body' },
@@ -121,7 +221,7 @@ export default function About() {
             </section>
 
             {/* Team */}
-            <section className="bg-[#fbf8f2] py-16 md:py-24 hidden">
+            <section className="bg-[#fbf8f2] py-16 md:py-24">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
                     <div className="text-center mb-12">
                         <p className="font-bold text-[#f0a05e] text-[12px] tracking-[2.16px] uppercase mb-3">
@@ -131,23 +231,35 @@ export default function About() {
                             {t('about.team_title')}
                         </h2>
                     </div>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-[1080px] mx-auto">
                         {TEAM.map((member) => (
-                            <div key={member.key} className="text-center">
-                                <div className="w-24 h-24 rounded-full bg-[#eef3ec] mx-auto mb-4 overflow-hidden">
-                                    {member.img
-                                        ? <img src={member.img} alt={member.name} className="w-full h-full object-cover" />
-                                        : <div className="w-full h-full flex items-center justify-center text-[32px] font-bold text-[#6e8c79]">{member.name[0]}</div>
-                                    }
+                            <button
+                                key={member.key}
+                                type="button"
+                                onClick={() => setActiveMember(member)}
+                                className="group flex flex-col items-center text-center bg-white rounded-[22px] p-8 border border-[#e4ddd0] hover:border-[#6e8c79] hover:shadow-lg transition-all cursor-pointer"
+                            >
+                                <div className="mb-4">
+                                    <Avatar member={member} size="w-24 h-24" textSize="text-[32px]" />
                                 </div>
                                 <h3 className="font-semibold text-[16px] text-[#16241b] mb-1">{member.name}</h3>
-                                <p className="text-[13px] text-[#6e8c79] font-medium mb-3">{t(`about.${member.key}_role`)}</p>
-                                <p className="text-[13px] leading-[20px] text-[#4f5c53]">{t(`about.${member.key}_bio`)}</p>
-                            </div>
+                                <p className="text-[13px] text-[#6e8c79] font-medium mb-4">{t(`about.${member.key}_role`)}</p>
+                                <p className="text-[13px] leading-[21px] text-[#4f5c53] italic mb-5">
+                                    &ldquo;{t(`about.${member.key}_excerpt`)}&rdquo;
+                                </p>
+                                <span className="mt-auto inline-flex items-center gap-1.5 text-[13px] font-medium text-[#6e8c79] group-hover:text-[#16241b] transition-colors">
+                                    {t('about.team_read_story')}
+                                    <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                                </span>
+                            </button>
                         ))}
                     </div>
                 </div>
             </section>
+
+            {activeMember && (
+                <MemberDialog member={activeMember} onClose={() => setActiveMember(null)} />
+            )}
 
             {/* CTA */}
             <section className="bg-white py-16 md:py-20">
