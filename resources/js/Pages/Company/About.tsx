@@ -15,8 +15,8 @@ interface TeamMember {
 // missing the card falls back to the founder's initials, so the section stays
 // presentable until the images are dropped in.
 const TEAM: TeamMember[] = [
-    { key: 'team1', name: 'Theophile Tayo',  img: '/images/team/theophile-tayo.jpeg' },
-    { key: 'team2', name: 'Elijiah Kazeneza', img: '/images/team/elijiah-kazeneza.jpeg' },
+    { key: 'team2', name: 'Theophile Tayo',  img: '/images/team/theophile-tayo.jpeg' },
+    { key: 'team1', name: 'Elijiah Kazeneza', img: '/images/team/elijiah-kazeneza.jpeg' },
     { key: 'team3', name: 'Ivan Saha',        img: '/images/team/ivan-saha.jpeg' },
 ];
 
