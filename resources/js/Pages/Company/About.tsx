@@ -12,12 +12,17 @@ interface TeamMember {
 }
 
 // Portraits go in public/images/team/ under these filenames. While a file is
-// missing the card falls back to the founder's initials, so the section stays
-// presentable until the images are dropped in.
-const TEAM: TeamMember[] = [
-    { key: 'team1', name: 'Elijiah Kazeneza', img: '/images/team/elijiah-kazeneza.jpeg' },
+// missing the card falls back to the member's initials, so the section stays
+// presentable until the images are dropped in. Each member's role, excerpt and
+// bio live in lang/*.json under about.{key}_role / _excerpt / _bio.
+const FOUNDERS: TeamMember[] = [
     { key: 'team2', name: 'Theophile Tayo',  img: '/images/team/theophile-tayo.jpeg' },
     { key: 'team3', name: 'Ivan Saha',        img: '/images/team/ivan-saha.jpeg' },
+];
+
+// Add new guide partners here as they join.
+const GUIDES: TeamMember[] = [
+    { key: 'team1', name: 'Elijiah Kazeneza', img: '/images/team/elijiah-kazeneza.jpeg' },
 ];
 
 function initialsOf(name: string) {
@@ -107,6 +112,31 @@ function MemberDialog({ member, onClose }: { member: TeamMember; onClose: () => 
                 </div>
             </div>
         </div>
+    );
+}
+
+function MemberCard({ member, onOpen }: { member: TeamMember; onOpen: (member: TeamMember) => void }) {
+    const { t } = useLaravelReactI18n();
+
+    return (
+        <button
+            type="button"
+            onClick={() => onOpen(member)}
+            className="group w-full sm:w-[320px] flex flex-col items-center text-center bg-white rounded-[22px] p-8 border border-[#e4ddd0] hover:border-[#6e8c79] hover:shadow-lg transition-all cursor-pointer"
+        >
+            <div className="mb-4">
+                <Avatar member={member} size="w-24 h-24" textSize="text-[32px]" />
+            </div>
+            <h3 className="font-semibold text-[16px] text-[#16241b] mb-1">{member.name}</h3>
+            <p className="text-[13px] text-[#6e8c79] font-medium mb-4">{t(`about.${member.key}_role`)}</p>
+            <p className="text-[13px] leading-[21px] text-[#4f5c53] italic mb-5">
+                &ldquo;{t(`about.${member.key}_excerpt`)}&rdquo;
+            </p>
+            <span className="mt-auto inline-flex items-center gap-1.5 text-[13px] font-medium text-[#6e8c79] group-hover:text-[#16241b] transition-colors">
+                {t('about.team_read_story')}
+                <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </span>
+        </button>
     );
 }
 
@@ -231,27 +261,25 @@ export default function About() {
                             {t('about.team_title')}
                         </h2>
                     </div>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-[1080px] mx-auto">
-                        {TEAM.map((member) => (
-                            <button
-                                key={member.key}
-                                type="button"
-                                onClick={() => setActiveMember(member)}
-                                className="group flex flex-col items-center text-center bg-white rounded-[22px] p-8 border border-[#e4ddd0] hover:border-[#6e8c79] hover:shadow-lg transition-all cursor-pointer"
-                            >
-                                <div className="mb-4">
-                                    <Avatar member={member} size="w-24 h-24" textSize="text-[32px]" />
-                                </div>
-                                <h3 className="font-semibold text-[16px] text-[#16241b] mb-1">{member.name}</h3>
-                                <p className="text-[13px] text-[#6e8c79] font-medium mb-4">{t(`about.${member.key}_role`)}</p>
-                                <p className="text-[13px] leading-[21px] text-[#4f5c53] italic mb-5">
-                                    &ldquo;{t(`about.${member.key}_excerpt`)}&rdquo;
-                                </p>
-                                <span className="mt-auto inline-flex items-center gap-1.5 text-[13px] font-medium text-[#6e8c79] group-hover:text-[#16241b] transition-colors">
-                                    {t('about.team_read_story')}
-                                    <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                                </span>
-                            </button>
+                    {/* Flex-wrap + centered so 1, 2 or 3 cards per row all stay balanced */}
+                    <div className="flex flex-wrap justify-center items-stretch gap-8 max-w-[1080px] mx-auto">
+                        {FOUNDERS.map((member) => (
+                            <MemberCard key={member.key} member={member} onOpen={setActiveMember} />
+                        ))}
+                    </div>
+
+                    {/* Guide partners */}
+                    <div className="text-center mt-20 md:mt-24 mb-12">
+                        <p className="font-bold text-[#f0a05e] text-[12px] tracking-[2.16px] uppercase mb-3">
+                            {t('about.guides_eyebrow')}
+                        </p>
+                        <h2 className="font-display not-italic text-[32px] md:text-[44px] tracking-[-0.62px] text-[#16241b]">
+                            {t('about.guides_title')}
+                        </h2>
+                    </div>
+                    <div className="flex flex-wrap justify-center items-stretch gap-8 max-w-[1080px] mx-auto">
+                        {GUIDES.map((member) => (
+                            <MemberCard key={member.key} member={member} onOpen={setActiveMember} />
                         ))}
                     </div>
                 </div>
