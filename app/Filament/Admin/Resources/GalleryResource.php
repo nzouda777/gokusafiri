@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\GalleryResource\Pages;
+use App\Models\GalleryCountry;
 use App\Models\GalleryItem;
 use Filament\Forms;
 use Filament\Resources\Resource;
@@ -29,6 +30,23 @@ class GalleryResource extends Resource
     {
         return $schema->schema([
             Schemas\Components\Section::make('Media')->schema([
+                Forms\Components\Select::make('gallery_country_id')
+                    ->label('Country')
+                    ->relationship('country', 'slug', fn ($query) => $query->ordered())
+                    ->getOptionLabelFromRecordUsing(fn (GalleryCountry $record) => $record->getTranslation('name', 'en'))
+                    ->default(fn () => GalleryCountry::where('slug', 'rwanda')->value('id'))
+                    ->required()
+                    ->native(false)
+                    // Lets the admin add a missing country without leaving the upload form.
+                    ->createOptionForm(GalleryCountryResource::nameFields())
+                    ->createOptionUsing(fn (array $data): int => GalleryCountry::create([
+                        'name'     => $data['name'],
+                        'position' => ((int) GalleryCountry::max('position')) + 1,
+                    ])->getKey())
+                    ->helperText(fn (string $operation): string => $operation === 'create'
+                        ? 'All files uploaded below will be filed under this country tab on the public gallery.'
+                        : 'The country tab this item appears under on the public gallery.'),
+
                 // Create: bulk import  one gallery item is created per file, in order.
                 Forms\Components\FileUpload::make('files')
                     ->label('Media Files')
@@ -94,10 +112,21 @@ class GalleryResource extends Resource
                     ->getStateUsing(fn (GalleryItem $record) => str_starts_with($record->getFirstMedia('file')?->mime_type ?? '', 'video/') ? 'Video' : 'Image')
                     ->badge()
                     ->color(fn (string $state) => $state === 'Video' ? 'warning' : 'gray'),
+                Tables\Columns\TextColumn::make('country.slug')
+                    ->label('Country')
+                    ->formatStateUsing(fn (GalleryItem $record) => $record->country?->getTranslation('name', 'en'))
+                    ->badge(),
                 Tables\Columns\TextColumn::make('caption.en')
                     ->label('Caption')->limit(50),
                 Tables\Columns\TextColumn::make('position')->sortable(),
                 Tables\Columns\IconColumn::make('is_active')->boolean()->label('Active'),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('gallery_country_id')
+                    ->label('Country')
+                    ->options(fn () => GalleryCountry::ordered()->get()
+                        ->mapWithKeys(fn (GalleryCountry $c) => [$c->id => $c->getTranslation('name', 'en')])
+                        ->all()),
             ])
             ->reorderable('position')
             ->defaultSort('position')

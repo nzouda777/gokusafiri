@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -15,7 +16,7 @@ class GalleryItem extends Model implements HasMedia
 
     public array $translatable = ['caption'];
 
-    protected $fillable = ['caption', 'position', 'is_active'];
+    protected $fillable = ['gallery_country_id', 'caption', 'position', 'is_active'];
 
     protected $casts = [
         'position' => 'integer',
@@ -25,6 +26,11 @@ class GalleryItem extends Model implements HasMedia
     public function scopeActive($query)
     {
         return $query->where('is_active', true)->orderBy('position');
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(GalleryCountry::class, 'gallery_country_id');
     }
 
     public function registerMediaCollections(): void

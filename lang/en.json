@@ -377,6 +377,8 @@
     "gallery.close": "Close",
     "gallery.prev": "Previous",
     "gallery.next": "Next",
+    "gallery.all": "All",
+    "gallery.tabs_label": "Gallery countries",
 
     "about.eyebrow": "Our story",
     "about.title": "Born from the wild, built for you",

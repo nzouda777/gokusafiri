@@ -75,6 +75,7 @@ export interface MediaItem {
 
 export interface GalleryMediaItem {
     id: number;
+    country: string | null; // GalleryCountry slug
     type: 'image' | 'video';
     url: string;
     thumb_url: string | null;

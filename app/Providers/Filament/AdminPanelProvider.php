@@ -11,6 +11,7 @@ use App\Filament\Admin\Resources\DestinationResource;
 use App\Filament\Admin\Resources\EmailAutomationResource;
 use App\Filament\Admin\Resources\EmailFlowResource;
 use App\Filament\Admin\Resources\FaqResource;
+use App\Filament\Admin\Resources\GalleryCountryResource;
 use App\Filament\Admin\Resources\GalleryResource;
 use App\Filament\Admin\Resources\OperatorResource;
 use App\Filament\Admin\Resources\PackageResource;
@@ -68,6 +69,7 @@ class AdminPanelProvider extends PanelProvider
                 ReviewResource::class,
                 FaqResource::class,
                 GalleryResource::class,
+                GalleryCountryResource::class,
                 UserResource::class,
                 OperatorResource::class,
                 RoleResource::class,

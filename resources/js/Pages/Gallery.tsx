@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { PlayCircle } from 'lucide-react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import AppLayout from '../Components/AppLayout';
@@ -8,6 +8,8 @@ import type { GalleryMediaItem } from '../types';
 
 interface Props {
     items: GalleryMediaItem[];
+    countries: { slug: string; name: string }[]; // countries that have media, in tab order
+    activeCountry: string | null; // slug, null = "All"
 }
 
 // CSS Grid masonry: track sizing handles column auto-fill, we only need to
@@ -46,10 +48,33 @@ function useMasonrySpans(items: GalleryMediaItem[]) {
     return { gridRef, spans };
 }
 
-export default function Gallery({ items }: Props) {
+export default function Gallery({ items: allItems, countries, activeCountry }: Props) {
     const { t } = useLaravelReactI18n();
+    const [country, setCountry] = useState<string | null>(activeCountry);
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+    const items = useMemo(
+        () => (country ? allItems.filter((item) => item.country === country) : allItems),
+        [allItems, country],
+    );
     const { gridRef, spans } = useMasonrySpans(items);
+
+    // Filter client-side (all media is already loaded) and mirror the tab in the
+    // URL so a country can be shared/bookmarked, without an extra request.
+    function selectCountry(code: string | null) {
+        setCountry(code);
+        setActiveIndex(null);
+
+        const url = new URL(window.location.href);
+        if (code) url.searchParams.set('country', code);
+        else url.searchParams.delete('country');
+        window.history.replaceState(window.history.state, '', url);
+    }
+
+    const tabs: { code: string | null; label: string }[] = [
+        { code: null, label: t('gallery.all') },
+        ...countries.map((c) => ({ code: c.slug, label: c.name })),
+    ];
 
     return (
         <AppLayout>
@@ -75,6 +100,33 @@ export default function Gallery({ items }: Props) {
             {/* Masonry grid  auto-fill columns, row span computed from real aspect ratio */}
             <section className="bg-[#fbf8f2] py-12 md:py-20">
                 <div className="max-w-[1440px] mx-auto px-[100px] max-lg:px-6">
+                    {allItems.length > 0 && (
+                        <div
+                            role="tablist"
+                            aria-label={t('gallery.tabs_label')}
+                            className="flex gap-2 overflow-x-auto pb-2 mb-8 md:mb-10 -mx-6 px-6 lg:mx-0 lg:px-0 [scrollbar-width:none]"
+                        >
+                            {tabs.map((tab) => {
+                                const selected = tab.code === country;
+                                return (
+                                    <button
+                                        key={tab.code ?? 'all'}
+                                        role="tab"
+                                        aria-selected={selected}
+                                        onClick={() => selectCountry(tab.code)}
+                                        className={`shrink-0 rounded-full px-5 py-2.5 text-[14px] font-medium border transition-colors ${
+                                            selected
+                                                ? 'bg-[#16241b] border-[#16241b] text-white'
+                                                : 'bg-white border-[#e4ddd0] text-[#4f5c53] hover:border-[#16241b] hover:text-[#16241b]'
+                                        }`}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+
                     {items.length === 0 ? (
                         <p className="text-center text-[#8a968d] text-[15px] py-20">{t('gallery.empty')}</p>
                     ) : (

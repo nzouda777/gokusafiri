@@ -377,6 +377,8 @@
     "gallery.close": "Cerrar",
     "gallery.prev": "Anterior",
     "gallery.next": "Siguiente",
+    "gallery.all": "Todos",
+    "gallery.tabs_label": "Países de la galería",
 
     "about.eyebrow": "Nuestra historia",
     "about.title": "Nacido de lo salvaje, creado para ti",

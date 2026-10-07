@@ -21,7 +21,8 @@ class CreateGalleryItem extends CreateRecord
 
         foreach ($paths as $path) {
             $record = GalleryItem::create([
-                'position'  => $nextPosition++,
+                'gallery_country_id' => $data['gallery_country_id'],
+                'position'           => $nextPosition++,
                 'is_active' => true,
             ]);
 
